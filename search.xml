@@ -15,6 +15,19 @@
     </entry>
     
     
+    
+    <entry>
+      <title>使用 Markdown 编写文档用什么软件</title>
+      <link href="/2025/04/10/%E4%BD%BF%E7%94%A8%20Markdown%20%E7%BC%96%E5%86%99%E6%96%87%E6%A1%A3%E7%94%A8%E4%BB%80%E4%B9%88%E8%BD%AF%E4%BB%B6/"/>
+      <url>/2025/04/10/%E4%BD%BF%E7%94%A8%20Markdown%20%E7%BC%96%E5%86%99%E6%96%87%E6%A1%A3%E7%94%A8%E4%BB%80%E4%B9%88%E8%BD%AF%E4%BB%B6/</url>
+      
+        <content type="html"><![CDATA[<ol><li>Typora<br> 核心优势：所见即所得（WYSIWYG）界面，实时渲染 Markdown 语法，支持表格、代码块、数学公式（LaTeX）、任务列表等。<br> 导出能力：直接导出为 PDF、HTML、Word、ePub 等格式，适合生成报告或电子书。<br> 价格：买断制 89 元人民币，支持 Windows&#x2F;macOS&#x2F;Linux。<br> 适用场景：个人写作、技术文档、学术论文。</li></ol><p>.&#x2F;..&#x2F;b_img&#x2F;image-20250411001541609.png</p><p>  <img src="/./../b_img/image-20250411001541609.png" alt="image-20250411001541609"></p><p>.&#x2F;..&#x2F;b_img&#x2F;</p><p><img src="/./../b_img/image-20250411015306999.png" alt="image-20250411015306999"></p><p><img src="/./../b_img/image-20250411015429273.png" alt="image-20250411015429273"></p><p>.&#x2F;..&#x2F;b_img&#x2F; img33</p><img src="./../b_img/image-20250411015443488.png" alt="image-20250411015443488" style="zoom:33%;" /><p>md md不能调图片大小</p><p>.&#x2F;..&#x2F;b_img&#x2F;image-20250411001541609.png</p><ol start="2"><li><p>VS Code + 插件<br> 核心优势：代码编辑器的强大扩展性，通过插件支持 Markdown 语法高亮、实时预览、TOC 生成。<br> 插件：<br> Markdown All in One：快捷键和格式转换工具。<br> Markdown PDF：一键导出 PDF（需安装 LaTeX 环境）。<br> 适用场景：开发者、技术文档撰写者。<br> 缺点：不能通过剪切板粘图，需要手动上传图片。这是我特别常用的一个功能，所以需要一个更好的软件。</p></li><li><p>MarkText<br> 核心优势：开源免费，支持实时预览、多主题切换（如 Material Dark）、三种编辑模式（源码 &#x2F; 打字机 &#x2F; 专注）。<br> 特色功能：直接粘贴图片到文档，支持数学公式（KaTeX）和 Mermaid 图表。<br> 导出能力：导出 HTML 和 PDF，适合轻量级文档。<br> 适用场景：学生、自由职业者、开源项目贡献者。<br> 缺点：现在好像没人维护了，最新版本还是v0.17.1。</p></li></ol><p>  <img src="/./../p_img/image-20250411001750775.png" alt="image-20250411001750775"></p><p><img src="/./p_img/image-20250411001856968.png" alt="image-20250411001856968"></p><p>所以直接下汉化版就好了，汉化版最新也是v0.17.1</p><p>b 33</p><img src="./../b_img/image-20250411001856968.png" alt="image-20250411001856968" style="zoom:33%;" /><p>b 33</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">referrerpolicy=&quot;no-referrer&quot;</span><br></pre></td></tr></table></figure><img src="./../b_img/image-20250411011924179.png" alt="image-20250411011924179" referrerpolicy="no-referrer" style="zoom:33%;" />]]></content>
+      
+      
+      
+    </entry>
+    
+    
   
   
 </search>
