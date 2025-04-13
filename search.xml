@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search> 
+  
+  
+    
+    <entry>
+      <title>Hello World</title>
+      <link href="/2025/04/13/hello-world/"/>
+      <url>/2025/04/13/hello-world/</url>
+      
+        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>已解决 md写文章hexo上传查看不了图片</title>
+      <link href="/2025/04/11/%E5%B7%B2%E8%A7%A3%E5%86%B3-md%E5%86%99%E6%96%87%E7%AB%A0hexo%E4%B8%8A%E4%BC%A0%E6%9F%A5%E7%9C%8B%E4%B8%8D%E4%BA%86%E5%9B%BE%E7%89%87/"/>
+      <url>/2025/04/11/%E5%B7%B2%E8%A7%A3%E5%86%B3-md%E5%86%99%E6%96%87%E7%AB%A0hexo%E4%B8%8A%E4%BC%A0%E6%9F%A5%E7%9C%8B%E4%B8%8D%E4%BA%86%E5%9B%BE%E7%89%87/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1-目标"><a href="#1-目标" class="headerlink" title="1 目标"></a>1 目标</h2><p>解决的痛点：markdown写文章可以直接粘本地图片，并上传到github时hexo的博客也能正常显示。避免开启post_asset_folder文件资源夹，这样只有有图片的博文会新建文件夹来存储博文的图片 。</p><p>关键词条：</p><p>如何在Hexo博客中插入本地图片</p><p>如何在Hexo博客中插入图片</p><p>Hexo博客中图片无法显示</p><h2 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2 解决方法"></a>2 解决方法</h2><p>解决的核心：在Typora粘图时设置图像粘到指定路径:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./../</span><br></pre></td></tr></table></figure><p>这样图片会直接存放在<strong>source</strong>文件夹下，如下面三张图：</p><p><img src="/./../%E5%B7%B2%E8%A7%A3%E5%86%B3-md%E5%86%99%E6%96%87%E7%AB%A0hexo%E4%B8%8A%E4%BC%A0%E6%9F%A5%E7%9C%8B%E4%B8%8D%E4%BA%86%E5%9B%BE%E7%89%87/image-20250413144513945.png"></p><p>我喜欢用如下路径：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./../$&#123;filename&#125;</span><br></pre></td></tr></table></figure><p>操作：Typora菜单栏的【文件】，打开【偏好设置】，点击【图像】</p><p><img src="/./../%E5%B7%B2%E8%A7%A3%E5%86%B3-md%E5%86%99%E6%96%87%E7%AB%A0hexo%E4%B8%8A%E4%BC%A0%E6%9F%A5%E7%9C%8B%E4%B8%8D%E4%BA%86%E5%9B%BE%E7%89%87/image-20250413144119948.png" alt="image-20250413144119948"></p><h2 id="3-尚未解决"><a href="#3-尚未解决" class="headerlink" title="3 尚未解决"></a>3 尚未解决</h2><p>图片不能调整大小，好难受，，，</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>pic</title>
+      <link href="/2025/04/11/pic/"/>
+      <url>/2025/04/11/pic/</url>
+      
+        <content type="html"><![CDATA[<p>1 md .&#x2F;pic&#x2F;image-20250411041951213.png)</p><p><img src="/./pic/image-20250411041951213.png" alt="image-20250411035745591"></p><p>2 非md .&#x2F;pic&#x2F;image-20250411041951213.png)</p><img src="./pic/image-20250411041951213.png" alt="image-20250411035745591" style="zoom:33%;" /><p>3 md 在source下 image-20250411035745591.png)  不行 编辑就看不见图片</p><p><img src="/image-20250411035745591.png" alt="image-20250411035745591"></p><p>4 md 在source下 .&#x2F;..&#x2F;image-20250411104041029.png)</p><p><img src="/./../image-20250411104041029.png" alt="image-20250411104041029"></p><p>5 非md 在source下 .&#x2F;..&#x2F;图片名</p><img src="./../image-20250411104225657.png" alt="image-20250411104225657" style="zoom:33%;" /><p>6 md  .&#x2F;..&#x2F;_posts&#x2F;pic&#x2F;图片名</p><p><img src="/./../_posts/pic/image-20250411041951213.png" alt="image-20250411041951213"></p><p>7 非md   .&#x2F;..&#x2F;_posts&#x2F;pic&#x2F;文件名 不行 编辑就看不见图片</p><p>8 .&#x2F;..&#x2F;b_img&#x2F;</p><p><img src="/./../b_img/image-20250411104726267.png" alt="image-20250411104726267"></p><p>9 md .&#x2F;..&#x2F;文件名 .&#x2F;..&#x2F;pic</p><p><img src="/./../pic/image-20250411104921505.png" alt="image-20250411104921505"></p><p>**结论：1 4 9可以显示图片。**但是我想可以调整图片尺寸就好了</p>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>使用 Markdown 编写文档用什么软件</title>
+      <link href="/2025/04/10/%E4%BD%BF%E7%94%A8%20Markdown%20%E7%BC%96%E5%86%99%E6%96%87%E6%A1%A3%E7%94%A8%E4%BB%80%E4%B9%88%E8%BD%AF%E4%BB%B6/"/>
+      <url>/2025/04/10/%E4%BD%BF%E7%94%A8%20Markdown%20%E7%BC%96%E5%86%99%E6%96%87%E6%A1%A3%E7%94%A8%E4%BB%80%E4%B9%88%E8%BD%AF%E4%BB%B6/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>Typora<br> 核心优势：所见即所得（WYSIWYG）界面，实时渲染 Markdown 语法，支持表格、代码块、数学公式（LaTeX）、任务列表等。<br> 导出能力：直接导出为 PDF、HTML、Word、ePub 等格式，适合生成报告或电子书。<br> 价格：买断制 89 元人民币，支持 Windows&#x2F;macOS&#x2F;Linux。<br> 适用场景：个人写作、技术文档、学术论文。</p></li><li><p>VS Code + 插件<br> 核心优势：代码编辑器的强大扩展性，通过插件支持 Markdown 语法高亮、实时预览、TOC 生成。<br> 插件：<br> Markdown All in One：快捷键和格式转换工具。<br> Markdown PDF：一键导出 PDF（需安装 LaTeX 环境）。<br> 适用场景：开发者、技术文档撰写者。<br> 缺点：不能通过剪切板粘图，需要手动上传图片。这是我特别常用的一个功能，所以需要一个更好的软件。</p></li><li><p>MarkText<br> 核心优势：开源免费，支持实时预览、多主题切换（如 Material Dark）、三种编辑模式（源码 &#x2F; 打字机 &#x2F; 专注）。<br> 特色功能：直接粘贴图片到文档，支持数学公式（KaTeX）和 Mermaid 图表。<br> 导出能力：导出 HTML 和 PDF，适合轻量级文档。<br> 适用场景：学生、自由职业者、开源项目贡献者。<br> 缺点：现在好像没人维护了，最新版本还是v0.17.1。</p></li></ol>]]></content>
+      
+      
+      
+    </entry>
+    
+    
+  
+  
+</search>
