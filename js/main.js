@@ -897,11 +897,22 @@ document.addEventListener('DOMContentLoaded', () => {
     initAdjust()
     justifiedIndexPostUI()
 
+    // if (GLOBAL_CONFIG_SITE.pageType === 'post') {
+    //   addPostOutdateNotice()
+    //   GLOBAL_CONFIG.relativeDate.post && relativeDate(document.querySelectorAll('#post-meta time'))
+    // } else {
+    //   GLOBAL_CONFIG.relativeDate.homepage && relativeDate(document.querySelectorAll('#recent-posts time'))
+    //   GLOBAL_CONFIG.runtime && addRuntime()
+    //   addLastPushDate()
+    //   toggleCardCategory()
+    // }
     if (GLOBAL_CONFIG_SITE.pageType === 'post') {
       addPostOutdateNotice()
-      GLOBAL_CONFIG.relativeDate.post && relativeDate(document.querySelectorAll('#post-meta time'))
+      // 仅将“更新日”切换为相对时间
+      relativeDate(document.querySelectorAll('#post-meta time.post-meta-date-updated'))
     } else {
-      GLOBAL_CONFIG.relativeDate.homepage && relativeDate(document.querySelectorAll('#recent-posts time'))
+      // 首页仅对“更新日”转换为相对时间
+      relativeDate(document.querySelectorAll('#recent-posts time.post-meta-date-updated'))
       GLOBAL_CONFIG.runtime && addRuntime()
       addLastPushDate()
       toggleCardCategory()
