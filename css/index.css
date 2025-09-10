@@ -4096,7 +4096,7 @@ figure.highlight pre .javascript .function {
   display: block;
   margin: 0 auto 20px;
   max-height: 250px;
-  max-width: 720px !important;
+  max-width: 720px;
   width: auto;
   -webkit-transition: filter 375ms ease-in 0.2s;
   -moz-transition: filter 375ms ease-in 0.2s;

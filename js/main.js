@@ -630,6 +630,16 @@ document.addEventListener('DOMContentLoaded', () => {
     'go-up': () => { // Back to top
       btf.scrollToDest(0, 500)
     },
+    /**
+     * 滚动到底部
+     * @returns {void}
+     */
+    'go-down': () => {
+      const body = document.body
+      const html = document.documentElement
+      const total = Math.max(html.scrollHeight, body.scrollHeight)
+      btf.scrollToDest(total, 500)
+    },
     'hide-aside-btn': () => { // Hide aside
       const $htmlDom = document.documentElement.classList
       const saveStatus = $htmlDom.contains('hide-aside') ? 'show' : 'hide'
