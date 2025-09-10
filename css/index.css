@@ -6584,6 +6584,3 @@ blockquote.pullquote.right {
 *:before {
   font-family: FontAwesome !important;
 }
-*:container {
-  max-width: 720px !important;
-}
