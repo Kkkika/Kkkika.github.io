@@ -433,12 +433,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isDown) {
           if (flag !== 'down') {
             $header.classList.remove('nav-visible')
+            $rightside.classList.remove('rightside-show')
             isChatBtn && window.chatBtn.hide()
             flag = 'down'
           }
         } else {
           if (flag !== 'up') {
             $header.classList.add('nav-visible')
+            $rightside.classList.add('rightside-show')
             isChatBtn && window.chatBtn.show()
             flag = 'up'
           }
@@ -448,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentTop === 0) {
           $header.classList.remove('nav-fixed', 'nav-visible')
         }
-        $rightside.classList.remove('rightside-show')
+        $rightside.classList.add('rightside-show')
       }
 
       isShowPercent && rightsideScrollPercent(currentTop)
@@ -456,6 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 300)
 
     btf.addEventListenerPjax(window, 'scroll', scrollTask, { passive: true })
+    // 初始化时执行一次，确保在页面顶部也显示右侧悬浮栏
+    scrollTask()
   }
 
   /**
