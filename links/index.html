@@ -1,0 +1,613 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>links | Kkkika</title><meta name="author" content="Kika"><meta name="copyright" content="Kika"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="生活网站                                                              kkkika           刚而不利 锐而不伤                                                                              小红书           网页版，看面经等">
+<meta property="og:type" content="website">
+<meta property="og:title" content="links">
+<meta property="og:url" content="https://kkkika.github.io/links/index.html">
+<meta property="og:site_name" content="Kkkika">
+<meta property="og:description" content="生活网站                                                              kkkika           刚而不利 锐而不伤                                                                              小红书           网页版，看面经等">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kkkika.github.io/img/icon.jpg">
+<meta property="article:published_time" content="2025-09-15T02:58:48.000Z">
+<meta property="article:modified_time" content="2025-09-18T09:06:34.899Z">
+<meta property="article:author" content="Kika">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kkkika.github.io/img/icon.jpg"><link rel="shortcut icon" href="/img/favicon.jpg"><link rel="canonical" href="https://kkkika.github.io/links/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":-1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":2,"languages":{"author":"作者: Kika","link":"链接: ","source":"来源: Kkkika","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#fcc10f","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'links',
+  isHighlightShrink: false,
+  isToc: false,
+  pageType: 'page'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div></div></div><div class="page type-links" id="body-wrap"><header class="not-home-page" id="page-header" style="background-image: url(/img/default_top.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Kkkika</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="page-site-info"><h1 id="site-title">links</h1></div></header><main class="layout" id="content-inner"><div id="page"><div class="container" id="article-container"><div class="flink"><div class="flink-name">生活网站</div><div class="flink-list">
+      <div class="flink-list-item">
+        <a href="https://kkkika.github.io/" title="kkkika" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://kkkika.github.io/img/icon.jpg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="kkkika" />
+          </div>
+          <div class="flink-item-name">kkkika</div>
+          <div class="flink-item-desc" title="刚而不利 锐而不伤">刚而不利 锐而不伤</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.xiaohongshu.com/" title="小红书" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://fe-video-qc.xhscdn.com/fe-platform/ed8fe781ce9e16c1bfac2cd962f0721edabe2e49.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="小红书" />
+          </div>
+          <div class="flink-item-name">小红书</div>
+          <div class="flink-item-desc" title="网页版，看面经等">网页版，看面经等</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.feidee.com/cloud/#/" title="随手记" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.sui.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="随手记" />
+          </div>
+          <div class="flink-item-name">随手记</div>
+          <div class="flink-item-desc" title="记账软件">记账软件</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://app.immersivetranslate.com/text/" title="在线翻译" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://app.immersivetranslate.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="在线翻译" />
+          </div>
+          <div class="flink-item-name">在线翻译</div>
+          <div class="flink-item-desc" title="沉浸式翻译">沉浸式翻译</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://fanyi.baidu.com/" title="百度翻译" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://fanyi.baidu.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="百度翻译" />
+          </div>
+          <div class="flink-item-name">百度翻译</div>
+          <div class="flink-item-desc" title="在线翻译">在线翻译</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://zh.z-library.sk/" title="Z-Library" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://zh.z-library.sk/favicon.svg" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Z-Library" />
+          </div>
+          <div class="flink-item-name">Z-Library</div>
+          <div class="flink-item-desc" title="自由访问知识和文化-世界上最大的电子图书馆">自由访问知识和文化-世界上最大的电子图书馆</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.notion.com/" title="Notion" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.notion.com/front-static/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Notion" />
+          </div>
+          <div class="flink-item-name">Notion</div>
+          <div class="flink-item-desc" title="笔记软件网页版">笔记软件网页版</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://note.youdao.com/" title="有道云笔记" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://note.youdao.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="有道云笔记" />
+          </div>
+          <div class="flink-item-name">有道云笔记</div>
+          <div class="flink-item-desc" title="笔记软件网页版">笔记软件网页版</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.feishu.cn/" title="飞书" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://p1-hera.feishucdn.com/tos-cn-i-jbbdkfciu3/1ec7129d900e442d8501d810efdaa369~tplv-jbbdkfciu3-image:0:0.image" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="飞书" />
+          </div>
+          <div class="flink-item-name">飞书</div>
+          <div class="flink-item-desc" title="笔记软件网页版">笔记软件网页版</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.yuque.com/" title="语雀" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.yuque.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="语雀" />
+          </div>
+          <div class="flink-item-name">语雀</div>
+          <div class="flink-item-desc" title="笔记软件网页版">笔记软件网页版</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://mojie.app/" title="魔戒" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://mojie.app/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="魔戒" />
+          </div>
+          <div class="flink-item-name">魔戒</div>
+          <div class="flink-item-desc" title="买梯子流量便宜">买梯子流量便宜</div>
+        </a>
+      </div></div><div class="flink-name">好用tools</div><div class="flink-desc">网址记录</div><div class="flink-list">
+      <div class="flink-list-item">
+        <a href="https://catocr.com/" title="CatOCR" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://catocr.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="CatOCR" />
+          </div>
+          <div class="flink-item-name">CatOCR</div>
+          <div class="flink-item-desc" title="文字识别-在线工具">文字识别-在线工具</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://app.diagrams.net/" title="用Mermaid格式，输出图表" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://app.diagrams.net/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="用Mermaid格式，输出图表" />
+          </div>
+          <div class="flink-item-name">用Mermaid格式，输出图表</div>
+          <div class="flink-item-desc" title="可结合ai代码画图">可结合ai代码画图</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.gaituba.com/crop-round" title="Gaituba" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.gaituba.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Gaituba" />
+          </div>
+          <div class="flink-item-name">Gaituba</div>
+          <div class="flink-item-desc" title="在线裁切圆形图片工具">在线裁切圆形图片工具</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://photokit.com/colors/eyedropper/?lang=zh" title="颜色吸管" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://photokit.com/images/icon256.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="颜色吸管" />
+          </div>
+          <div class="flink-item-name">颜色吸管</div>
+          <div class="flink-item-desc" title="PhotoKit在线颜色工具">PhotoKit在线颜色工具</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://gonglue.qinggl.com/app/img/icon.jsp" title="轻略应用" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.qinglue.cn/com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="轻略应用" />
+          </div>
+          <div class="flink-item-name">轻略应用</div>
+          <div class="flink-item-desc" title="网页图标(favicon.ico)在线抓取工具">网页图标(favicon.ico)在线抓取工具</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://favicon.im/zh/" title="Favicon.im" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://favicon.im/logo.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Favicon.im" />
+          </div>
+          <div class="flink-item-name">Favicon.im</div>
+          <div class="flink-item-desc" title="即时网站图标获取器">即时网站图标获取器</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://cn.overleaf.com/" title="Overleaf" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://cdn.overleaf.com/favicon-32x32.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Overleaf" />
+          </div>
+          <div class="flink-item-name">Overleaf</div>
+          <div class="flink-item-desc" title="在线LaTeX编辑器">在线LaTeX编辑器</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.pdf2go.com/zh" title="PDF2Go" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.pdf2go.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="PDF2Go" />
+          </div>
+          <div class="flink-item-name">PDF2Go</div>
+          <div class="flink-item-desc" title="pdf解密等多种工具">pdf解密等多种工具</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://search.chongbuluo.com/" title="虫部落快搜" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://search.chongbuluo.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="虫部落快搜" />
+          </div>
+          <div class="flink-item-name">虫部落快搜</div>
+          <div class="flink-item-desc" title="各种搜索工具">各种搜索工具</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.bgrdh.com/" title="办公人导航" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.bgrdh.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="办公人导航" />
+          </div>
+          <div class="flink-item-name">办公人导航</div>
+          <div class="flink-item-desc" title="职场常用工具汇总">职场常用工具汇总</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.hippter.com" title="HiPPTer" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.hippter.com/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="HiPPTer" />
+          </div>
+          <div class="flink-item-name">HiPPTer</div>
+          <div class="flink-item-desc" title="PPT资源网站导航">PPT资源网站导航</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.pmbaobao.com/" title="产品经理导航" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://dh.woshipm.com/wp-content/uploads/2022/01/txtm.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="产品经理导航" />
+          </div>
+          <div class="flink-item-name">产品经理导航</div>
+          <div class="flink-item-desc" title="集合了产品、运营、交互设计、用户体验、行业资讯等网站">集合了产品、运营、交互设计、用户体验、行业资讯等网站</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://chuangzaoshi.com/" title="创造狮" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://chuangzaoshi.com/assets/images/favicon.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="创造狮" />
+          </div>
+          <div class="flink-item-name">创造狮</div>
+          <div class="flink-item-desc" title="互联网工具导航">互联网工具导航</div>
+        </a>
+      </div></div><div class="flink-name">大文档</div><div class="flink-desc">中文文档为主</div><div class="flink-list">
+      <div class="flink-list-item">
+        <a href="https://matplotlib.org/stable/api/pyplot_summary.html" title="Matplotlib" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://matplotlib.org/_static/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Matplotlib" />
+          </div>
+          <div class="flink-item-name">Matplotlib</div>
+          <div class="flink-item-desc" title="3.10.6 documentation">3.10.6 documentation</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.colorhexa.com/" title="ColorHexa" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.colorhexa.com/static/i/apple/touch-icon-iphone-retina.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="ColorHexa" />
+          </div>
+          <div class="flink-item-name">ColorHexa</div>
+          <div class="flink-item-desc" title="配色选择参考">配色选择参考</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.hello-algo.com/" title="Hello-algo" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.hello-algo.com/assets/images/favicon.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Hello-algo" />
+          </div>
+          <div class="flink-item-name">Hello-algo</div>
+          <div class="flink-item-desc" title="有趣的算法基础练习网站，车老师推荐">有趣的算法基础练习网站，车老师推荐</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://hexo.io/zh-cn/docs/" title="Hexo" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://hexo.io/icon/apple-touch-icon-57x57.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Hexo" />
+          </div>
+          <div class="flink-item-name">Hexo</div>
+          <div class="flink-item-desc" title="Hexo使用文档">Hexo使用文档</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.latexstudio.net/LearnLaTeX/" title="LaTeX" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.latexstudio.net/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="LaTeX" />
+          </div>
+          <div class="flink-item-name">LaTeX</div>
+          <div class="flink-item-desc" title="LaTeX教程">LaTeX教程</div>
+        </a>
+      </div></div><div class="flink-name">技术</div><div class="flink-desc">未深入尝试</div><div class="flink-list">
+      <div class="flink-list-item">
+        <a href="https://www.kaggle.com/" title="Kaggle" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.kaggle.com/static/images/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Kaggle" />
+          </div>
+          <div class="flink-item-name">Kaggle</div>
+          <div class="flink-item-desc" title="Your Machine Learning and Data Science Community">Your Machine Learning and Data Science Community</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://dblab.xmu.edu.cn/blog/category/big-data/" title="大数据" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://dblab.xmu.edu.cn/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="大数据" />
+          </div>
+          <div class="flink-item-name">大数据</div>
+          <div class="flink-item-desc" title="厦大数据库实验室博客">厦大数据库实验室博客</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://data.stats.gov.cn/" title="国家数据" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://data.stats.gov.cn/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="国家数据" />
+          </div>
+          <div class="flink-item-name">国家数据</div>
+          <div class="flink-item-desc" title="国家数据 - 国家统计局">国家数据 - 国家统计局</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://www.stats.gov.cn/sj/" title="国家统计局" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://www.stats.gov.cn/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="国家统计局" />
+          </div>
+          <div class="flink-item-name">国家统计局</div>
+          <div class="flink-item-desc" title="数据源 - 国家统计局">数据源 - 国家统计局</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://yuncode.net/" title="云代码" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://yuncode.net/favicon.ico" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="云代码" />
+          </div>
+          <div class="flink-item-name">云代码</div>
+          <div class="flink-item-desc" title="分享源代码片段 管理云端代码库">分享源代码片段 管理云端代码库</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="http://www.idatascience.cn/dataset" title="爱数科" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="http://www.idatascience.cn/favilogo.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="爱数科" />
+          </div>
+          <div class="flink-item-name">爱数科</div>
+          <div class="flink-item-desc" title="有数据集，数智通识实验平台">有数据集，数智通识实验平台</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="http://idatacoding.cn/" title="数据实验楼" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="http://idatacoding.cn/idatacoding-logo.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="数据实验楼" />
+          </div>
+          <div class="flink-item-name">数据实验楼</div>
+          <div class="flink-item-desc" title="数智综合项目实训平台">数智综合项目实训平台</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://clarivate.com/" title="Clarivate" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://clarivate.com/wp-content/themes/clarivate/src/favicon/apple-icon-57x57.png" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="Clarivate" />
+          </div>
+          <div class="flink-item-name">Clarivate</div>
+          <div class="flink-item-desc" title="Leading Global Transformative Intelligence">Leading Global Transformative Intelligence</div>
+        </a>
+      </div></div><div class="flink-name">其他</div><div class="flink-list">
+      <div class="flink-list-item">
+        <a href="http://192.168.2.1/" title="路由器" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="null" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="路由器" />
+          </div>
+          <div class="flink-item-name">路由器</div>
+          <div class="flink-item-desc" title="K2G">K2G</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="https://cn.colleges.chat/favicon.ico" title="大学生活质量指北" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="https://cn.colleges.chat/assets/images/favicon.webp" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="大学生活质量指北" />
+          </div>
+          <div class="flink-item-name">大学生活质量指北</div>
+          <div class="flink-item-desc" title="真实评价">真实评价</div>
+        </a>
+      </div>
+      <div class="flink-list-item">
+        <a href="null" title="null" target="_blank">
+          <div class="flink-item-icon">
+            <img class="no-lightbox" src="null" onerror='this.onerror=null;this.src="/img/friend_404.gif"' alt="null" />
+          </div>
+          <div class="flink-item-name">null</div>
+          <div class="flink-item-desc" title="null">null</div>
+        </a>
+      </div></div></div>
+</div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Kika</div><div class="author-info-description">Why so serious?</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">5</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Kkkika"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Kkkika" target="_blank" title="Github"><i class="fab fa-github" style="color: #FDB68C;"></i></a><a class="social-icon" href="https://blog.csdn.net/m0_73972962" target="_blank" title="CSDN"><i class="fa fa-search" style="color: #FDB68C;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">持续更新中...<br>欢迎关注我的 GitHub，获取更多开源项目和教程分享！</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/04/12/Markdown%E5%B8%B8%E7%94%A8/" title="Markdown常用"><img src="/./../Cover/Markdown.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Markdown常用"/></a><div class="content"><a class="title" href="/2025/04/12/Markdown%E5%B8%B8%E7%94%A8/" title="Markdown常用">Markdown常用</a><time datetime="2025-04-12T07:58:47.000Z" title="发表于 2025-04-12 15:58:47">2025-04-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/11/Github%E5%B8%B8%E7%94%A8/" title="Github常用"><img src="/./../Cover/GitHub.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Github常用"/></a><div class="content"><a class="title" href="/2025/04/11/Github%E5%B8%B8%E7%94%A8/" title="Github常用">Github常用</a><time datetime="2025-04-10T19:55:50.000Z" title="发表于 2025-04-11 03:55:50">2025-04-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/11/pic/" title="pic"><img src="/./../pic/test4.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="pic"/></a><div class="content"><a class="title" href="/2025/04/11/pic/" title="pic">pic</a><time datetime="2025-04-10T19:55:50.000Z" title="发表于 2025-04-11 03:55:50">2025-04-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/09/04/Hexo%E6%90%AD%E5%BB%BAButterfly%E4%B8%BB%E9%A2%98%E8%AE%B0%E5%BD%95/" title="Hexo搭建Butterfly主题记录"><img src="/./../Cover/butterfly.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hexo搭建Butterfly主题记录"/></a><div class="content"><a class="title" href="/2024/09/04/Hexo%E6%90%AD%E5%BB%BAButterfly%E4%B8%BB%E9%A2%98%E8%AE%B0%E5%BD%95/" title="Hexo搭建Butterfly主题记录">Hexo搭建Butterfly主题记录</a><time datetime="2024-09-03T21:31:00.000Z" title="发表于 2024-09-04 05:31:00">2024-09-04</time></div></div></div></div><div class="card-widget card-categories"><div class="item-headline">
+            <i class="fas fa-folder-open"></i>
+            <span>分类</span>
+            
+          </div>
+          <ul class="card-category-list" id="aside-cat-list">
+            <li class="card-category-list-item "><a class="card-category-list-link" href="/categories/blog/"><span class="card-category-list-name">blog</span><span class="card-category-list-count">2</span></a></li><li class="card-category-list-item "><a class="card-category-list-link" href="/categories/%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/"><span class="card-category-list-name">常用命令</span><span class="card-category-list-count">2</span></a></li>
+          </ul></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Markdown/" style="font-size: 1.1em; color: #999">Markdown</a> <a href="/tags/Github/" style="font-size: 1.1em; color: #999">Github</a> <a href="/tags/Gitee/" style="font-size: 1.1em; color: #999">Gitee</a> <a href="/tags/Hexo/" style="font-size: 1.1em; color: #999">Hexo</a> <a href="/tags/Typora/" style="font-size: 1.1em; color: #999">Typora</a></div></div><div class="card-widget card-archives">
+    <div class="item-headline">
+      <i class="fas fa-archive"></i>
+      <span>归档</span>
+      
+    </div>
+  
+    <ul class="card-archive-list">
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2025/04/">
+            <span class="card-archive-list-date">
+              四月 2025
+            </span>
+            <span class="card-archive-list-count">3</span>
+          </a>
+        </li>
+      
+        <li class="card-archive-list-item">
+          <a class="card-archive-list-link" href="/archives/2024/09/">
+            <span class="card-archive-list-date">
+              九月 2024
+            </span>
+            <span class="card-archive-list-count">1</span>
+          </a>
+        </li>
+      
+    </ul>
+  </div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站信息</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">4</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">7.1k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">本站总浏览量 :</div><div class="item-count" id="busuanzi_value_site_pv"><i class="fa-solid fa-spinner fa-spin"></i></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2025-09-18T09:06:47.232Z"><i class="fa-solid fa-spinner fa-spin"></i></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Kika</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-beat"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日夜切换"><i class="fas fa-adjust fa-flip"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up fa-bounce"></i></button><button id="go-down" type="button" title="回到底部"><i class="fas fa-arrow-down fa-bounce"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="253,114,16" opacity="0.9" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

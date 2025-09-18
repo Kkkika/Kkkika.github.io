@@ -1372,7 +1372,7 @@ canvas:not(#ribbon-canvas),
   --scrollbar-color: #fdb68c;
   --default-bg-color: #fdb68c;
   --zoom-bg: #fff;
-  --mark-bg: rgba(0,0,0,0.3);
+  --mark-bg: rgba(0,0,0,0.13);
 }
 body {
   position: relative;
@@ -1638,6 +1638,16 @@ figure.highlight pre .tag .attr,
 figure.highlight pre .javascript .function {
   color: #c792ea;
 }
+.container figure.highlight .line:before {
+  display: inline-block;
+  color: var(--hlnumber-color);
+  content: counter(line);
+  counter-increment: line;
+  padding: 0 20px 0 0;
+  text-align: right;
+  min-width: 15px;
+  font-family: "Consolas", "Monaco", "Menlo" !important;
+}
 .container figure.highlight .line.marked {
   background-color: rgba(97,97,97,0.314);
 }
@@ -1670,6 +1680,8 @@ figure.highlight pre .javascript .function {
   background: var(--hl-bg);
   color: var(--hl-color);
   line-height: 1.6;
+  counter-reset: line;
+  white-space: pre-wrap;
 }
 .container pre,
 .container code {
@@ -2374,40 +2386,18 @@ figure.highlight pre .javascript .function {
   position: relative;
   overflow: hidden;
   margin-bottom: 20px;
-  display: -webkit-box;
-  display: -moz-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: box;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -moz-box-orient: horizontal;
-  -o-box-orient: horizontal;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-box-align: center;
-  -moz-box-align: center;
-  -o-box-align: center;
-  -ms-flex-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-  height: 16.8em;
+  display: inline-block;
+  width: calc(100% / 2 - 8px);
+  vertical-align: top;
 }
 @media screen and (max-width: 768px) {
   #recent-posts .recent-post-item {
-    -webkit-box-orient: vertical;
-    -moz-box-orient: vertical;
-    -o-box-orient: vertical;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    height: auto;
+    width: 100%;
   }
 }
 @media screen and (min-width: 2000px) {
   #recent-posts .recent-post-item {
-    height: 18.8em;
+    width: calc(100% / 3 - 8px);
   }
 }
 #recent-posts .recent-post-item:hover .post-bg {
@@ -2423,8 +2413,8 @@ figure.highlight pre .javascript .function {
 }
 #recent-posts .recent-post-item .post_cover {
   overflow: hidden;
-  width: 42%;
-  height: 100%;
+  width: 100%;
+  height: 230px;
 }
 @media screen and (max-width: 768px) {
   #recent-posts .recent-post-item .post_cover {
@@ -2432,30 +2422,11 @@ figure.highlight pre .javascript .function {
     height: 230px;
   }
 }
-#recent-posts .recent-post-item .post_cover.right {
-  -webkit-box-ordinal-group: 1;
-  -moz-box-ordinal-group: 1;
-  -o-box-ordinal-group: 1;
-  -ms-flex-order: 1;
-  -webkit-order: 1;
-  order: 1;
-}
-@media screen and (max-width: 768px) {
-  #recent-posts .recent-post-item .post_cover.right {
-    -webkit-box-ordinal-group: 0;
-    -moz-box-ordinal-group: 0;
-    -o-box-ordinal-group: 0;
-    -ms-flex-order: 0;
-    -webkit-order: 0;
-    order: 0;
-  }
-}
 #recent-posts .recent-post-item .post_cover .post-bg {
   z-index: -4;
 }
 #recent-posts .recent-post-item >.recent-post-info {
-  padding: 0 40px;
-  width: 58%;
+  padding: 30px 30px 25px;
 }
 @media screen and (max-width: 768px) {
   #recent-posts .recent-post-item >.recent-post-info {
@@ -2464,7 +2435,7 @@ figure.highlight pre .javascript .function {
   }
 }
 #recent-posts .recent-post-item >.recent-post-info.no-cover {
-  width: 100%;
+  padding: 35px 30px;
 }
 @media screen and (max-width: 768px) {
   #recent-posts .recent-post-item >.recent-post-info.no-cover {
@@ -6148,7 +6119,7 @@ blockquote.pullquote.right {
   --scrollbar-color: #525252;
   --timeline-bg: #1f1f1f;
   --zoom-bg: #121212;
-  --mark-bg: rgba(0,0,0,0.6);
+  --mark-bg: rgba(0,0,0,0.24);
 }
 [data-theme='dark'] #web_bg:before {
   position: absolute;
@@ -6597,6 +6568,12 @@ html:not([data-theme='dark']) #aside-content .card-widget {
 html:not([data-theme='dark']) #recent-posts .recent-post-item {
   background: rgba(255,255,255,0.94);
 }
+html:not([data-theme='dark']) #page {
+  background: rgba(255,255,255,0.94);
+}
 #page-header.post-bg {
   background: transparent !important;
+}
+#page-header.not-home-page:before {
+  display: none !important;
 }
