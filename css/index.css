@@ -6577,3 +6577,15 @@ html:not([data-theme='dark']) #page {
 #page-header.not-home-page:before {
   display: none !important;
 }
+.hbe-input-field-blink {
+  color: #d89f68 !important;
+}
+.hbe-input-field-blink:focus {
+  border-color: #d89f68 !important;
+}
+.hbe-input-label-content-blink::after {
+  color: #c97d3a !important;
+}
+.hbe-input-field {
+  margin: 6px !important;
+}
