@@ -1,23 +1,25 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>快速精通SQL | Kkkika</title><meta name="author" content="Kika"><meta name="copyright" content="Kika"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="刷7大类型SQL题：   排序类问题（普通排序，组内排序） TOPN 问题 用户留存、复购率、完播率等计算复合指标问题 新用户数、用户间隔连续登录天数、最长连续登陆问题 偏移类求和求平均问题（lag, lead函数） 行列互转问题 中位数问题  题型基本覆盖面试90%的问题！ 排序类问题（普通排序，组内排序）普通排序：使用order by对查询结果进行排序。组内排序：使用窗口函数row_numbe">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>快速精通SQL | Kkkika</title><meta name="author" content="Kika"><meta name="copyright" content="Kika"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="刷7大类型SQL题；">
 <meta property="og:type" content="article">
 <meta property="og:title" content="快速精通SQL">
 <meta property="og:url" content="https://kkkika.github.io/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/index.html">
 <meta property="og:site_name" content="Kkkika">
-<meta property="og:description" content="刷7大类型SQL题：   排序类问题（普通排序，组内排序） TOPN 问题 用户留存、复购率、完播率等计算复合指标问题 新用户数、用户间隔连续登录天数、最长连续登陆问题 偏移类求和求平均问题（lag, lead函数） 行列互转问题 中位数问题  题型基本覆盖面试90%的问题！ 排序类问题（普通排序，组内排序）普通排序：使用order by对查询结果进行排序。组内排序：使用窗口函数row_numbe">
+<meta property="og:description" content="刷7大类型SQL题；">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://kkkika.github.io/img/icon.jpg">
+<meta property="og:image" content="https://kkkika.github.io/Cover/SQL.png">
 <meta property="article:published_time" content="2025-10-20T09:17:43.000Z">
-<meta property="article:modified_time" content="2025-10-20T09:28:10.190Z">
+<meta property="article:modified_time" content="2025-10-23T01:12:49.472Z">
 <meta property="article:author" content="Kika">
+<meta property="article:tag" content="SQL">
+<meta property="article:tag" content="PostgreSQL">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://kkkika.github.io/img/icon.jpg"><script type="application/ld+json">{
+<meta name="twitter:image" content="https://kkkika.github.io/Cover/SQL.png"><script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "快速精通SQL",
   "url": "https://kkkika.github.io/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/",
-  "image": "https://kkkika.github.io/img/icon.jpg",
+  "image": "https://kkkika.github.io/Cover/SQL.png",
   "datePublished": "2025-10-20T09:17:43.000Z",
-  "dateModified": "2025-10-20T09:28:10.190Z",
+  "dateModified": "2025-10-23T01:12:49.472Z",
   "author": [
     {
       "@type": "Person",
@@ -176,7 +178,9 @@
   isHighlightShrink: false,
   isToc: true,
   pageType: 'post'
-}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(./../Cover/);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Kkkika</span></a><a class="nav-page-title" href="/"><span class="site-name">快速精通SQL</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">快速精通SQL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-20T09:17:43.000Z" title="发表于 2025-10-20 17:17:43">2025-10-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-20T09:28:10.190Z" title="更新于 2025-10-20 17:28:10">2025-10-20</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">470</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>1分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;It has been&quot;,&quot;messageNext&quot;:&quot;days since the last update, the content of the article may be outdated.&quot;,&quot;postUpdate&quot;:&quot;2025-10-20 17:28:10&quot;}" hidden></div><p>刷7大类型SQL题： </p>
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(./../Cover/SQL.png);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Kkkika</span></a><a class="nav-page-title" href="/"><span class="site-name">快速精通SQL</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">快速精通SQL</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-10-20T09:17:43.000Z" title="发表于 2025-10-20 17:17:43">2025-10-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-10-23T01:12:49.472Z" title="更新于 2025-10-23 09:12:49">2025-10-23</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%B8%93%E7%B2%BE%E8%AE%AD%E7%BB%83/">专精训练</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;It has been&quot;,&quot;messageNext&quot;:&quot;days since the last update, the content of the article may be outdated.&quot;,&quot;postUpdate&quot;:&quot;2025-10-23 09:12:49&quot;}" hidden></div><h1 id="刷7大类型SQL题"><a href="#刷7大类型SQL题" class="headerlink" title="刷7大类型SQL题"></a>刷7大类型SQL题</h1><blockquote>
+<p>题型基本覆盖面试90%的问题！</p>
+</blockquote>
 <ul>
 <li>排序类问题（普通排序，组内排序）</li>
 <li>TOPN 问题</li>
@@ -185,40 +189,246 @@
 <li>偏移类求和求平均问题（lag, lead函数）</li>
 <li>行列互转问题</li>
 <li>中位数问题</li>
+<li>相关的函数和语法有哪些，有没有哪些问题这7类没总结的</li>
+<li>对 7 大类型 SQL 面试题，结合 PostgreSQL 语法给出典型例题及答案</li>
 </ul>
-<p>题型基本覆盖面试90%的问题！</p>
-<h1 id="排序类问题（普通排序，组内排序）"><a href="#排序类问题（普通排序，组内排序）" class="headerlink" title="排序类问题（普通排序，组内排序）"></a>排序类问题（普通排序，组内排序）</h1><p><strong>普通排序</strong>：使用<code>order by</code>对查询结果进行排序。<br><strong>组内排序</strong>：使用窗口函数<code>row_number()</code>, <code>rank()</code>, <code>dense_rank()</code>等，在分组内进行排序。</p>
+<h2 id="排序类问题（普通排序，组内排序）"><a href="#排序类问题（普通排序，组内排序）" class="headerlink" title="排序类问题（普通排序，组内排序）"></a>排序类问题（普通排序，组内排序）</h2><p><strong>普通排序</strong>：使用<code>order by</code>对查询结果进行排序。<br><strong>组内排序</strong>：使用窗口函数<code>row_number()</code>, <code>rank()</code>, <code>dense_rank()</code>等，在分组内进行排序。<br>配合 <code>PARTITION BY</code>进行分组，<code>ORDER BY</code>在组内排序</p>
 <ul>
 <li>排序函数：row_number(), rank(), dense_rank(), tnile()</li>
+<li>ASC&#x2F;DESC</li>
 </ul>
-<h1 id="TOPN-问题"><a href="#TOPN-问题" class="headerlink" title="TOPN 问题"></a>TOPN 问题</h1><p>使用窗口函数或子查询来获取每个组内前N条记录。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">date</span>)  <span class="comment">-- 连续不重复排名   </span></span><br><span class="line"><span class="built_in">rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> sales)       <span class="comment">-- 并列排名会跳过后续名次</span></span><br><span class="line"><span class="built_in">dense_rank</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> sales) <span class="comment">-- 并列排名不跳名次</span></span><br><span class="line"><span class="built_in">ntile</span>(n) <span class="keyword">over</span>(<span class="keyword">order</span> <span class="keyword">by</span> sales)                       <span class="comment">-- 分组排名</span></span><br></pre></td></tr></table></figure>
+
 <ul>
-<li>使用排序函数（如row_number）后取前N条，或者使用limit（在MySQL等）或TOP（在SQL Server）等</li>
+<li><code>ROW_NUMBER()</code>: 连续唯一序号（1,2,3,4）</li>
+<li><code>RANK()</code>: 并列时排名相同，后续序号跳过（1,2,2,4）</li>
+<li><code>DENSE_RANK()</code>: 并列时排名相同，序号连续（1,2,2,3）</li>
+<li><code>NTILE()</code>: 分桶，常用于五分位、十分位等</li>
 </ul>
-<h1 id="用户留存、复购率、完播率等计算复合指标问题"><a href="#用户留存、复购率、完播率等计算复合指标问题" class="headerlink" title="用户留存、复购率、完播率等计算复合指标问题"></a>用户留存、复购率、完播率等计算复合指标问题</h1><p>这类问题通常需要计算比率，例如用户留存率是计算某天新增的用户在后续某天仍然活跃的比例。</p>
+<p><strong>例题</strong>：有表1（<code>region</code>地区，<code>date</code>日期，<code>sales</code>销售额），按地区分组，给每天的销售额按降序排组内名次（允许并列，不跳号）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> region</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="TOPN-问题"><a href="#TOPN-问题" class="headerlink" title="TOPN 问题"></a>TOPN 问题</h2><p>使用窗口函数或子查询来获取每个组内前N条记录。</p>
 <ul>
-<li>常用日期函数：datediff, date_add, 等</li>
-<li>聚合函数：count, sum, avg</li>
+<li>使用<code>row_number()</code>配合where条件</li>
+<li>或者使用<code>limit()</code>（在MySQL&#x2F;PostgreSQL）或TOP（在SQL Server）等</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 使用窗口函数</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span>(</span><br><span class="line">	<span class="keyword">select</span> <span class="operator">*</span></span><br><span class="line">	,<span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">date</span> <span class="keyword">DESC</span>) <span class="keyword">as</span> rn</span><br><span class="line">	<span class="keyword">from</span> table1</span><br><span class="line">	)t</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&lt;=</span><span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 使用LIMIT（简单场景）</span></span><br><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> table1</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> <span class="type">date</span> <span class="keyword">DESC</span></span><br><span class="line">limit <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li><p>全局TOPN<br>语法：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span>(</span><br><span class="line">	<span class="keyword">select</span> <span class="operator">*</span>,<span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">order</span> <span class="keyword">by</span> 排序列 <span class="keyword">DESC</span>) <span class="keyword">as</span> rn</span><br><span class="line">    <span class="keyword">from</span> 表名</span><br><span class="line">)t</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&lt;=</span>N</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+
+<p>示例：取销售额前3的订单</p>
+</li>
+<li><p>分组TOPN<br>语法：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span>(</span><br><span class="line">	<span class="keyword">select</span> <span class="operator">*</span>,<span class="built_in">row_number</span>() <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> 分组列 <span class="keyword">order</span> <span class="keyword">by</span> 排序列 <span class="keyword">DESC</span>) <span class="keyword">as</span> rn</span><br><span class="line">    <span class="keyword">from</span> 表名</span><br><span class="line">)t</span><br><span class="line"><span class="keyword">where</span> rn<span class="operator">&lt;=</span>N</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+
+<p>示例：取每个地区销售额前2的订单</p>
+</li>
+</ol>
+<h2 id="用户留存、复购率、完播率等计算复合指标问题"><a href="#用户留存、复购率、完播率等计算复合指标问题" class="headerlink" title="用户留存、复购率、完播率等计算复合指标问题"></a>用户留存、复购率、完播率等计算复合指标问题</h2><p>这类问题通常需要计算比率，例如用户留存率是计算某天新增的用户在后续某天仍然活跃的比例。</p>
+<ul>
+<li>常用日期函数：<code>date_diff()</code>, <code>date_add()</code> 等</li>
+<li>聚合函数：<code>sum(case when ...)</code>, <code>count(distinct ...)</code></li>
 <li>条件表达式：case when, if</li>
+<li>interval</li>
 </ul>
-<h1 id="新用户数、用户间隔连续登录天数、最长连续登陆问题"><a href="#新用户数、用户间隔连续登录天数、最长连续登陆问题" class="headerlink" title="新用户数、用户间隔连续登录天数、最长连续登陆问题"></a>新用户数、用户间隔连续登录天数、最长连续登陆问题</h1><ul>
-<li>常用窗口函数：lag, lead, 用于获取前后行的数据</li>
-<li>日期函数：datediff</li>
+<h2 id="新用户数、用户间隔连续登录天数、最长连续登陆问题"><a href="#新用户数、用户间隔连续登录天数、最长连续登陆问题" class="headerlink" title="新用户数、用户间隔连续登录天数、最长连续登陆问题"></a>新用户数、用户间隔连续登录天数、最长连续登陆问题</h2><ul>
+<li>常用窗口函数：<code>lag()</code>、<code>lead()</code>，用于获取前后行的数据</li>
+<li>日期函数：<code>date_diff()</code>、<code>timestamp_diff()</code>，计算时间间隔</li>
 <li>使用变量或窗口函数来分组连续登录</li>
 </ul>
-<h1 id="偏移类求和求平均问题（lag-lead函数）"><a href="#偏移类求和求平均问题（lag-lead函数）" class="headerlink" title="偏移类求和求平均问题（lag, lead函数）"></a>偏移类求和求平均问题（lag, lead函数）</h1><ul>
-<li>窗口函数：lag, lead, 用于获取前后行的值</li>
-<li>窗口函数：sum, avg 等 over window</li>
+<h2 id="偏移类求和求平均问题（lag-lead函数）"><a href="#偏移类求和求平均问题（lag-lead函数）" class="headerlink" title="偏移类求和求平均问题（lag, lead函数）"></a>偏移类求和求平均问题（lag, lead函数）</h2><ul>
+<li>窗口函数：<code>lag()</code>、<code>lead()</code>, 用于获取前后行的值</li>
+<li>窗口函数：<code>sum()</code>，<code>avg()</code> 等结合rows&#x2F;range</li>
 </ul>
-<h1 id="行列互转问题"><a href="#行列互转问题" class="headerlink" title="行列互转问题"></a>行列互转问题</h1><ul>
-<li>行转列：使用 CASE WHEN 或 PIVOT（部分数据库支持，如SQL Server）</li>
-<li>列转行：使用 UNION ALL 或 UNPIVOT（部分数据库支持）</li>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="built_in">lag</span>(sales,<span class="number">1</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">date</span>) <span class="keyword">as</span> prev_sales</span><br><span class="line"><span class="built_in">lead</span>(sales,<span class="number">1</span>) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">date</span>) <span class="keyword">as</span> next_sales</span><br><span class="line"><span class="built_in">avg</span>(sales) <span class="keyword">over</span>(<span class="keyword">partition</span> <span class="keyword">by</span> region <span class="keyword">order</span> <span class="keyword">by</span> <span class="type">date</span> <span class="keyword">rows</span> <span class="keyword">between</span> <span class="number">6</span> preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span>) <span class="keyword">as</span> moving_avg</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>rows&#x2F;range</strong><ul>
+<li>包括左右区间</li>
+<li><code>unbounded preceding</code>                      分区头</li>
+<li><code>unbounded following</code>                       分区尾</li>
+<li><code>interval &#39;1 month&#39; preceding</code>    前1个月</li>
+<li><code>n preceding </code>                 前n行</li>
+<li><code>current row</code>                   当前行</li>
+<li><code>n following</code>                   后n行</li>
 </ul>
-<h1 id="中位数问题"><a href="#中位数问题" class="headerlink" title="中位数问题"></a>中位数问题</h1><ul>
+</li>
+</ul>
+<ol>
+<li><p>分区头到分区尾：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> unbounded following</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前n行到当前行</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">rows</span> <span class="keyword">between</span> n preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当前行到后n行</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">rows</span> <span class="keyword">between</span> <span class="keyword">current</span> <span class="type">row</span> <span class="keyword">and</span> n following</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前n行到后n行</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">rows</span> <span class="keyword">between</span> n preceding <span class="keyword">and</span> n following</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分区头到当前行</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">rows</span> <span class="keyword">between</span> unbounded preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当前行到分区尾</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">rows</span> <span class="keyword">between</span> <span class="keyword">current</span> <span class="type">row</span> <span class="keyword">and</span> unbounded following</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>前一个月到当前行</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">range</span> <span class="keyword">between</span> <span class="type">interval</span> <span class="string">&#x27;1 month&#x27;</span> preceding <span class="keyword">and</span> <span class="keyword">current</span> <span class="type">row</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>继续。。。</p>
+</li>
+</ol>
+<h2 id="行列互转问题"><a href="#行列互转问题" class="headerlink" title="行列互转问题"></a>行列互转问题</h2><ul>
+<li>行转列：使用<code>case when</code>或 <code>pivot</code>（部分数据库支持，如SQL Server）</li>
+<li>列转行：使用<code>union all</code>或 <code>unpivot</code>（部分数据库支持）</li>
+</ul>
+<h2 id="中位数问题"><a href="#中位数问题" class="headerlink" title="中位数问题"></a>中位数问题</h2><ul>
 <li>使用窗口函数：PERCENTILE_CONT, PERCENTILE_DISC（部分数据库支持，如PostgreSQL、SQL Server）</li>
 <li>使用排序和计数的方法</li>
 </ul>
-</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://kkkika.github.io/">Kika</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kkkika.github.io/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/">https://kkkika.github.io/2025/10/20/快速精通SQL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://kkkika.github.io" target="_blank">Kkkika</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_wechat"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/24/%E5%A4%A7%E6%96%87%E6%A1%A3/" title="大文档"><img class="cover" src="/img/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">大文档</div></div><div class="info-2"><div class="info-item-1">  ...</div></div></div></a><a class="pagination-related" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数"><img class="cover" src="/./../Cover/SQL.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">SQL窗口函数</div></div><div class="info-2"><div class="info-item-1">窗口函数的函数，示例演示，深入理解和使用</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Kika</div><div class="author-info-description">Why so serious?</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">9</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Kkkika"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Kkkika" target="_blank" title="Github"><i class="fab fa-github" style="color: #FDB68C;"></i></a><a class="social-icon" href="https://blog.csdn.net/m0_73972962" target="_blank" title="CSDN"><i class="fa fa-search" style="color: #FDB68C;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">持续更新中...<br>欢迎关注我的 GitHub，获取更多开源项目和教程分享！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E7%B1%BB%E9%97%AE%E9%A2%98%EF%BC%88%E6%99%AE%E9%80%9A%E6%8E%92%E5%BA%8F%EF%BC%8C%E7%BB%84%E5%86%85%E6%8E%92%E5%BA%8F%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">排序类问题（普通排序，组内排序）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TOPN-%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">TOPN 问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%95%99%E5%AD%98%E3%80%81%E5%A4%8D%E8%B4%AD%E7%8E%87%E3%80%81%E5%AE%8C%E6%92%AD%E7%8E%87%E7%AD%89%E8%AE%A1%E7%AE%97%E5%A4%8D%E5%90%88%E6%8C%87%E6%A0%87%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">用户留存、复购率、完播率等计算复合指标问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%B0%E7%94%A8%E6%88%B7%E6%95%B0%E3%80%81%E7%94%A8%E6%88%B7%E9%97%B4%E9%9A%94%E8%BF%9E%E7%BB%AD%E7%99%BB%E5%BD%95%E5%A4%A9%E6%95%B0%E3%80%81%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E7%99%BB%E9%99%86%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">新用户数、用户间隔连续登录天数、最长连续登陆问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%81%8F%E7%A7%BB%E7%B1%BB%E6%B1%82%E5%92%8C%E6%B1%82%E5%B9%B3%E5%9D%87%E9%97%AE%E9%A2%98%EF%BC%88lag-lead%E5%87%BD%E6%95%B0%EF%BC%89"><span class="toc-number">5.</span> <span class="toc-text">偏移类求和求平均问题（lag, lead函数）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A1%8C%E5%88%97%E4%BA%92%E8%BD%AC%E9%97%AE%E9%A2%98"><span class="toc-number">6.</span> <span class="toc-text">行列互转问题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98"><span class="toc-number">7.</span> <span class="toc-text">中位数问题</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数"><img src="/./../Cover/SQL.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL窗口函数"/></a><div class="content"><a class="title" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数">SQL窗口函数</a><time datetime="2025-10-21T06:11:09.000Z" title="发表于 2025-10-21 14:11:09">2025-10-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/" title="快速精通SQL"><div style="background: ./../Cover/"></div></a><div class="content"><a class="title" href="/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/" title="快速精通SQL">快速精通SQL</a><time datetime="2025-10-20T09:17:43.000Z" title="发表于 2025-10-20 17:17:43">2025-10-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/24/%E5%A4%A7%E6%96%87%E6%A1%A3/" title="大文档"><img src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大文档"/></a><div class="content"><a class="title" href="/2025/09/24/%E5%A4%A7%E6%96%87%E6%A1%A3/" title="大文档">大文档</a><time datetime="2025-09-24T05:16:29.000Z" title="发表于 2025-09-24 13:16:29">2025-09-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/24/%E6%80%8E%E4%B9%88%E7%BC%B4%E7%A8%8E/" title="怎么缴税"><img src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="怎么缴税"/></a><div class="content"><a class="title" href="/2025/09/24/%E6%80%8E%E4%B9%88%E7%BC%B4%E7%A8%8E/" title="怎么缴税">怎么缴税</a><time datetime="2025-09-24T04:00:56.000Z" title="发表于 2025-09-24 12:00:56">2025-09-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/SQL%E5%AD%90%E6%9F%A5%E8%AF%A2/" title="SQL子查询"><img src="/./../Cover/SQL.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL子查询"/></a><div class="content"><a class="title" href="/2025/09/23/SQL%E5%AD%90%E6%9F%A5%E8%AF%A2/" title="SQL子查询">SQL子查询</a><time datetime="2025-09-23T15:23:33.000Z" title="发表于 2025-09-23 23:23:33">2025-09-23</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Kika</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-beat"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日夜切换"><i class="fas fa-adjust fa-flip"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up fa-bounce"></i></button><button id="go-down" type="button" title="回到底部"><i class="fas fa-arrow-down fa-bounce"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="built_in">percentile_cont</span>(<span class="number">0.5</span>) <span class="keyword">within</span> <span class="keyword">group</span>(<span class="keyword">order</span> <span class="keyword">by</span> score) <span class="keyword">as</span></span><br></pre></td></tr></table></figure>
+
+
+
+<hr>
+<h1 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h1><h3 id="日期-时间戳→数值"><a href="#日期-时间戳→数值" class="headerlink" title="日期&#x2F;时间戳→数值"></a>日期&#x2F;时间戳→数值</h3><p>各数据库的替代写法</p>
+<table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>PostgreSQL</strong></td>
+<td align="left"><code>extract(epoch from date)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Trino</strong></td>
+<td align="left"><code>to_unixtime(date)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>MySQL</strong></td>
+<td align="left"><code>unix_timestamp(date)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Hive</strong></td>
+<td align="left"><code>unix_timestamp(date)</code></td>
+</tr>
+</tbody></table>
+<p>为什么Unix时间戳更适合回归分析</p>
+<ul>
+<li><strong>Unix时间戳</strong>: 每天均匀增加 <code>86400</code> 秒，适合线性回归</li>
+<li><strong>YYYYMMDD格式</strong>: 数字跳跃很大（<code>20250901</code> → <code>20250902</code>），且间隔不均匀</li>
+</ul>
+<h3 id="函数语法"><a href="#函数语法" class="headerlink" title="函数语法"></a>函数语法</h3><p>全部都支持通用标准转换：<code>cast(expr as type)</code></p>
+<table>
+<thead>
+<tr>
+<th align="left">数据库</th>
+<th align="left">专用转换函数</th>
+<th>字符串→日期</th>
+<th>日期→字符串</th>
+<th>字符串→整数</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>PostgreSQL</strong></td>
+<td align="left"><code>::</code>操作符</td>
+<td><code>cast(expr as date)</code></td>
+<td><code>cast(expr as text)</code></td>
+<td><code>cast(expr as integer)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Trino</strong></td>
+<td align="left"><code>try_cast()</code></td>
+<td><code>cast(expr as date)</code></td>
+<td><code>cast(expr as varchar)</code></td>
+<td><code>cast(expr as integer)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>MySQL</strong></td>
+<td align="left"><code>convert(),cast()</code></td>
+<td><code>cast(expr as date)</code></td>
+<td><code>cast(expr as char)</code></td>
+<td><code>cast(expr as signed)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Hive</strong></td>
+<td align="left">无<code>try_cast</code></td>
+<td><code>cast(expr as date)</code></td>
+<td><code>cast(expr as string)</code></td>
+<td><code>cast(expr as int)</code></td>
+</tr>
+</tbody></table>
+<p>不同数据库中的数据类型转换，数据库类型按照企业级分类</p>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">数据库</th>
+<th align="left">标准CAST</th>
+<th align="left">推荐&#x2F;专用转换语法</th>
+<th align="left">核心特点与注意事项</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>🔒 传统OLTP</strong></td>
+<td align="left"><strong>PostgreSQL</strong></td>
+<td align="left">✅</td>
+<td align="left"><code>expr::type</code> <code>to_char(expr)</code> <code>extract(epoch from expr)</code></td>
+<td align="left"><strong>类型系统最严格</strong>，转换失败直接报错。功能最丰富，支持自定义类型和运算符。</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><strong>MySQL</strong></td>
+<td align="left">✅</td>
+<td align="left"><code>CONVERT(expr, type)</code> <code>DATE_FORMAT(...)</code> <code>CAST(expr as signed)</code></td>
+<td align="left"><strong>隐式转换宽松</strong>，可能导致意外结果。例如，字符串转数字会截取开头部分。</td>
+</tr>
+<tr>
+<td align="left"><strong>🚀 大数据OLAP</strong></td>
+<td align="left"><strong>Trino&#x2F;Presto</strong></td>
+<td align="left">✅</td>
+<td align="left"><strong><code>try_cast(expr as type)</code></strong> <code>to_unixtime(expr)</code> <code>format_datetime(expr)</code></td>
+<td align="left"><strong>强调稳定性</strong>。<code>try_cast</code>转换失败返回<code>NULL</code>，是ETL任务首选。类型名多用<code>VARCHAR</code>。</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><strong>Spark SQL</strong></td>
+<td align="left">✅</td>
+<td align="left"><code>try_cast(expr as type)</code> (新版本) <code>date_format(...)</code> <code>unix_timestamp(...)</code></td>
+<td align="left">与Trino理念类似，但函数名更接近Hive。处理脏数据时推荐使用<code>try_cast</code>。</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><strong>Hive</strong></td>
+<td align="left">✅</td>
+<td align="left"><code>unix_timestamp(...)</code> <code>from_unixtime(...)</code> <code>date_format(...)</code></td>
+<td align="left"><strong>“读时模式”</strong>，转换相对宽松。版本间行为可能有变（如Hive 3时间戳时区处理）。</td>
+</tr>
+<tr>
+<td align="left"><strong>🌐 云原生HTAP</strong></td>
+<td align="left"><strong>TiDB</strong></td>
+<td align="left">✅</td>
+<td align="left"><code>CONVERT(expr, type)</code> <code>DATE_FORMAT(...)</code></td>
+<td align="left"><strong>高度兼容MySQL语法</strong>，但作为分布式系统，某些函数（如<code>CONVERT</code>）的行为旨在确保集群一致性。</td>
+</tr>
+<tr>
+<td align="left"><strong>📈 专用OLAP</strong></td>
+<td align="left"><strong>ClickHouse</strong></td>
+<td align="left">✅</td>
+<td align="left"><strong><code>accurateCast(expr, type)</code></strong> <code>toUnixTimestamp(...)</code> <code>toString(...)</code></td>
+<td align="left"><strong>类型转换函数家族庞大</strong>。<code>accurateCast</code>更安全（范围检查），<code>cast</code>会尝试尽力转换。</td>
+</tr>
+</tbody></table>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://kkkika.github.io/">Kika</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kkkika.github.io/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/">https://kkkika.github.io/2025/10/20/快速精通SQL/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://kkkika.github.io" target="_blank">Kkkika</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SQL/">SQL</a><a class="post-meta__tags" href="/tags/PostgreSQL/">PostgreSQL</a></div><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_wechat"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2025/09/24/%E5%A4%A7%E6%96%87%E6%A1%A3/" title="大文档"><img class="cover" src="/img/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">大文档</div></div><div class="info-2"><div class="info-item-1">  ...</div></div></div></a><a class="pagination-related" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数"><img class="cover" src="/./../Cover/SQL.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">SQL窗口函数</div></div><div class="info-2"><div class="info-item-1">窗口函数的函数，示例演示，深入理解和使用</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2025/09/23/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0%E9%80%9F%E6%9F%A5%E8%A1%A8/" title="SQL窗口函数速查表"><img class="cover" src="/./../Cover/SQL.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2025-09-24</div><div class="info-item-2">SQL窗口函数速查表</div></div><div class="info-2"><div class="info-item-1">24个SQL 标准中定义的全部窗口函数（Window Function），每个函数用一句话概括其核心用途，方便日常查阅时能快速对应到需求</div></div></div></a><a class="pagination-related" href="/2025/09/23/SQL%E5%AD%90%E6%9F%A5%E8%AF%A2/" title="SQL子查询"><img class="cover" src="/./../Cover/SQL.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2025-10-20</div><div class="info-item-2">SQL子查询</div></div><div class="info-2"><div class="info-item-1">把“必须用子查询”和“可以改 JOIN / WITH 提速”这两种场景一次性拆开讲透。每条都给出 Trino（Presto）语法示例</div></div></div></a><a class="pagination-related" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数"><img class="cover" src="/./../Cover/SQL.png" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="fas fa-history fa-fw"></i> 2025-10-21</div><div class="info-item-2">SQL窗口函数</div></div><div class="info-2"><div class="info-item-1">窗口函数的函数，示例演示，深入理解和使用</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Kika</div><div class="author-info-description">Why so serious?</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">11</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">10</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Kkkika"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Kkkika" target="_blank" title="Github"><i class="fab fa-github" style="color: #FDB68C;"></i></a><a class="social-icon" href="https://blog.csdn.net/m0_73972962" target="_blank" title="CSDN"><i class="fa fa-search" style="color: #FDB68C;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">持续更新中...<br>欢迎关注我的 GitHub，获取更多开源项目和教程分享！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%B77%E5%A4%A7%E7%B1%BB%E5%9E%8BSQL%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">刷7大类型SQL题</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E7%B1%BB%E9%97%AE%E9%A2%98%EF%BC%88%E6%99%AE%E9%80%9A%E6%8E%92%E5%BA%8F%EF%BC%8C%E7%BB%84%E5%86%85%E6%8E%92%E5%BA%8F%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">排序类问题（普通排序，组内排序）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TOPN-%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">TOPN 问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%95%99%E5%AD%98%E3%80%81%E5%A4%8D%E8%B4%AD%E7%8E%87%E3%80%81%E5%AE%8C%E6%92%AD%E7%8E%87%E7%AD%89%E8%AE%A1%E7%AE%97%E5%A4%8D%E5%90%88%E6%8C%87%E6%A0%87%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">用户留存、复购率、完播率等计算复合指标问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B0%E7%94%A8%E6%88%B7%E6%95%B0%E3%80%81%E7%94%A8%E6%88%B7%E9%97%B4%E9%9A%94%E8%BF%9E%E7%BB%AD%E7%99%BB%E5%BD%95%E5%A4%A9%E6%95%B0%E3%80%81%E6%9C%80%E9%95%BF%E8%BF%9E%E7%BB%AD%E7%99%BB%E9%99%86%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">新用户数、用户间隔连续登录天数、最长连续登陆问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%8F%E7%A7%BB%E7%B1%BB%E6%B1%82%E5%92%8C%E6%B1%82%E5%B9%B3%E5%9D%87%E9%97%AE%E9%A2%98%EF%BC%88lag-lead%E5%87%BD%E6%95%B0%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">偏移类求和求平均问题（lag, lead函数）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%8C%E5%88%97%E4%BA%92%E8%BD%AC%E9%97%AE%E9%A2%98"><span class="toc-number">1.6.</span> <span class="toc-text">行列互转问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E4%BD%8D%E6%95%B0%E9%97%AE%E9%A2%98"><span class="toc-number">1.7.</span> <span class="toc-text">中位数问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="toc-number">2.</span> <span class="toc-text">类型转换</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F-%E6%97%B6%E9%97%B4%E6%88%B3%E2%86%92%E6%95%B0%E5%80%BC"><span class="toc-number">2.0.1.</span> <span class="toc-text">日期&#x2F;时间戳→数值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E8%AF%AD%E6%B3%95"><span class="toc-number">2.0.2.</span> <span class="toc-text">函数语法</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/22/ABtest/" title="ABtest"><div style="background: ./../Cover/"></div></a><div class="content"><a class="title" href="/2025/10/22/ABtest/" title="ABtest">ABtest</a><time datetime="2025-10-22T00:34:53.000Z" title="发表于 2025-10-22 08:34:53">2025-10-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数"><img src="/./../Cover/SQL.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL窗口函数"/></a><div class="content"><a class="title" href="/2025/10/21/SQL%E7%AA%97%E5%8F%A3%E5%87%BD%E6%95%B0/" title="SQL窗口函数">SQL窗口函数</a><time datetime="2025-10-21T06:11:09.000Z" title="发表于 2025-10-21 14:11:09">2025-10-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/" title="快速精通SQL"><img src="/./../Cover/SQL.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="快速精通SQL"/></a><div class="content"><a class="title" href="/2025/10/20/%E5%BF%AB%E9%80%9F%E7%B2%BE%E9%80%9ASQL/" title="快速精通SQL">快速精通SQL</a><time datetime="2025-10-20T09:17:43.000Z" title="发表于 2025-10-20 17:17:43">2025-10-20</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/24/%E5%A4%A7%E6%96%87%E6%A1%A3/" title="大文档"><img src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="大文档"/></a><div class="content"><a class="title" href="/2025/09/24/%E5%A4%A7%E6%96%87%E6%A1%A3/" title="大文档">大文档</a><time datetime="2025-09-24T05:16:29.000Z" title="发表于 2025-09-24 13:16:29">2025-09-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/24/%E6%80%8E%E4%B9%88%E7%BC%B4%E7%A8%8E/" title="怎么缴税"><img src="/img/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="怎么缴税"/></a><div class="content"><a class="title" href="/2025/09/24/%E6%80%8E%E4%B9%88%E7%BC%B4%E7%A8%8E/" title="怎么缴税">怎么缴税</a><time datetime="2025-09-24T04:00:56.000Z" title="发表于 2025-09-24 12:00:56">2025-09-24</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2025 By Kika</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-beat"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日夜切换"><i class="fas fa-adjust fa-flip"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up fa-bounce"></i></button><button id="go-down" type="button" title="回到底部"><i class="fas fa-arrow-down fa-bounce"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(() => {
   const runMermaid = ele => {
     window.loadMermaid = true
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
