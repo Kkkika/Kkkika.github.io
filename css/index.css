@@ -6681,20 +6681,32 @@ blockquote.pullquote.right {
 html:not([data-theme='dark']) #post {
   background: rgba(255,255,255,0.94);
 }
+html:not([data-theme='light']) #post {
+  background: rgba(0,0,0,0.7);
+}
 html:not([data-theme='dark']) #aside-content .card-widget {
   background: rgba(255,255,255,0.94);
+}
+html:not([data-theme='light']) #aside-content .card-widget {
+  background: rgba(0,0,0,0.7);
 }
 html:not([data-theme='dark']) #recent-posts .recent-post-item {
   background: rgba(255,255,255,0.94);
 }
+html:not([data-theme='light']) #recent-posts .recent-post-item {
+  background: rgba(0,0,0,0.7);
+}
 html:not([data-theme='dark']) #page {
   background: rgba(255,255,255,0.94);
+}
+html:not([data-theme='light']) #page {
+  background: rgba(0,0,0,0.7);
 }
 #page-header.post-bg {
   background: transparent !important;
 }
-#page-header.not-home-page:before {
-  display: none !important;
+#page-header.not-home-page {
+  background: transparent !important;
 }
 .hbe-input-field-blink {
   color: #d89f68 !important;
