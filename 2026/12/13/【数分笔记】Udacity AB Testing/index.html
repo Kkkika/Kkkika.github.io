@@ -1,0 +1,3183 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>【数分笔记】Udacity AB Testing | Kkkika</title><meta name="author" content="Kika"><meta name="copyright" content="Kika"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="前Google讲师从实战出发，讲解 A&#x2F;B 测试的设计 + 分析全流程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【数分笔记】Udacity AB Testing">
+<meta property="og:url" content="https://kkkika.github.io/2026/12/13/%E3%80%90%E6%95%B0%E5%88%86%E7%AC%94%E8%AE%B0%E3%80%91Udacity%20AB%20Testing/index.html">
+<meta property="og:site_name" content="Kkkika">
+<meta property="og:description" content="前Google讲师从实战出发，讲解 A&#x2F;B 测试的设计 + 分析全流程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://kkkika.github.io/Cover/ABtest.jpg">
+<meta property="article:published_time" content="2026-12-13T12:09:59.000Z">
+<meta property="article:modified_time" content="2026-01-13T16:05:44.047Z">
+<meta property="article:author" content="Kika">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kkkika.github.io/Cover/ABtest.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "【数分笔记】Udacity AB Testing",
+  "url": "https://kkkika.github.io/2026/12/13/%E3%80%90%E6%95%B0%E5%88%86%E7%AC%94%E8%AE%B0%E3%80%91Udacity%20AB%20Testing/",
+  "image": "https://kkkika.github.io/Cover/ABtest.jpg",
+  "datePublished": "2026-12-13T12:09:59.000Z",
+  "dateModified": "2026-01-13T16:05:44.047Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Kika",
+      "url": "https://kkkika.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/icon.jpg"><link rel="canonical" href="https://kkkika.github.io/2026/12/13/%E3%80%90%E6%95%B0%E5%88%86%E7%AC%94%E8%AE%B0%E3%80%91Udacity%20AB%20Testing/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', 'undefined')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":-1,"unescape":true,"languages":{"hits_empty":"未找到符合您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300,"highlightFullpage":false,"highlightMacStyle":true},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":23,"languages":{"author":"作者: Kika","link":"链接: ","source":"来源: Kkkika","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: {"chs_to_cht":"已切换为繁体中文","cht_to_chs":"已切换为简体中文","day_to_night":"已切换为深色模式","night_to_day":"已切换为浅色模式","bgLight":"#fcc10f","bgDark":"#1f1f1f","position":"bottom-center"},
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: true,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '【数分笔记】Udacity AB Testing',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(./../Cover/ABtest.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Kkkika</span></a><a class="nav-page-title" href="/"><span class="site-name">【数分笔记】Udacity AB Testing</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-folder-open"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-file-pen"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 技术标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-sun fa-spin"></i><span> 生活</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/delicious/"><i class="fa-fw fa fa-laugh-squint"></i><span> 美食</span></a></li><li><a class="site-page child" href="/photos/"><i class="fa-fw fa fa-image"></i><span> 相册</span></a></li><li><a class="site-page child" href="/music/"><i class="fa-fw fa fa-headphones"></i><span> 音乐</span></a></li><li><a class="site-page child" href="/movies/"><i class="fa-fw fa fa-video"></i><span> 影视</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/links/"><i class="fa-fw fa fa-link"></i><span> 快速链接</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">【数分笔记】Udacity AB Testing</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-12-13T12:09:59.000Z" title="发表于 2026-12-13 20:09:59">2026-12-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-01-13T16:05:44.047Z" title="更新于 2026-01-14 00:05:44">2026-01-14</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">31.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>123分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:365,&quot;messagePrev&quot;:&quot;It has been&quot;,&quot;messageNext&quot;:&quot;days since the last update, the content of the article may be outdated.&quot;,&quot;postUpdate&quot;:&quot;2026-01-14 00:05:44&quot;}" hidden></div><p><a target="_blank" rel="noopener" href="https://www.udacity.com/course/ab-testing-business-analysts--ud979">https://www.udacity.com/course/ab-testing-business-analysts--ud979</a></p>
+<h1>🎯课程基础信息</h1>
+<ol>
+<li>
+<p><strong>受众定位</strong>：面向拥有线上产品（网站 / 移动应用）的企业，聚焦 A/B 测试的<strong>设计 + 分析全流程</strong>，不涉及工程代码实现。</p>
+</li>
+<li>
+<p><strong>核心模块</strong>：三大核心内容 —— 实验设计、指标选择、结果分析，形成 “变 - 指 - 设 - 采 - 析 - 决” 的完整闭环。</p>
+</li>
+<li>
+<p>讲师背景</p>
+<ul>
+<li>Diane Tang：计算机博士，Google 12 年 + 经验，负责实验平台架构、指标设计、数据决策。</li>
+<li>Carrie Grimes Bostock：统计学博士，Google 12 年 + 经验，主导假设检验、置信区间、功效分析等统计环节。</li>
+<li>Caroline Buckey：优达学城开发人员，前硅谷软件工程师，负责案例拆解与实践落地。</li>
+</ul>
+</li>
+<li>
+<p><strong>课程结构</strong>：共 5 课，从宏观到微观层层深入</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">课程</th>
+<th style="text-align:center">核心内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">第一课</td>
+<td style="text-align:center">A/B 测试定义、适用边界、完整闭环示例</td>
+</tr>
+<tr>
+<td style="text-align:center">第二课</td>
+<td style="text-align:center">实验伦理（用户隐私、知情同意、最小风险）</td>
+</tr>
+<tr>
+<td style="text-align:center">第三课</td>
+<td style="text-align:center">指标体系搭建（OMEC 框架、代理指标选择）</td>
+</tr>
+<tr>
+<td style="text-align:center">第四课</td>
+<td style="text-align:center">实验设计（分流单元、随机化、分层实验）</td>
+</tr>
+<tr>
+<td style="text-align:center">第五课</td>
+<td style="text-align:center">结果分析（置信区间、统计 / 业务显著、决策矩阵）</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p><strong>先修要求</strong>：无需 A/B 测试或编程经验，具备基础统计学知识（正态分布、均值、标准差）即可。</p>
+</li>
+</ol>
+<h1>🎯A/B 测试核心认知</h1>
+<p><strong>官方定义</strong></p>
+<p>A/B 测试是<strong>在线场景下的假设检验方法</strong>，通过设置对照组（原有产品 / 功能）和实验组（新版产品 / 功能），随机分流用户，量化两组指标差异，科学判断新版本是否更优。</p>
+<p><strong>本质</strong></p>
+<ul>
+<li>本质是<strong>局部优化工具</strong>：用 “爬山比喻”，A/B 测试能帮你爬上当前山的顶峰（局部最优），但无法帮你判断是否爬错了山（全局战略选择）。</li>
+<li>核心原则：<strong>单一变量</strong>，确保实验组与对照组仅存在一个差异点，否则无法归因。</li>
+</ul>
+<p><strong>核心价值</strong></p>
+<blockquote>
+<p>迭代优化</p>
+</blockquote>
+<ul>
+<li>用<strong>数据决策</strong>替代猜想，避免主观臆测。</li>
+<li>实现产品<strong>迭代式优化</strong>，小步快跑、快速验证。</li>
+</ul>
+<h1>🎯A/B 测试适用边界</h1>
+<blockquote>
+<p>（核心：爬山比喻）</p>
+</blockquote>
+<ol>
+<li>能做的事：局部最优解的探索（<strong>可量化、有明确基准</strong>）
+<ul>
+<li><strong>UI / 功能迭代</strong>：按钮颜色、文案、页面布局、新功能上线（如 Google 测试 41 种蓝色阴影）</li>
+<li><strong>算法优化</strong>：推荐排序、搜索结果排序（如 Amazon 个性化推荐、LinkedIn Feed 排序）</li>
+<li><strong>性能优化</strong>：页面加载速度（如 Amazon 证实 100ms 延迟导致收入下降 1%）</li>
+<li><strong>核心特征</strong>：用户可感知、指标可量化、实验周期可控</li>
+</ul>
+</li>
+<li>不能做的事：全局战略选择（<strong>无基准、难量化、长周期</strong>）
+<ul>
+<li><strong>0-1 创新 / 战略选择</strong>：全新产品形态、赛道切换（无现有版本做对照）</li>
+<li><strong>长周期目标</strong>：低频高客单业务（如公寓租赁、汽车销售）的复购率、口碑推荐（实验周期远超商业耐心）</li>
+<li><strong>情感 / 品牌类变更</strong>：品牌 Logo 更换（存在<strong>改变厌恶症</strong>和<strong>新奇效应</strong>，短期数据失真）</li>
+<li><strong>缺失品类检测</strong>：判断网站是否缺少用户需要的商品（实验只能观测已上架商品，无法检测 “未存在” 的品类）</li>
+<li><strong>无法随机分流的场景</strong>：Freemium 转 Premium 的付费升级（用户需主动选择，无法强制随机分组）</li>
+</ul>
+</li>
+</ol>
+<h2 id="经典案例">经典案例</h2>
+<ul>
+<li>Google：测试 41 种蓝色阴影的按钮点击率，验证微观优化的有效性。</li>
+<li>Amazon：个性化推荐算法测试，显著提升用户购买率；页面延迟测试，量化性能对收入的影响。</li>
+<li>LinkedIn：测试 Feed 流 “新文章 / 新增联系人” 优先级，平衡内容消费与关系链增长。</li>
+</ul>
+<h2 id="替代方法">替代方法</h2>
+<blockquote>
+<p>（A/B 测试不适用时）</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">作用</th>
+<th style="text-align:center">特点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">日志分析</td>
+<td style="text-align:center">回溯用户行为，生成实验假设</td>
+<td style="text-align:center">被动采集、低成本、大数据量</td>
+</tr>
+<tr>
+<td style="text-align:center">问卷 / 焦点小组</td>
+<td style="text-align:center">挖掘用户动机、需求</td>
+<td style="text-align:center">定性数据、补充定量结果</td>
+</tr>
+<tr>
+<td style="text-align:center">UX 研究 / 人为评价</td>
+<td style="text-align:center">评估新体验的用户感受</td>
+<td style="text-align:center">适合创新型、情感类变更</td>
+</tr>
+</tbody>
+</table>
+<p>补充：</p>
+<ul>
+<li>准实验方法：断点回归、双重差分（DID），适用于无法随机分流的场景。</li>
+</ul>
+<h1>🎯指标选择</h1>
+<blockquote>
+<p>选对指标是实验成功的前提</p>
+</blockquote>
+<ol>
+<li>
+<p>指标分类</p>
+<ul>
+<li>终极指标（Goal Metric）：业务核心目标，如课程完课率、商品购买率，但<strong>周期长、反馈慢</strong>，不适合直接作为实验指标。</li>
+<li>代理指标（Proxy Metric）：与终极指标<strong>强相关</strong>的<strong>短期可观测指标</strong>，如 “点击概率（CTP）”，是实验的核心观测对象。</li>
+</ul>
+</li>
+<li>
+<p><strong>核心指标：点击概率（CTP）vs 点击率（CTR）</strong></p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">指标</th>
+<th style="text-align:center">计算公式</th>
+<th style="text-align:center">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">点击率（CTR）</td>
+<td style="text-align:center">总点击数 / 总页面访问数</td>
+<td style="text-align:center">衡量 UI 可用性（如按钮是否易点击）</td>
+</tr>
+<tr>
+<td style="text-align:center">点击概率（CTP）</td>
+<td style="text-align:center">至少点击 1 次的独立访客数 / 总独立访客数</td>
+<td style="text-align:center">衡量用户覆盖度（如<strong>多少人进入漏斗第二层</strong>）</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>关键区别：CTR 包含重复点击噪音，CTP 为<strong>二项分布</strong>数据（点击 = 成功；未点击 = 失败），更适合统计推断。</li>
+</ul>
+<h1>🎯统计基础</h1>
+<h2 id="二项分布">二项分布</h2>
+<blockquote>
+<p>（Binomial Distribution）</p>
+</blockquote>
+<p>二项分布适用条件</p>
+<ul>
+<li>二元结果：只有成功 / 失败两种可能（如点击 / 未点击）。</li>
+<li>事件独立：一次实验结果不影响其他实验（如不同用户的点击行为独立）。</li>
+<li>同概率性：实验期间成功概率恒定（排除时间、渠道等干扰因素）。</li>
+<li>常见误区：不满足独立性（如同用户连续搜索、购物车多商品结账），事件不独立，需提升分析粒度（用户级 / 订单级）。</li>
+</ul>
+<p><strong>参数</strong>：</p>
+<ul>
+<li>均值 = p（成功概率）</li>
+<li>标准偏差 = <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mfrac><mrow><mi>p</mi><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><mo stretchy="false">)</mo></mrow><mi>n</mi></mfrac></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{\frac{p (1-p )}{n} }</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.84em;vertical-align:-0.5225em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3175em;"><span class="svg-align" style="top:-3.8em;"><span class="pstrut" style="height:3.8em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">p</span><span class="mopen mtight">(</span><span class="mord mtight">1</span><span class="mbin mtight">−</span><span class="mord mathnormal mtight">p</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.2775em;"><span class="pstrut" style="height:3.8em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.88em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.88em" viewBox="0 0 400000 1944" preserveAspectRatio="xMinYMin slice"><path d="M983 90
+l0 -0
+c4,-6.7,10,-10,18,-10 H400000v40
+H1013.1s-83.4,268,-264.1,840c-180.7,572,-277,876.3,-289,913c-4.7,4.7,-12.7,7,-24,7
+s-12,0,-12,0c-1.3,-3.3,-3.7,-11.7,-7,-25c-35.3,-125.3,-106.7,-373.3,-214,-744
+c-10,12,-21,25,-33,39s-32,39,-32,39c-6,-5.3,-15,-14,-27,-26s25,-30,25,-30
+c26.7,-32.7,52,-63,76,-91s52,-60,52,-60s208,722,208,722
+c56,-175.3,126.3,-397.3,211,-666c84.7,-268.7,153.8,-488.2,207.5,-658.5
+c53.7,-170.3,84.5,-266.8,92.5,-289.5z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.5225em;"><span></span></span></span></span></span></span></span></span></li>
+</ul>
+<h2 id="中心极限定理">中心极限定理</h2>
+<blockquote>
+<p>（CLT）</p>
+</blockquote>
+<ul>
+<li>当样本量 n 足够大（通常 n≥30），二项分布可近似为正态分布，简化置信区间计算。</li>
+</ul>
+<h2 id="标准误差">标准误差</h2>
+<blockquote>
+<p>（SE）</p>
+</blockquote>
+<p>量化抽样波动，即 “不同样本之间的差异程度”</p>
+<ul>
+<li><strong>概率估计</strong>：$\hat{p} =\frac{X}{N} $</li>
+<li>比例形式公式：$SE=\sqrt{\frac{\hat{p} (1-\hat{p} )}{n} } $</li>
+<li>核心规律：样本量越大，SE 越小；<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{p}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span>越接近 0 或 1，SE 越小。</li>
+</ul>
+<h2 id="置信区间">置信区间</h2>
+<blockquote>
+<p>（CI）</p>
+</blockquote>
+<p>描述真实参数的可能范围</p>
+<ul>
+<li>定义：95% 置信区间表示<strong>重复抽样 100 次，有 95 次的区间会包含真实值</strong>（不是 “真实值落在区间的概率为 95%”）</li>
+<li>计算公式：95%<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>I</mi><mo>=</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>±</mo><mi>z</mi><mo>×</mo><mi>S</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">CI=\hat{p}±z×SE</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">±</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">SE</span></span></span></span></li>
+</ul>
+<h3 id="公式分解">公式分解</h3>
+<blockquote>
+<p>**核心公式：**百分之多少<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>I</mi><mo>=</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>±</mo><mi>z</mi><mo>×</mo><mi>S</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">CI=\hat{p}±z×SE</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">±</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">SE</span></span></span></span></p>
+</blockquote>
+<ul>
+<li><strong>概率估计</strong>：$\hat{p} =\frac{X}{N} $​</li>
+<li><strong>标准误差</strong>：$SE=\sqrt{\frac{\hat{p} (1-\hat{p} )}{n} } $</li>
+<li><strong>误差幅度</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>=</mo><mi>z</mi><mo>×</mo><mi>S</mi><mi>E</mi></mrow><annotation encoding="application/x-tex">m=z×SE</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">m</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05764em;">SE</span></span></span></span></li>
+<li><strong>置信区间</strong>： <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>−</mo><mi>m</mi><mo separator="true">,</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>+</mo><mi>m</mi><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[\hat{p} −m,\hat{p} +m]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">m</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">m</span><span class="mclose">]</span></span></span></span>​</li>
+<li><strong>常用z值</strong>：
+<ul>
+<li>95%置信度：z = 1.96</li>
+<li>99%置信度：z = 2.58</li>
+</ul>
+</li>
+<li><strong>正态近似条件</strong>：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>×</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo>&gt;</mo><mn>5</mn><mtext>且</mtext><mi>N</mi><mo>×</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mover accent="true"><mi>p</mi><mo>^</mo></mover><mo stretchy="false">)</mo><mo>&gt;</mo><mn>5</mn></mrow><annotation encoding="application/x-tex">N×\hat{p} &gt;5 且 N×(1−\hat{p} )&gt;5</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7667em;vertical-align:-0.0833em;"></span><span class="mord">5</span><span class="mord cjk_fallback">且</span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">5</span></span></span></span></li>
+</ul>
+<h3 id="案例计算"><strong>案例计算</strong></h3>
+<ul>
+<li>已知：n=1000，点击访客数 = 100</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{p}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span>为样本点击概率，n 为样本量</li>
+<li>→ <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover accent="true"><mi>p</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\hat{p}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal">p</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1667em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span>=0.1</li>
+<li>计算 SE：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msqrt><mfrac><mrow><mn>0.1</mn><mo>×</mo><mn>0.9</mn></mrow><mn>1000</mn></mfrac></msqrt></mrow><annotation encoding="application/x-tex">\sqrt{\frac{0.1×0.9}{1000} }</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.84em;vertical-align:-0.6049em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.2351em;"><span class="svg-align" style="top:-3.8em;"><span class="pstrut" style="height:3.8em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8451em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1000</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">0.1</span><span class="mbin mtight">×</span><span class="mord mtight">0.9</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span><span style="top:-3.1951em;"><span class="pstrut" style="height:3.8em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.88em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.88em" viewBox="0 0 400000 1944" preserveAspectRatio="xMinYMin slice"><path d="M983 90
+l0 -0
+c4,-6.7,10,-10,18,-10 H400000v40
+H1013.1s-83.4,268,-264.1,840c-180.7,572,-277,876.3,-289,913c-4.7,4.7,-12.7,7,-24,7
+s-12,0,-12,0c-1.3,-3.3,-3.7,-11.7,-7,-25c-35.3,-125.3,-106.7,-373.3,-214,-744
+c-10,12,-21,25,-33,39s-32,39,-32,39c-6,-5.3,-15,-14,-27,-26s25,-30,25,-30
+c26.7,-32.7,52,-63,76,-91s52,-60,52,-60s208,722,208,722
+c56,-175.3,126.3,-397.3,211,-666c84.7,-268.7,153.8,-488.2,207.5,-658.5
+c53.7,-170.3,84.5,-266.8,92.5,-289.5z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.6049em;"><span></span></span></span></span></span></span></span></span>≈0.0095</li>
+<li>计算 95% CI：0.1±1.96×0.0095≈[0.081,0.119]</li>
+<li>结论：真实点击概率有 95% 可能落在 8.1%~11.9% 之间</li>
+<li>含义：重复抽样时，95% 的区间会包含真实点击概率；区间外的数值属于 “令人吃惊的结果”。</li>
+</ul>
+<h3 id="常用临界-Z-值">常用临界 Z 值</h3>
+<table>
+<thead>
+<tr>
+<th>置信水平</th>
+<th>单尾 α</th>
+<th>双尾 α</th>
+<th>单尾 Z 临界值</th>
+<th>双尾 Z 临界值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>90%</td>
+<td>0.10</td>
+<td>0.05</td>
+<td>1.28</td>
+<td>1.645</td>
+</tr>
+<tr>
+<td>95%</td>
+<td>0.05</td>
+<td>0.025</td>
+<td>1.645</td>
+<td>1.96</td>
+</tr>
+<tr>
+<td>99%</td>
+<td>0.01</td>
+<td>0.005</td>
+<td>2.33</td>
+<td>2.576</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="假设检验">假设检验</h2>
+<blockquote>
+<p>统计显著性判定，判断差异是否显著</p>
+</blockquote>
+<p><strong>核心流程</strong></p>
+<ol>
+<li>建立假设
+<ul>
+<li>零假设（H₀）：对照组与实验组指标无差异，即<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo>=</mo><msub><mi>P</mi><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{exp}=P_{cont}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">co</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 。</li>
+<li>备择假设（Hₐ）：两组指标有差异（双尾：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mo mathvariant="normal">≠</mo><msub><mi>P</mi><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{exp}\ne P_{cont}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">co</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> ；单尾：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mtext>＞</mtext><msub><mi>P</mi><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{exp}＞P_{cont}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">＞</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">co</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>或<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>P</mi><mrow><mi>e</mi><mi>x</mi><mi>p</mi></mrow></msub><mtext>＜</mtext><msub><mi>P</mi><mrow><mi>c</mi><mi>o</mi><mi>n</mi><mi>t</mi></mrow></msub></mrow><annotation encoding="application/x-tex">P_{exp}＜P_{cont}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9694em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">e</span><span class="mord mathnormal mtight">x</span><span class="mord mathnormal mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord cjk_fallback">＜</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.13889em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">co</span><span class="mord mathnormal mtight">n</span><span class="mord mathnormal mtight">t</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>）</li>
+<li>下面的例子是双尾</li>
+</ul>
+</li>
+<li><strong>计算 p-value</strong>：在 H₀成立的前提下，出现当前样本差异或更极端差异的概率。</li>
+<li>？？？计算两组指标差异的置信区间，若区间<strong>不包含 0</strong>，则拒绝零假设，认为差异具有<strong>统计显著性</strong>。</li>
+<li><strong>判定结果</strong>：若 p-value &lt; 0.05（显著性水平 α），则<strong>拒绝 H₀</strong>，认为差异具有统计显著性。</li>
+</ol>
+<p><strong>等价判定</strong>：95% 置信区间不包含 0 ↔ p-value &lt; 0.05</p>
+<h2 id="统计显著性-vs-实际显著性">统计显著性 vs 实际显著性</h2>
+<ul>
+<li><strong>确定显著性水平</strong>：
+<ul>
+<li><strong>统计显著性</strong>：通常设定 α=0.05，即95%置信度。</li>
+<li><strong>实际显著性</strong>：从业务角度判断的最小有意义变化。本例设定为点击概率提升 <strong>2%</strong> (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>=0.02)。</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">维度</th>
+<th style="text-align:center">统计显著性</th>
+<th style="text-align:center">实际显著性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">定义</td>
+<td style="text-align:center">差异由随机波动导致的概率 &lt; 5%</td>
+<td style="text-align:center">差异达到业务决策阈值（如点击概率提升 2%）</td>
+</tr>
+<tr>
+<td style="text-align:center">判定方法</td>
+<td style="text-align:center">置信区间是否包含 0</td>
+<td style="text-align:center">差异是否≥预设的最小可探测效果（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>）</td>
+</tr>
+<tr>
+<td style="text-align:center">决策价值</td>
+<td style="text-align:center">排除偶然性</td>
+<td style="text-align:center">决定是否值得发布新版本</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>核心结论</strong>：只有同时满足<strong>统计显著 + 实际显著</strong>，才建议发布新版本。</li>
+</ul>
+<h1>🎯样本量计算</h1>
+<blockquote>
+<p>平衡功效与成本</p>
+</blockquote>
+<h2 id="核心概念">核心概念</h2>
+<ul>
+<li><strong>α（显著性水平）</strong>：错误拒绝零假设的概率（通常0.05）</li>
+<li><strong>β</strong>：零假设为假时未能拒绝的概率</li>
+<li><strong>统计功效/敏感性（1-β）</strong>：检测到真实差异的能力（通常0.8）</li>
+<li><strong><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></strong>：最小可探测效果（实际显著性边界）</li>
+</ul>
+<h2 id="样本量影响因素">样本量影响因素</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">因素</th>
+<th>变化</th>
+<th style="text-align:center">对样本量的影响</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">基准转化率</td>
+<td>点击概率接近0.5</td>
+<td style="text-align:center">越接近 0.5，样本量需求越大</td>
+</tr>
+<tr>
+<td style="text-align:center">最小可探测效果（<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>）</td>
+<td>增加实际显著性界限</td>
+<td style="text-align:center">越大，样本量需求越小</td>
+</tr>
+<tr>
+<td style="text-align:center">显著性水平（1-α）</td>
+<td>提高置信度</td>
+<td style="text-align:center">越高（如 99%→95%），样本量需求越大</td>
+</tr>
+<tr>
+<td style="text-align:center">统计功效（1-β）</td>
+<td>提高敏感性</td>
+<td style="text-align:center">越高（如 90%→80%），样本量需求越大</td>
+</tr>
+</tbody>
+</table>
+<h2 id="计算工具">计算工具</h2>
+<ol>
+<li><strong>计算工具</strong>：可通过<a target="_blank" rel="noopener" href="https://www.evanmiller.org/ab-testing/sample-size.html">在线计算器</a>、编程语言内置库实现，输入参数包括基准转化率、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、α、1-β。</li>
+<li><strong>案例</strong>：页面平均转化率为 10%，想提升​2%，α=0.05，1-β=0.8 → 每组至少需要 3623 个页面浏览量。</li>
+<li>基准转化率（绝对/相对）</li>
+</ol>
+<p>![image-20260113223219988](./…/【数分笔记】Udacity AB Testing/image-20260113223219988.png)</p>
+<ul>
+<li>绝对提升：<strong>直接差值</strong>，单位是<strong>百分点（pp）</strong>
+<ul>
+<li>提升 2 个百分点</li>
+<li>p1= 10% + 2% = 12% = 0.12</li>
+</ul>
+</li>
+<li>相对提升：<strong>比例</strong>，单位是<strong>百分比（%）</strong>
+<ul>
+<li>提升 2%</li>
+<li>p1= p0 × (1+2%) = 10% × 1.02 =10.2%=0.102</li>
+</ul>
+</li>
+</ul>
+<h1>🎯结果决策</h1>
+<p>图示来说明。假设实际显著性边界 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>=2%</p>
+<p><strong>核心思路</strong>：我们需要看<strong>置信区间</strong>落在哪个位置，判断标准有两条线：</p>
+<ul>
+<li><strong>零线（0）</strong>：判断统计显著性</li>
+<li><strong>实际显著性边界（±<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>）</strong>：判断是否有商业价值</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    负面          无意义区        正面有意义</span><br><span class="line">←─────────┼─────────┼─────────┼─────────→</span><br><span class="line">        -2%        0         +2%</span><br><span class="line">       -dmin               +dmin</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="六种情况图解">六种情况图解</h2>
+<blockquote>
+<p><strong>核心问题就两个</strong>：</p>
+<ol>
+<li>置信区间是否跨越0？（决定统计显著性）</li>
+<li>置信区间是否超过 dmin？（决定实际显著性）</li>
+</ol>
+</blockquote>
+<p><strong>情况1：发布 ✅</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">                          [=======]</span><br><span class="line">────┼─────────┼─────────┼─────────→</span><br><span class="line">  -2%        0         +2%</span><br></pre></td></tr></table></figure>
+<p>置信区间完全在 +2% 右边 → <strong>统计显著 + 实际显著</strong> → 发布！</p>
+<p><strong>情况2：不发布（中性结果）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">           [=====]</span><br><span class="line">────┼─────────┼─────────┼─────────→</span><br><span class="line">  -2%        0         +2%</span><br></pre></td></tr></table></figure>
+<p>置信区间包含0，且整体在 ±2% 之间 → 没有变化 → 不发布</p>
+<p><strong>情况3：不发布（太小不值得）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">                [====]</span><br><span class="line">────┼─────────┼─────────┼─────────→</span><br><span class="line">  -2%        0         +2%</span><br></pre></td></tr></table></figure>
+<p>置信区间 &gt; 0（统计显著），但 &lt; 2%（无实际意义）→ 变化太小，不值得发布</p>
+<p><strong>情况4：重新测试（功效不足）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    [==================]</span><br><span class="line">────┼─────────┼─────────┼─────────→</span><br><span class="line">  -2%        0         +2%</span><br></pre></td></tr></table></figure>
+<p>置信区间太宽，横跨 -2% 到 +2% → 可能增加10%也可能减少10%，无法判断 → 增大样本量重测</p>
+<p><strong>情况5：重新测试（不确定）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">            [==========]</span><br><span class="line">────┼─────────┼─────────┼─────────→</span><br><span class="line">  -2%        0         +2%</span><br></pre></td></tr></table></figure>
+<p>置信区间跨越0，但部分超过 +2% → 可能有效也可能无效 → 增大样本量重测</p>
+<p><strong>情况6：不发布（负面影响）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[=======]</span><br><span class="line">────┼─────────┼─────────┼─────────→</span><br><span class="line">  -2%        0         +2%</span><br></pre></td></tr></table></figure>
+<p>置信区间完全在负数区域 → 变更有害 → 绝对不发布</p>
+<table>
+<thead>
+<tr>
+<th>置信区间位置</th>
+<th>含义</th>
+<th>决策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>完全 &gt; +<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>确定有正面且有意义的变化</td>
+<td>✅ 发布</td>
+</tr>
+<tr>
+<td>完全 &lt; -<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></td>
+<td>确定有负面且严重的变化</td>
+<td>❌ 不发布</td>
+</tr>
+<tr>
+<td>在0附近，宽度小</td>
+<td>确定没什么变化</td>
+<td>❌ 不发布</td>
+</tr>
+<tr>
+<td>跨越太多区域</td>
+<td>不确定，数据不够</td>
+<td>🔄 重测</td>
+</tr>
+</tbody>
+</table>
+<h1>🎯实验全流程总结</h1>
+<ol>
+<li>明确变更点：确定要测试的产品 / 功能改动（单变量优先）。</li>
+<li>选择指标：确定代理指标与终极指标，设定实际显著性阈值。</li>
+<li>计算样本量：根据基准转化率、<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">min</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>、α、1-β 确定实验规模。</li>
+<li>随机分流：选择合适的分流单元（user_id/cookie/device），确保组间均衡。</li>
+<li>运行实验：采集数据，避免中途偷看结果（p-hacking 风险）。</li>
+<li>分析结果：计算置信区间，判断统计 / 实际显著性，做出决策。</li>
+</ol>
+<h1>🎯补充知识</h1>
+<h2 id="历史渊源">历史渊源</h2>
+<p>A/B 测试的方法论源于<strong>农业随机区组试验</strong>（Fisher 20 世纪 20 年代确立），后应用于医学临床试验（随机对照试验 RCT），最终在互联网时代因大数据优势普及，成为 Google、Amazon、Netflix 等大厂的标准配置。</p>
+<h2 id="实验伦理-Checklist">实验伦理 Checklist</h2>
+<ol>
+<li>是否侵犯用户隐私（GDPR/CCPA 合规）？</li>
+<li>是否对用户造成伤害（如功能故障、信息泄露）？</li>
+<li>是否需要提前终止实验（如出现严重负向影响）？</li>
+</ol>
+<h2 id="核心金句">核心金句</h2>
+<ol>
+<li>A/B 测试能帮你爬上当前山峰的顶峰，但无法告诉你该爬哪座山。</li>
+<li>统计显著性回答 “差异是否真实”，实际显著性回答 “差异是否值钱”。</li>
+<li>样本量与最小可探测效果的平方成反比 —— 想探测更小的差异，需要指数级增加样本。</li>
+<li>数据驱动不是数据独裁，当实验结果不确定时，需结合业务战略决策。</li>
+</ol>
+<h2 id="真实工作中">真实工作中</h2>
+<blockquote>
+<p>数据分析师在真实工作中分析AB实验计算流程</p>
+</blockquote>
+<p>**业务：**某电商测试红色“立即购买”按钮（B组）vs原蓝色按钮（A组），目标提升购物车转化率。</p>
+<p><strong>实验数据（各10万用户，7天）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">A组（蓝色）：成功下单1800，转化率1.80%</span><br><span class="line">B组（红色）：成功下单2184，转化率2.184%  </span><br><span class="line">相对提升：21.3% = (2.184%-1.80%)/1.80%</span><br></pre></td></tr></table></figure>
+<p><strong>数据清洗（第1小时）</strong></p>
+<p>SQL查询：<code>SELECT user_id, group, add_to_cart, purchase FROM ab_test WHERE date&gt;='2026-01-06' AND user_id NOT IN (SELECT user_id FROM fraud_list)</code></p>
+<ul>
+<li>剔除5%机器人流量，样本剩A:95000，B:95200</li>
+<li>检查分桶：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>χ</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">χ²</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0085em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal">χ</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span>检验p=0.87（流量分配均匀）</li>
+<li>基线校验：A/B点击率无差异(p=0.42&gt;0.05)</li>
+</ul>
+<p><strong>核心统计计算（Excel/Python，第2小时）</strong></p>
+<p><strong>Excel操作</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">选中A列(0/1转化数据)、B列 → 数据 → 数据分析 → t检验:两样本不等方差</span><br><span class="line">结果：p值=0.00012（双尾），显著性通过</span><br><span class="line">置信区间公式：=CONFIDENCE.T(0.05,STDEV.P(A1:A95000)/SQRT(95000))*2 → ±0.12%</span><br><span class="line">最终：B提升21.3%，95%CI [13.2%, 29.4%]（下限&gt;0，可信）</span><br></pre></td></tr></table></figure>
+<p><strong>Python验证</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pythonfrom scipy.stats import ttest_ind</span><br><span class="line">a = df[df.group==&#x27;A&#x27;][&#x27;purchase&#x27;]  # 1800 True，其余False</span><br><span class="line">b = df[df.group==&#x27;B&#x27;][&#x27;purchase&#x27;]</span><br><span class="line">t_stat, p = ttest_ind(a, b, equal_var=False)  # p=0.00012</span><br><span class="line">print(&quot;显著！上线B按钮&quot;)</span><br></pre></td></tr></table></figure>
+<p><strong>守门员指标检查</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">客单价：A $85.2 vs B $84.9，p=0.67（无恶化）</span><br><span class="line">D1留存：p=0.23（稳定）</span><br><span class="line">新客转化：提升25.1%（p=0.002，一致性好）</span><br></pre></td></tr></table></figure>
+<p>多重检验校正：5指标，α=0.05/5=0.01，主指标p=0.00012仍显著。</p>
+<p><strong>最终报告与决策（第3小时）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">🟢 结论：红色按钮转化率提升21.3% (p&lt;0.001, CI[13%,29%])</span><br><span class="line">🟡 风险：监控D7留存</span><br><span class="line">🟢 决策：1月15日全量上线，预计月增收12万USD</span><br></pre></td></tr></table></figure>
+<p><strong>真实结果</strong>：上线后稳定提升19%，年化ROI 800%。这个案例90%数据岗都这样干，重点是清洗+双检验+业务阈值。</p>
+<h3 id="解释原因">解释原因</h3>
+<blockquote>
+<p>为啥选择卡方检验，方法选择要解释原因</p>
+</blockquote>
+<p>卡方检验在AB实验中常用于二分类计数数据（如“购买/未购买”），因为它直接检验<strong>观测频数表与期望频数的偏离</strong>，比t检验更稳健，不需假设正态分布。</p>
+<p><strong>记忆口诀</strong>：<code>计数用卡方，均值用t检验</code></p>
+<p><strong>90%电商AB实验直接卡方一键解决</strong>，因为指标天然是频数表，无需纠结正态性、方差齐性等t检验前置条件。</p>
+<h3 id="假设检验类型">假设检验类型</h3>
+<blockquote>
+<p>假设检验类型，真实工作中怎么选择</p>
+</blockquote>
+<p>真实工作中AB实验假设检验有<strong>单侧/双侧</strong>、<strong>参数/非参数</strong>等类型，数据分析师按<strong>数据类型+样本量+业务假设</strong>选方法。</p>
+<p><strong>检验类型分类</strong></p>
+<p><strong>1. 方向性：单侧 vs 双侧</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">双侧（90%场景）：H1: μ1 ≠ μ2（红色按钮可能更好也可能更差）</span><br><span class="line">单侧（10%场景）：H1: μ1 &gt; μ2（新支付流程一定比旧快）</span><br></pre></td></tr></table></figure>
+<p><strong>为什么双侧为主</strong>：商业决策需同时看收益+风险，美团/阿里标准做法。</p>
+<p><strong>2. 参数检验 vs 非参数检验</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">参数检验（t/Z/卡方）：假设正态/二项分布，功效最高</span><br><span class="line">非参数（Mann-Whitney U）：分布未知，牺牲功效换鲁棒性</span><br></pre></td></tr></table></figure>
+<p><strong>真实工作选择流程（决策树）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Step1: 数据类型？</span><br><span class="line">├── 计数比例（点击率/转化率）→ 卡方/Z检验</span><br><span class="line">├── 连续变量（客单价/时长）→ t检验  </span><br><span class="line">└── 排序/等级数据 → Wilcoxon秩和检验</span><br><span class="line"></span><br><span class="line">Step2: 样本量？</span><br><span class="line">├── n&gt;1000 → Z检验（精确）</span><br><span class="line">├── 30&lt;n&lt;1000 → t检验</span><br><span class="line">└── n&lt;30 → 非参数或增加样本</span><br><span class="line"></span><br><span class="line">Step3: 方差？</span><br><span class="line">├── 已知（历史基线）→ Z检验</span><br><span class="line">└── 未知 → t检验（Welch变种处理不等方差）</span><br><span class="line"></span><br><span class="line">Step4: 业务假设？</span><br><span class="line">├── &quot;绝对比旧方案好&quot; → 单侧</span><br><span class="line">└── &quot;有差异就行&quot; → 双侧</span><br></pre></td></tr></table></figure>
+<p><strong>电商场景全覆盖表</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">指标类型</th>
+<th style="text-align:left">示例</th>
+<th style="text-align:left">检验方法</th>
+<th style="text-align:left">Excel公式</th>
+<th style="text-align:left">Python函数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>转化率</strong></td>
+<td style="text-align:left">1.8%→2.18%</td>
+<td style="text-align:left">卡方/Z</td>
+<td style="text-align:left">数据透视→卡方</td>
+<td style="text-align:left">chi2_contingency</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>点击率</strong></td>
+<td style="text-align:left">12.3%→13.1%</td>
+<td style="text-align:left">卡方/Z</td>
+<td style="text-align:left">同上</td>
+<td style="text-align:left">proportions_ztest</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>客单价</strong></td>
+<td style="text-align:left">¥85→¥88</td>
+<td style="text-align:left">t检验</td>
+<td style="text-align:left">T.TEST(2,2)</td>
+<td style="text-align:left">ttest_ind</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>停留时长</strong></td>
+<td style="text-align:left">45s→48s</td>
+<td style="text-align:left">t检验</td>
+<td style="text-align:left">同上</td>
+<td style="text-align:left">ttest_ind</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>NPS评分</strong></td>
+<td style="text-align:left">7.2→7.5</td>
+<td style="text-align:left">Wilcoxon</td>
+<td style="text-align:left">不支持</td>
+<td style="text-align:left">mannwhitneyu</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>分布形状</strong></td>
+<td style="text-align:left">UV值分布</td>
+<td style="text-align:left">Kolmogorov-Smirnov</td>
+<td style="text-align:left">不支持</td>
+<td style="text-align:left">ks_2samp</td>
+</tr>
+</tbody>
+</table>
+<p><strong>特殊场景选择</strong></p>
+<p><strong>高方差指标</strong>（如订单金额）：用<strong>对数变换</strong>后t检验，或<strong>Bootstrap置信区间</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">textdf[&#x27;log_amount&#x27;] = np.log1p(df[&#x27;amount&#x27;])</span><br><span class="line">ttest_ind(a_log, b_log)</span><br></pre></td></tr></table></figure>
+<p><strong>多臂实验</strong>（A/B/C三组）：<strong>ANOVA</strong>首选，再事后t检验</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">textfrom statsmodels.stats.anova import anova_lm</span><br><span class="line">anova_lm(df, &#x27;value&#x27;, &#x27;group&#x27;)</span><br></pre></td></tr></table></figure>
+<p><strong>时间序列</strong>（D1/D7留存）：<strong>CUPED</strong>降方差，或分层t检验</p>
+<p><strong>工单选择</strong>：<strong>先看指标类型，再看样本量，最后看分布</strong>。90%电商场景卡方/t检验覆盖，复杂场景用Bootstrap最稳（无分布假设）。</p>
+<h1>🎯字幕稿解读</h1>
+<p>“逐句级”精读，把文件里所有时间轴、所有口语化表达、所有隐含细节全部拆成可检索的条目。<br>
+阅读方式：</p>
+<ul>
+<li>左侧是“原字幕逐句”→ 右侧是“翻译/拆解/补充/易忽略点”。</li>
+<li>如果同一句话里出现 ≥2 个可拆信息，用 ‖ 分隔。</li>
+<li>所有括号内文字是我额外补的“课外知识点”或“考试易考辨析”。</li>
+</ul>
+<hr>
+<h3 id="文件-1-课程简介">文件 1  课程简介</h3>
+<p>1  00:00:01,010 --&gt; 00:00:02,750<br>
+大家好 欢迎来到 A/B 测试<br>
+→ 标准开场白，无实质信息，可忽略。</p>
+<p>2  00:00:02,750 --&gt; 00:00:06,730<br>
+本课中 我们将讨论如何为建有网站或移动应用的企业运行试验或 A/B 测试<br>
+→ 受众限定：已有线上产品（Web or App）；不面向线下业务。‖ “运行试验”=设计+分析，≠代码实现。</p>
+<p>3  00:00:06,730 --&gt; 00:00:10,280<br>
+A/B 测试可以通过尝试可能的改变寻找用户更喜欢的方式<br>
+→ 关键词“可能的改变”=迭代式优化，非从 0 到 1 的创新。</p>
+<p>4  00:00:10,280 --&gt; 00:00:14,910<br>
+帮助你科学地确定如何优化网站或移动应用<br>
+→ “科学地”=对照+随机+统计显著，后续会反复出现。</p>
+<p>5  00:00:14,910 --&gt; 00:00:17,860<br>
+使用 A/B 测试意味着你可以根据数据做出决定<br>
+→ 对立面：HiPPO（Highest Paid Person’s Opinion）——直接点名“薪酬最高人员的意见”是反面教材。</p>
+<p>6  00:00:17,860 --&gt; 00:00:19,551<br>
+而不是依赖猜想或臆测<br>
+→ 再次强调“数据 &gt; 直觉”。</p>
+<p>7  00:00:19,551 --&gt; 00:00:24,380<br>
+我们将从头到尾地了解这个过程<br>
+→ 课程输出：完整闭环，不是碎片技巧。</p>
+<p>8  00:00:24,380 --&gt; 00:00:27,160<br>
+从一开始确定你要测试的变更到得出结论的整个过程<br>
+→ 流程 6 字诀：变-指-设-采-析-决。</p>
+<p>9  00:00:27,160 --&gt; 00:00:29,840<br>
+另一方面 我们不会关注如何实施你的 A/B 测试框架<br>
+→ 边界声明：不教工程代码（如 Airbnb 的 PlanOut、Google 的 Zanzibar）。</p>
+<p>10  00:00:29,840 --&gt; 00:00:32,340<br>
+本课程会讲授如何设计任务、选择指标并分析结果<br>
+→ 三大核心模块：设计、指标、分析。</p>
+<p>11  00:00:32,340 --&gt; 00:00:35,060<br>
+听起来十分不错 但是 在我们开始之前我们何不花点时间介绍一下我们自己？<br>
+→ 过渡句，提示接下来是讲师背书。</p>
+<p>12  00:00:35,060 --&gt; 00:00:36,990<br>
+好的 我是 Diane Tang<br>
+→ Diane 出场。</p>
+<p>13  00:00:36,990 --&gt; 00:00:39,590<br>
+计算机博士 在 Google 工作了 12 年多<br>
+→ 博士 title + 12 年 = 可信度；后续她负责“工程落地”视角。</p>
+<p>14  00:00:39,590 --&gt; 00:00:42,090<br>
+我的工作涉及实验的各个方面<br>
+→ 暗示她跨域：平台、指标、分析、决策，全部踩过坑。</p>
+<p>15  00:00:42,090 --&gt; 00:00:46,230<br>
+审查潜在的基础架构、设计指标和 dashboard<br>
+→ 潜在基础架构=实验平台性能、分流稳定性、数据漏损。</p>
+<p>16  00:00:46,230 --&gt; 00:00:46,880<br>
+运行分析实验<br>
+→ 她也会亲手跑 SQL/R/Python，不是纯管理。</p>
+<p>17  00:00:46,880 --&gt; 00:00:50,400<br>
+以及用以推动数据驱动决策的处理环境<br>
+→ “处理环境”=Google 内部实时实验看板（Data Studio 前身）。</p>
+<p>18  00:00:50,400 --&gt; 00:00:51,650<br>
+我叫 Carrie Grimes Bostock 统计学博士<br>
+→ Carrie 出场，统计防线。</p>
+<p>19  00:00:51,650 --&gt; 00:00:56,640<br>
+在 Google 工作近12年 涉及各种不同领域<br>
+→ “不同领域”=搜索、广告、Chrome、Android，暗示方法通用。</p>
+<p>20  00:00:56,640 --&gt; 00:00:59,790<br>
+在如何得出 A/B 试验的结论方面我将给大家提出统计学方面的意见<br>
+→ 她负责 p-value、置信区间、多重检验、功效分析。</p>
+<p>21  00:00:59,790 --&gt; 00:01:02,700<br>
+我是 Caroline Buckey<br>
+→ Caroline 出场，负责“让你练手”。</p>
+<p>22  00:00:59,790 --&gt; 00:01:06,800<br>
+优达学城的开发人员 在此之前我是硅谷的软件工程师<br>
+→ 桥梁角色：把 Google 内部方法拆成外部可复现的练习。</p>
+<p>23  00:01:06,800 --&gt; 00:01:09,380<br>
+我将通过各种示例研究所有细节并确保你能够将自学的内容运用于实践<br>
+→ 承诺：每个概念配案例 + 可运行作业（虽然课程里不会给你代码仓库，但会给伪代码/公式）。</p>
+<hr>
+<h3 id="文件-2-课程模式">文件 2  课程模式</h3>
+<p>1  00:00:00,370 --&gt; 00:00:02,020<br>
+本课程分为五课<br>
+→ 给出宏观目录，后续每课对应一个文件簇。</p>
+<p>2  00:00:02,020 --&gt; 00:00:05,280<br>
+第一课中 我们会大概介绍什么是 A/B 测试以及测试可用和不可用的情况<br>
+→ 第一课 = 你现在正在看的 8 个文件。</p>
+<p>3  00:00:05,280 --&gt; 00:00:07,250<br>
+我们将一起从头到尾地了解 A/B 测试的示例<br>
+→ 承诺：第一课就会跑一遍“小闭环”，降低焦虑。</p>
+<p>4  00:00:07,250 --&gt; 00:00:10,100<br>
+以便于你可以看到整个过程是怎样的<br>
+→ 目的：先见森林，再见树木。</p>
+<p>5  00:00:10,100 --&gt; 00:00:12,220<br>
+在示例中 我们首先要选择用于试验的一项指标<br>
+→ 指标先行，避免“先改后想”。</p>
+<p>6  00:00:12,220 --&gt; 00:00:15,020<br>
+查看必要的统计结果 随后我们将设计我们自己的试验<br>
+→ 顺序：指标→统计需求（样本量）→设计。</p>
+<p>7  00:00:15,020 --&gt; 00:00:18,490<br>
+最终 我们将分析结果<br>
+→ 闭环到“分析”才算结束，避免“跑实验不看数”。</p>
+<p>8  00:00:18,490 --&gt; 00:00:23,900<br>
+在之后的课程中 我们将深入了解整个过程中某个部分的具体细节<br>
+→ 预告：第 2-5 课把闭环拆成 4 段深度。</p>
+<p>9  00:00:23,900 --&gt; 00:00:25,920<br>
+在第二课中 你将学到如何保护试验中的参与者<br>
+→ 伦理课：知情同意、最小风险、数据隐私（GDPR/CCPA）。</p>
+<p>10  00:00:25,920 --&gt; 00:00:28,560<br>
+以及你应该不断问自己哪些关于实验伦理性方面的问题<br>
+→ 给出 checklist：是否对用户造成伤害？是否泄露 PII？能否提前终止？</p>
+<p>11  00:00:28,560 --&gt; 00:00:31,830<br>
+在第三课中 我们将更具体地探讨如何选择和定义用于实验评估的指标<br>
+→ 指标类型：invariant、goal、guardrail、secondary；会讲 OMEC 框架。</p>
+<p>12  00:00:31,830 --&gt; 00:00:34,630<br>
+在第四课中 我们将更多的讨论如何设计试验<br>
+→ 分流单元（user_id vs cookie vs device）、随机化块、分层实验、正交。</p>
+<p>13  00:00:34,630 --&gt; 00:00:37,090<br>
+包括选择哪些用户进入对照组 哪些用户进入到实验组<br>
+→ 涉及“触发逻辑”（trigger）与“意向治疗（ITT）vs 按治疗（PP）”区别。</p>
+<p>14  00:00:37,090 --&gt; 00:00:40,560<br>
+在第五课中 我们将查看大量示例 说明你的结果可能出现的形式<br>
+→ 会覆盖：置信区间、统计显著 vs 业务显著、第一类/第二类错误、样本比误导。</p>
+<p>15  00:00:40,560 --&gt; 00:00:43,450<br>
+如何分析上述结果 如何得出有效的结论<br>
+→ 给出“决策矩阵”：发布/不发布/需更大样本/需重做。</p>
+<p>16  00:00:43,450 --&gt; 00:00:46,230<br>
+现在 要参加这个课程 你不需要任何以前使用 A/B 测试的经验<br>
+→ 再次降低门槛，吸引零基础。</p>
+<p>17  00:00:46,230 --&gt; 00:00:49,149<br>
+因为我们将从最基础的部分开始<br>
+→ 基础 = 随机化概念、均值比较、中心极限定理。</p>
+<p>18  00:00:49,149 --&gt; 00:00:52,010<br>
+同时你也不需要任何编程经验<br>
+→ 课程作业用 Excel/计算器/在线样本量工具即可完成。</p>
+<p>19  00:00:52,010 --&gt; 00:00:55,260<br>
+因为本课程不会包含如何执行 A/B 测试的框架<br>
+→ 与文件 1 第 9 条呼应，避免学员抱怨“没代码”。</p>
+<p>20  00:00:55,260 --&gt; 00:00:58,817<br>
+本课程讲的是如何设计和分析实验<br>
+→ 核心卖点：Design &amp; Analysis，Implementation 自己找工程团队。</p>
+<p>21  00:00:58,817 --&gt; 00:01:02,331<br>
+另一方面 我们需要的是统计学入门知识<br>
+→ 先修门槛再次明确：知道“正态分布、均值、标准差”即可。</p>
+<p>22  00:01:02,331 --&gt; 00:01:05,540<br>
+因此 如果你需要复习 就查看讲师注释中的链接<br>
+→ 讲师注释会放 Khan Academy 或 Coursera 统计学链接。</p>
+<p>23  00:01:05,540 --&gt; 00:01:08,480<br>
+在整个课程中 我将向大家展示大量示例<br>
+→ Caroline 负责“示例”，保证每 5 分钟一个案例。</p>
+<p>24  00:01:08,480 --&gt; 00:01:11,440<br>
+你也拥有运用所学内容的机会<br>
+→ 每课后有 quiz + 开放问答题（手写计算置信区间）。</p>
+<p>25  00:01:11,440 --&gt; 00:01:14,290<br>
+我还会与 Dianne 和 Carrie 一起讨论她们在 A/B 测试中的经验<br>
+→ 三人圆桌访谈形式，穿插在课后“Bonus”视频。</p>
+<h3 id="文件-3-A-B-测试简介">文件 3  A/B 测试简介</h3>
+<p>1  00:00:00,930 --&gt; 00:00:04,462<br>
+Diane、Carrie 究竟什么是 A/B 测试？<br>
+→ 主持人抛问题，暗示后面是“官方定义”。</p>
+<p>2  00:00:04,462 --&gt; 00:00:07,920<br>
+A/B 测试是一个用于在线测试的常规方法<br>
+→ 关键词“在线”→ 线下业务（如门店促销）不直接适用。</p>
+<p>3  00:00:07,920 --&gt; 00:00:09,370<br>
+可用来测试新产品或新功能<br>
+→ 范围限定：产品或功能，不是品牌定位或战略。</p>
+<p>4  00:00:09,370 --&gt; 00:00:12,170<br>
+你需要做的是设置两组用户<br>
+→ 最小模型：仅两组（对照/实验），多臂 bandit 留到进阶课。</p>
+<p>5  00:00:12,170 --&gt; 00:00:16,030<br>
+将其中一组设置为对照组 采用已有的产品或功能<br>
+→ 对照组 = “基准”，必须可观测同期数据，避免历史对照陷阱。</p>
+<p>6  00:00:16,030 --&gt; 00:00:19,480<br>
+另一组是实验组 采用新版产品或功能<br>
+→ 实验组 = “单变量差异”，否则解释不了因果。</p>
+<p>7  00:00:19,480 --&gt; 00:00:20,170<br>
+你需要做的是找到上述用户做出的不同响应<br>
+→ 不同响应 = 指标差异，强调可量化。</p>
+<p>8  00:00:20,170 --&gt; 00:00:22,670<br>
+然后确认哪个版本的功能更好<br>
+→ 决策标准：统计显著 + 业务显著，后面会拆。</p>
+<p>9  00:00:22,670 --&gt; 00:00:25,870<br>
+对所有考虑进行的变更使用 A/B 测试 还是说 A/B 测试是否更适用于一些特定类型的改变？<br>
+→ 主持人抛出“适用边界”问题，引出 mountain 比喻。</p>
+<p>10  00:00:25,870 --&gt; 00:00:29,380<br>
+我曾经和 John Lilly 讨论过 他现在是 Greylock 的 VC 但是 他曾任 Mozilla 的 CEO<br>
+→ 背书：John Lilly = Mozilla 前 CEO + 风投，增加比喻可信度。</p>
+<p>11  00:00:29,380 --&gt; 00:00:31,850<br>
+他打了一个十分恰当的比方<br>
+→ 预告 mountain 比喻即将上线。</p>
+<p>12  00:00:31,850 --&gt; 00:00:34,530<br>
+他说 A/B 测试能够帮你爬上你面前高山的顶峰<br>
+→ 意译：A/B 只能局部最优（hill climbing），不能全局最优。</p>
+<p>13  00:00:34,530 --&gt; 00:00:37,090<br>
+但是如果你想弄清楚自己是否想爬上这座山还是另一座山 那么 A/B 测试就没那么有用了<br>
+→ 换句话说：战略方向、赛道选择、0-1 创新，A/B 帮不上。</p>
+<p>14  00:00:37,090 --&gt; 00:00:41,350<br>
+也就是说 你可以通过 A/B 测试对很大范围的事情进行测试<br>
+→ 拉回正题：虽然战略不行，但战术范围仍然很大。</p>
+<p>15  00:00:41,350 --&gt; 00:00:45,960<br>
+比如一些新功能 用户界面中增加的内容 网站的不同外观<br>
+→ 列举“可见变化”，暗示“用户可感知”是前提。</p>
+<p>16  00:00:45,960 --&gt; 00:00:48,880<br>
+很多公司都在使用 A/B 测试<br>
+→ 过渡句，准备举大厂案例。</p>
+<p>17  00:00:48,880 --&gt; 00:00:52,010<br>
+例如 Amazon 首次开始做个性化推荐时<br>
+→ 案例 1：推荐系统，属于“算法排序”类。</p>
+<p>18  00:00:52,010 --&gt; 00:00:55,260<br>
+他们想看一下人们是否真的会购买更多商品<br>
+→ 指标 = 购买率/收入，后续会讲“如何选指标”。</p>
+<p>19  00:00:55,260 --&gt; 00:00:57,090<br>
+他们发现由于个性化推荐 他们的收益有了显著增加<br>
+→ 结果：显著 + 业务大，所以成为经典案例。</p>
+<p>20  00:00:57,090 --&gt; 00:01:00,440<br>
+所以 你可以将它用于十分复杂的改变<br>
+→ 强调“复杂”也行，只要变量单一。</p>
+<p>21  00:01:00,440 --&gt; 00:01:03,630<br>
+现在 Google 有时可能 A/B 测试做太多了<br>
+→ 自我吐槽，铺垫“过度实验”陷阱。</p>
+<p>22  00:01:03,630 --&gt; 00:01:07,670<br>
+有一次我们在用户界面中运行 41 个不同的蓝色阴影<br>
+→ 名场面：41 种蓝，外界黑 Google“数据僵化”。</p>
+<p>23  00:01:07,670 --&gt; 00:01:10,350<br>
+来查看用户有什么反响 如果他们做出反应<br>
+→ 指标 = 点击率/搜索量，确实能测出差异。</p>
+<p>24  00:01:10,350 --&gt; 00:01:12,220<br>
+它本身十分有趣并有用<br>
+→ 官方态度：微观优化有效，但别神话。</p>
+<p>25  00:01:12,220 --&gt; 00:01:15,150<br>
+但是实验做的太过了<br>
+→ 自我批评：边际收益递减 + 工程师时间浪费。</p>
+<p>26  00:01:15,150 --&gt; 00:01:18,780<br>
+但是我们能够测试少量的用户可见的变化<br>
+→ 拉回正轨：适度即可。</p>
+<p>27  00:01:18,780 --&gt; 00:01:23,697<br>
+例如 排名变动<br>
+→ 案例 2：搜索/推荐排序，属于“看不见但可感知”变化。</p>
+<p>28  00:01:23,697 --&gt; 00:01:24,847<br>
+LinkedIn 测试了一个改变<br>
+→ 案例 3：LinkedIn feed 排序。</p>
+<p>29  00:01:24,847 --&gt; 00:01:27,724<br>
+尝试确定他们是否应显示新文章还是鼓励大家增加新联系人<br>
+→ 业务问题：关系链增长 vs 内容消费，两者 KPI 冲突。</p>
+<p>30  00:01:27,724 --&gt; 00:01:31,250<br>
+这就是排名变动<br>
+→ 总结：任何 feed 流皆可 A/B。</p>
+<p>31  00:01:31,250 --&gt; 00:01:36,030<br>
+Google 做了很多检索列表和广告之间的排名<br>
+→ 案例 4：广告位高低，直接决定收入，敏感。</p>
+<p>32  00:01:36,030 --&gt; 00:01:37,720<br>
+我们也通过 A/B 测试对所有上述改变进行了测试<br>
+→ 再次强调“全覆盖”。</p>
+<p>33  00:01:37,720 --&gt; 00:01:41,090<br>
+你也可以针对你不确信用户是否会注意到的改变进行测试<br>
+→ 引出“不可见变化”案例：性能。</p>
+<p>34  00:01:41,090 --&gt; 00:01:45,400<br>
+例如 100 毫秒的页面加载时间不是太多<br>
+→ 量级：100 ms = 0.1 s，用户主观难察觉。</p>
+<p>35  00:01:45,400 --&gt; 00:01:46,840<br>
+但是 Amazon 和 Google 都运行了测试<br>
+→ 双厂背书，增加可信度。</p>
+<p>36  00:01:46,840 --&gt; 00:01:49,040<br>
+Amazon 在 2007 年证实<br>
+→ 时间点：2007，论文/博客可考证（Greg Linden 公开过）。</p>
+<p>37  00:01:49,040 --&gt; 00:01:52,520<br>
+每个页面增加 100 毫秒的延迟会导致收入降低 1%<br>
+→ 数字：100 ms ↓ 1%，常被引用做“性能 ROI”标杆。</p>
+<p>38  00:01:52,520 --&gt; 00:01:55,260<br>
+对于 Google 来说 我们得到了相似的结果<br>
+→ Google 内部 2009 年也跑过，结论一致。</p>
+<p>39  00:01:55,260 --&gt; 00:01:57,620<br>
+平均来看 虽然 100 毫秒看起来不多<br>
+→ 强调“小延迟也有大影响”，为后面“性能优化优先级”埋伏笔。</p>
+<p>40  00:01:57,620 --&gt; 00:02:01,650<br>
+人们查询的数量真地降低了<br>
+→ 指标 = 每用户查询数（queries/user），属于 engagement。</p>
+<p>41  00:02:01,650 --&gt; 00:02:04,420<br>
+这就是可以从 A/B 测试中学到的东西<br>
+→ 小结：性能也能 A/B，只要能量化。</p>
+<p>42  00:02:04,420 --&gt; 00:02:07,070<br>
+那你不能用 A/B 测试做的事情是哪些呢？<br>
+→ 主持人过渡，准备讲“边界”。</p>
+<p>43  00:02:07,070 --&gt; 00:02:10,380<br>
+在测试新的体验时 A/B 测试的用途就没那么大了<br>
+→ 新体验 = 用户从未见过，无基准可比。</p>
+<p>44  00:02:10,380 --&gt; 00:02:12,600<br>
+但是你可以用更明显的方式考虑这个问题 对吧？<br>
+→ 反问句，提示下面将给出“可感知”例子。</p>
+<p>45  00:02:12,600 --&gt; 00:02:14,730<br>
+你在测试新的体验时 你当前已有的那些用户可能会觉得<br>
+→ 点出“改变厌恶症”（change aversion）。</p>
+<p>46  00:02:14,730 --&gt; 00:02:18,200<br>
+“你改变了我的体验 发生了什么 我喜欢我原来的方式 我有点不高兴”<br>
+→ 用户情绪成本，需长期观测。</p>
+<p>47  00:02:18,200 --&gt; 00:02:21,310<br>
+这也被称为改变厌恶症<br>
+→ 给出术语：change aversion，可检索论文。</p>
+<p>48  00:02:21,310 --&gt; 00:02:23,830<br>
+另一方面 他们可能觉得 这是新的 然后他们尝试所有东西<br>
+→ 对立面：新奇效应（novelty effect）。</p>
+<p>49  00:02:23,830 --&gt; 00:02:26,960<br>
+这就被称为新奇效应 对吧？<br>
+→ 给出术语：novelty effect。</p>
+<p>50  00:02:26,960 --&gt; 00:02:29,443<br>
+那么 在新的体验中会发生什么<br>
+→ 总结：两种偏差同时存在，短期数据失真。</p>
+<p>51  00:02:29,443 --&gt; 00:02:32,860<br>
+一个问题是 你比较的基准是什么<br>
+→ 自问自答：基准缺失，无法判断。</p>
+<p>52  00:02:32,860 --&gt; 00:02:35,210<br>
+第二个问题 你需要多少时间为了在实际中让你的用户接受新的体验<br>
+→ 隐含：需长期观测，但业务等不起。</p>
+<p>53  00:02:35,210 --&gt; 00:02:37,090<br>
+实际上就是平稳的体验会是什么样<br>
+→ 只有“平稳后”数据才能用于决策。</p>
+<p>54  00:02:37,090 --&gt; 00:02:40,790<br>
+我能够据此做出稳健的决策<br>
+→ 关键词：稳健（robust），统计+业务双显著。</p>
+<p>55  00:02:40,790 --&gt; 00:02:44,990<br>
+由于其他一些原因 时间也可能成为难题所在<br>
+→ 引出“长周期业务”案例。</p>
+<p>56  00:02:44,990 --&gt; 00:02:48,920<br>
+例如 你有一个网站 推荐公寓租赁的<br>
+→ 案例：公寓租赁，低频高客单。</p>
+<p>57  00:02:48,920 --&gt; 00:02:52,010<br>
+人们寻找公寓不是那么频繁<br>
+→ 频率低 → 事件稀疏 → 实验周期长。</p>
+<p>58  00:02:52,010 --&gt; 00:02:55,260<br>
+那么 你真正想要的是回报的业务 或通过推荐给其他喜欢这项服务的人扩大业务<br>
+→ 目标：复购 + 口碑，但二者都难在短期实验观测。</p>
+<p>59  00:02:55,260 --&gt; 00:02:57,620<br>
+现实是 在试验的范围内十分难以测定<br>
+→ 直接结论：A/B 测不准。</p>
+<p>60  00:02:57,620 --&gt; 00:03:01,650<br>
+人们是否真的因为更多的推介回到你的网站<br>
+→ 指标： referral rate，追踪链路断裂。</p>
+<p>61  00:03:01,650 --&gt; 00:03:04,420<br>
+即便人们向他们的朋友推荐 老实说 是否需要等到下一周？<br>
+→ 反问句：实验窗口无法确定。</p>
+<p>62  00:03:04,420 --&gt; 00:03:07,070<br>
+是否需要等到六个月后？<br>
+→ 拉长窗口 → 流量/预算/工程成本高。</p>
+<p>63  00:03:07,070 --&gt; 00:03:10,380<br>
+所以你可能想知道关于你的网站的一些东西 但通过短期的 A/B 测试却十分难以实现<br>
+→ 小结：长周期目标 → A/B 失灵。</p>
+<p>64  00:03:10,380 --&gt; 00:03:12,600<br>
+我们将在第三课中讨论针对这些情况 有哪些好的指标可以选择<br>
+→ 预告：第三课会讲“代理指标”（proxy metric）。</p>
+<p>65  00:03:12,600 --&gt; 00:03:15,480<br>
+因此 最后我们提供的示例中 A/B 测试不是十分有效<br>
+→ 过渡到最后一个反例：遗漏检测。</p>
+<p>66  00:03:15,480 --&gt; 00:03:19,290<br>
+因为 A/B 测试无法真实地告诉你是否遗漏了什么东西<br>
+→ 核心：A/B 只能测“已存在差异”，不能测“不存在”。</p>
+<p>67  00:03:19,290 --&gt; 00:03:21,340<br>
+现在 假设你在做数码相机评论网站<br>
+→ 案例：内容覆盖率。</p>
+<p>68  00:03:21,340 --&gt; 00:03:25,530<br>
+A/B 测试可以告诉你是否需要在这相机评论上面发表相机评论<br>
+→ 白话：已上架的评测能不能放首页。</p>
+<p>69  00:03:25,530 --&gt; 00:03:28,390<br>
+但是 A/B 测试无法告诉你 你是否完全忽略了其他需要你来评价但是你根本没有评价的相机<br>
+→ 致命盲区：遗漏的 SKU 无法被实验观测，必须用搜索词、问卷、竞品爬虫补充。</p>
+<p>70  00:03:28,390 --&gt; 00:03:30,770<br>
+明白了<br>
+→ 口语结束，提示本节收尾。</p>
+<hr>
+<h3 id="文件-4-你可以做和不可以做的事（题目）">文件 4  你可以做和不可以做的事（题目）</h3>
+<p>1  00:00:00,350 --&gt; 00:00:03,890<br>
+在接下来的视频中 我们将看到更多示例<br>
+→ 预告：下面 4 道判断题是互动环节。</p>
+<p>2  00:00:03,890 --&gt; 00:00:06,280<br>
+说明什么时候可以或不可以使用 A/B 测试<br>
+→ 目标：让学员先猜，形成认知冲突。</p>
+<p>3  00:00:06,280 --&gt; 00:00:09,950<br>
+可以使用的替代 A/B 测试的技术<br>
+→ 提前埋点：后续会讲“日志回溯、问卷、焦点小组”。</p>
+<p>4  00:00:09,950 --&gt; 00:00:12,020<br>
+以及 A/B 测试的历史简介<br>
+→ 历史简介被砍，实际视频里没出现，可忽略。</p>
+<p>5  00:00:12,020 --&gt; 00:00:15,610<br>
+随后 我将介绍我们在本课接下来要使用的 A/B 测试的示例<br>
+→ 预告：会拿一个“完整闭环”案例贯穿。</p>
+<p>6  00:00:15,610 --&gt; 00:00:17,010<br>
+如果你要跳到这里<br>
+→ 给快捷键：讲师注释放时间戳。</p>
+<p>7  00:00:17,010 --&gt; 00:00:19,470<br>
+你可以利用讲师注释中的链接<br>
+→ Udacity 平台支持“互动视频”，可跳段。</p>
+<p>8  00:00:19,470 --&gt; 00:00:21,980<br>
+现在 我们来看一下你可能考虑使用 A/B 测试的变更列表<br>
+→ 过渡句，准备出题。</p>
+<p>9  00:00:21,980 --&gt; 00:00:25,420<br>
+首先 假设有一家在线购物公司例如 Amazon<br>
+→ 案例 1：电商缺货检测。</p>
+<p>10  00:00:25,420 --&gt; 00:00:27,170<br>
+想知道他们的网站是否全面<br>
+→ “全面”= 商品覆盖率，无法随机。</p>
+<p>11  00:00:27,170 --&gt; 00:00:30,760<br>
+或者是否存在用户想要购买但是他们无法提供的产品<br>
+→ 隐含：缺失的商品不在实验组里，无法比较。</p>
+<p>12  00:00:30,760 --&gt; 00:00:33,080<br>
+要求你确定什么情况下 A/B 测试是合适的<br>
+→ 题型：勾选框 → 让学员主动思考。</p>
+<p>13  00:00:33,080 --&gt; 00:00:37,070<br>
+第二 假设公司已经有了免费服务 他们可能拥有待办事项应用<br>
+→ 案例 2：Freemium → Premium 升级。</p>
+<p>14  00:00:37,070 --&gt; 00:00:40,530<br>
+他们想提供带有其他功能的高级服务<br>
+→ 关键：用户需主动升级 → 无法强制随机。</p>
+<p>15  00:00:40,530 --&gt; 00:00:43,450<br>
+如需使用高级服务 用户需要升级 创建登录帐户 并探寻新的功能<br>
+→ 三步摩擦：升级→注册→探索，每一步都可 dropout。</p>
+<p>16  00:00:43,450 --&gt; 00:00:46,230<br>
+第三 假设一个网站 为用户提供电影建议例如 Netflix<br>
+→ 案例 3：算法排序，经典可 A/B 场景。</p>
+<p>17  00:00:46,230 --&gt; 00:00:49,149<br>
+他们创建了一个新的算法 对可能的建议进行排序<br>
+→ 单一变量：算法差异，可随机。</p>
+<p>18  00:00:49,149 --&gt; 00:00:52,010<br>
+第四 假设你想要改变基础架构的后台<br>
+→ 案例 4：后端性能，用户无感知。</p>
+<p>19  00:00:52,010 --&gt; 00:00:55,260<br>
+这可能影响页面加载的速度、用户可以看到的显示结果等等<br>
+→ 指标：速度/收入/报错率，均可量化。</p>
+<p>20  00:00:55,260 --&gt; 00:00:57,670<br>
+使用 A/B 测试对这个改变进行测试是否合适？<br>
+→ 结束提问，等待文件 5 解析。</p>
+<hr>
+<h3 id="文件-5-你可以做和不可以做的事（解析）">文件 5  你可以做和不可以做的事（解析）</h3>
+<p>1  00:00:00,420 --&gt; 00:00:03,810<br>
+第一种情况 你通过 A/B 测试无法确认你是否提供了所有产品<br>
+→ 直接给答案：缺货检测 ❌。</p>
+<p>2  00:00:03,810 --&gt; 00:00:06,160<br>
+你可以尝试额外增加产品 但是如果用户不购买 你仍然无法知道是否缺少其他产品<br>
+→ 解释：实验只能观测“已上架”商品的表现。</p>
+<p>3  00:00:06,160 --&gt; 00:00:10,070<br>
+相反 你可能想要询问用户他们是否觉得缺少什么东西<br>
+→ 替代方案：站内问卷、搜索词挖掘、客服工单 NLP。</p>
+<p>4  00:00:10,070 --&gt; 00:00:13,710<br>
+第二 使用 A/B 测试无法全面测试高级服务是否是好的商业决策<br>
+→ Freemium → Premium ❌（无法强制随机）。</p>
+<p>5  00:00:13,710 --&gt; 00:00:16,860<br>
+用户需要选择进入高级服务 因此随机指定人员进入到一组 而另一组无法起作用<br>
+→ 核心：无对称对照组 → 因果推断失效。</p>
+<p>6  00:00:16,860 --&gt; 00:00:18,200<br>
+你仍然可以从 A/B 测试中获得有价值的信息<br>
+→ 让步：可做“升级漏斗”分析，但无法测“整体收入因果”。</p>
+<p>7  00:00:18,200 --&gt; 00:00:21,310<br>
+例如 你可以看到多少用户会访问增加的功能或如果提供选择 多少用户会选择升级<br>
+→ 可测指标：入口点击率、升级转化率、付费留存。</p>
+<p>8  00:00:21,310 --&gt; 00:00:24,590<br>
+但是你无法全面测试所做的改变<br>
+→ 再次强调：不能回答“如果全员强制升级会怎样”。</p>
+<p>9  00:00:24,590 --&gt; 00:00:26,930<br>
+第三 是使用 A/B 测试的主要情形<br>
+→ 算法排序 ✅，经典场景。</p>
+<p>10  00:00:26,930 --&gt; 00:00:29,660<br>
+有明确的对照组和实验组 旧算法和新算法<br>
+→ 单一变量 + 随机分流 → 因果清晰。</p>
+<p>11  00:00:29,660 --&gt; 00:00:32,170<br>
+也可以找到一些能够评估改变的明确的指标<br>
+→ 指标：CTR、观看完成率、人均播放数。</p>
+<p>12  00:00:32,170 --&gt; 00:00:35,540<br>
+第四 测试有点复杂 取决于你是否拥有同时运行两个后台版本的计算能力<br>
+→ 后端性能 ✅ 有条件：工程能双跑。</p>
+<p>13  00:00:35,540 --&gt; 00:00:38,930<br>
+如果同时运行两个版本 你当然可以对变化的结果进行 A/B 测试<br>
+→ 前提：工程资源 + 数据管道双倍成本。</p>
+<p>14  00:00:38,930 --&gt; 00:00:41,240<br>
+再者 你拥有明确的对照组和实验组<br>
+→ 因果成立，但需权衡成本。</p>
+<p>15  00:00:41,240 --&gt; 00:00:43,710<br>
+因此 只要你拥有计算能力 同时运行两个版本 你会十分容易完成测试<br>
+→ 结论：技术上可行，商业上看 ROI。</p>
+<hr>
+<h3 id="文件-6-再给你-3-个场景（第二轮练习）">文件 6  再给你 3 个场景（第二轮练习）</h3>
+<p>1  00:00:00,360 --&gt; 00:00:02,790<br>
+为了向你展示更丰富的多样性 我们将看另外三个可能的变化<br>
+→ 第二轮互动，加深记忆。</p>
+<p>2  00:00:02,790 --&gt; 00:00:05,420<br>
+对于每种情况 如果你觉得对改变运行 A/B 测试有用 请勾选方框<br>
+→ 题型依旧：先猜后讲。</p>
+<p>3  00:00:05,420 --&gt; 00:00:06,430<br>
+首先 假设你有一个销售汽车的网站<br>
+→ 案例 1：汽车复购 + 口碑，低频长周期。</p>
+<p>4  00:00:06,430 --&gt; 00:00:10,520<br>
+你考虑做出改变 你想要知道变更是否会让客户更可能再次访问网站或者向他们的朋友推荐<br>
+→ 指标：return rate + referral rate，都难短期观测。</p>
+<p>5  00:00:10,520 --&gt; 00:00:14,300<br>
+第二 假设一家公司想要更新他们的品牌 包括网站的主要 Logo<br>
+→ 案例 2：品牌 Logo，情绪/习惯干扰。</p>
+<p>6  00:00:14,300 --&gt; 00:00:16,820<br>
+你能对改变进行 A/B 测试吗？<br>
+→ 提问，等待文件 7 解析。</p>
+<p>7  00:00:16,820 --&gt; 00:00:19,470<br>
+第三 假设你想对移动应用首页的改变进行测试<br>
+→ 案例 3：首页信息架构，典型可 A/B。</p>
+<p>8  00:00:19,470 --&gt; 00:00:22,410<br>
+你想要变更包含的信息 使用的措辞、颜色等<br>
+→ 变量：文案 + 配色 + 信息顺序，可单因素切分。</p>
+<p>9  00:00:22,410 --&gt; 00:00:25,680<br>
+选择你认为最合适进行 A/B 测试的情况<br>
+→ 结束提问。</p>
+<hr>
+<h3 id="文件-7-第二轮解析">文件 7  第二轮解析</h3>
+<p>1  00:00:00,410 --&gt; 00:00:04,350<br>
+第一种情况 不能使用 A/B 测试<br>
+→ 汽车复购 ❌。</p>
+<p>2  00:00:04,350 --&gt; 00:00:06,450<br>
+人们很少购买汽车<br>
+→ 频率低 → 事件稀疏 → 实验周期&gt;&gt;商业耐心。</p>
+<p>3  00:00:06,450 --&gt; 00:00:09,630<br>
+所以你需要很长时间才能看到是否有回头客<br>
+→ 统计功效不足，样本量需求爆炸。</p>
+<p>4  00:00:09,630 --&gt; 00:00:13,440<br>
+你甚至不需要获得用户是否向朋友建议此网站的数据<br>
+→ 口碑追踪链路断裂（无 referrer/分享 ID）。</p>
+<p>5  00:00:13,440 --&gt; 00:00:16,860<br>
+第二 看起来很容易进行 A/B 测试<br>
+→ Logo ❌（短期）。</p>
+<p>6  00:00:16,860 --&gt; 00:00:19,200<br>
+你肯定能够收集关于新、旧 Logo 的用户行为数据<br>
+→ 技术可行：CTR/停留时长/滚动深度都能采。</p>
+<p>7  00:00:19,200 --&gt; 00:00:22,410<br>
+但是改变你的公司的品牌肯定对用户来说是情感上的冲击<br>
+→ 情感冲击 → 短期数据失真（改变厌恶 + 新奇并存）。</p>
+<p>8  00:00:22,410 --&gt; 00:00:25,680<br>
+他们可能需要时间习惯新的 Logo 因此你不需要根据 A/B 测试中采集到的短期数据做出决定<br>
+→ 建议：拉长观测窗到季度或年，或改用问卷/焦点小组。</p>
+<p>9  00:00:25,680 --&gt; 00:00:28,390<br>
+第三 最适合使用 A/B 测试<br>
+→ 首页改版 ✅。</p>
+<p>10  00:00:28,390 --&gt; 00:00:30,970<br>
+存在明确的对照组和实验组<br>
+→ 随机分流易实现。</p>
+<p>11  00:00:30,970 --&gt; 00:00:33,460<br>
+并且比起前面两个案例 更容易选择适合的指标评估此类改变<br>
+→ 指标：首页→下一步 CTR、留存、单会话时长。</p>
+<p>12  00:00:33,460 --&gt; 00:00:36,230<br>
+你可以选择某些指标 例如用户通过初始页面的概率<br>
+→ 给出具体示例：初始页面转化率（即 bounce rate 的补数）。</p>
+<hr>
+<h3 id="文件-8-其他技巧">文件 8  其他技巧</h3>
+<p>1  00:00:00,230 --&gt; 00:00:03,719<br>
+我们刚刚看到了 A/B 测试不太有用的情况<br>
+→ 承接上文，准备给“替代工具箱”。</p>
+<p>2  00:00:03,719 --&gt; 00:00:05,260<br>
+在这种情况下 我们要怎么做呢？<br>
+→ 反问句，引出“混合方法”。</p>
+<p>3  00:00:05,260 --&gt; 00:00:07,390<br>
+是否有其他可用的技术？<br>
+→ 预告：下面列出“日志、问卷、焦点小组、UX 研究”。</p>
+<p>4  00:00:07,390 --&gt; 00:00:10,344<br>
+还有很多不同的收集关于用户数据的方法<br>
+→ 总起句：多源数据互补。</p>
+<p>5  00:00:10,344 --&gt; 00:00:13,137<br>
+同时 部分方法甚至还可以作为运行 A/B 测试的补充<br>
+→ 强调“互补”而非“替代”。</p>
+<p>6  00:00:13,137 --&gt; 00:00:14,607<br>
+例如 通常你会有记录用户在你的网站进行操作的日志<br>
+→ 日志 = 被动大数据，低成本。</p>
+<p>7  00:00:14,607 --&gt; 00:00:19,200<br>
+你可以通过检查或观察分析日志得出假设 是什么原因造成其行为改变<br>
+→ 流程：回溯日志 → 形成假设 → 前瞻性实验验证。</p>
+<p>8  00:00:19,200 --&gt; 00:00:24,250<br>
+可能你就要沿着这个方向努力 然后设计实验完成随机化和试验 进行前瞻性分析<br>
+→ 标准“数据 → 假设 → 实验”闭环，与科研方法一致。</p>
+<p>9  00:00:24,250 --&gt; 00:00:28,000<br>
+同时 你可以使用两个数据来源作为相互补充的类别<br>
+→ 再次强调“互补”策略。</p>
+<p>10  00:00:28,000 --&gt; 00:00:31,340<br>
+这种情况下 你可以通过查看日志建立一个假设 但是 实际上你想测试你能否在实验中让假设成真<br>
+→ 避免“数据 dredging”：先假设后实验，防止 p-hacking。</p>
+<p>11  00:00:31,340 --&gt; 00:00:35,460<br>
+因此 你还需要运行 A/B 测试比较结果 查看你的理论是否合理<br>
+→ 结论：日志不能代替实验，只能生成假设。</p>
+<p>12  00:00:35,460 --&gt; 00:00:38,930<br>
+也有一大堆其他技术 从用户体验研究到焦点小组、调查和人为评价<br>
+→ 清单：UX Research、Focus Group、Survey、Human Evaluation。</p>
+<p>13  00:00:38,930 --&gt; 00:00:42,830<br>
+现在 A/B 测试可以给你大量的宽泛的定量数据<br>
+→ 定量：大样本、低偏差、可统计推断。</p>
+<p>14  00:00:42,830 --&gt; 00:00:46,060<br>
+但是 上述其他技术会给到你非常深入的定性数据<br>
+→ 定性：动机、情绪、认知负荷，无法通过实验量化。</p>
+<p>15  00:00:46,060 --&gt; 00:00:50,600<br>
+作为 A/B 测试的补充 比如 上述其他技术可以告诉你应该翻越哪座山<br>
+→ 呼应 mountain 比喻：定性帮你选山，定量帮你爬山。</p>
+<p>16  00:00:50,600 --&gt; 00:00:52,740<br>
+因此 我们将在第三课中介绍上面所说的一些其他技术<br>
+→ 预告：第三课讲“指标 + 混合方法”。</p>
+<p>17  00:00:52,740 → 00:00:55,500<br>
+当然有一些情况用 A/B 测试十分难以测试<br>
+→ 过渡：准备讲“完全无法随机”场景。</p>
+<p>18  00:00:55,500 → 00:00:58,930<br>
+例如 如果你彻底重新建立你的网站或改变用户互动的方式<br>
+→ 案例：全站重构 → 无法保持“单一变量”。</p>
+<p>19  00:00:58,930 → 00:01:01,290<br>
+这些情况中 你很难运行对照组的实验<br>
+→ 隐含：需用 quasi-experiment（断点、DID）或长期队列。</p>
+<p>20  00:01:01,290 → 00:01:03,719<br>
+我们将在稍后的课程中讨论<br>
+→ 预告：第四课“设计”会展开 quasi-experiment。</p>
+<hr>
+<p>以下把 9–17 号字幕（历史→商业案例→指标→二项分布）逐句拆成“知识点卡片”。<br>
+格式说明：</p>
+<ul>
+<li>左侧＝原字幕时间轴+原文；右侧＝翻译/拆解/考试或面试易考点。</li>
+<li>用 ‖ 分隔同一句话里的多个隐藏信息。</li>
+<li>加粗★为必须背下来的“结论性原话”。</li>
+</ul>
+<hr>
+<h3 id="文件-9-A-B-测试的历史">文件 9  A/B 测试的历史</h3>
+<p>1  00:00:00,151 --&gt; 00:00:02,911<br>
+人类最初从什么时候开始使用 A/B 测试？<br>
+→ 开场提问，暗示“早于互联网”。</p>
+<p>2  00:00:02,911 --&gt; 00:00:06,447<br>
+A/B 测试的历史很长 一开始应该是出现在农业领域<br>
+★ 最早形态：农田分区试验（随机区组设计）。‖ 农业= factorial design 源头，Fisher 20 世纪 20 年代确立。</p>
+<p>3  00:00:06,447 --&gt; 00:00:10,242<br>
+虽然那时候还不叫 A/B 测试<br>
+→ 术语是后来借用的，方法论同源：对照+随机。</p>
+<p>4  00:00:10,242 --&gt; 00:00:13,845<br>
+人们将土地分为各个部分<br>
+→ 早期“分流单元”= 地块；现代= user_id/cookie/device。</p>
+<p>5  00:00:13,845 --&gt; 00:00:17,610<br>
+然后测试哪个地方最适合某种作物或者作物如何生长<br>
+→ 指标= 产量/株高；在线= CTR/收入。</p>
+<p>6  00:00:17,610 --&gt; 00:00:20,654<br>
+其实有很多不同的领域在很长时间内都在实际使用 A/B 测试<br>
+→ 暗示“通用科学方法”，不只市场或产品。</p>
+<p>7  00:00:20,654 --&gt; 00:00:22,731<br>
+一般来说 在科学领域中假设检验是确定创新的关键方法<br>
+★ 官方定义：A/B = 在线场景下的“假设检验”。</p>
+<p>8  00:00:22,731 --&gt; 00:00:28,408<br>
+医学上的 A/B 测试称为临床试验<br>
+→ 医学= 黄金标准：双盲、随机、对照（RCT）。</p>
+<p>9  00:00:28,408 --&gt; 00:00:32,220<br>
+他们会藉此确定新药品是否有效<br>
+→ 医学指标= 生存率/副作用；在线= 转化率/留存。</p>
+<p>10  00:00:32,220 --&gt; 00:00:35,406<br>
+在 A/B 测试中你最想看到的是对照组和实验组返回一致的响应<br>
+→ 一致= 除实验变量外其他分布均衡，可排除混杂。</p>
+<p>11  00:00:35,406 --&gt; 00:00:41,902<br>
+让你能够真正地决定试验的结构 确定实验组以及对照组是否有很明显的行为改变<br>
+→ 结构= 随机化方案+样本量+指标；行为改变= 统计显著+业务显著。</p>
+<p>12  00:00:41,902 --&gt; 00:00:45,498<br>
+所以运行这些试验以及在线 A/B 测试之间有什么不同？<br>
+→ 过渡句，准备比较“线下 vs 线上”。</p>
+<p>13  00:00:45,498 --&gt; 00:00:49,094<br>
+网络上 我们有更多更多的数据 但是分辨率更低<br>
+★ 核心对比：大数据+低像素（unknown user）。</p>
+<p>14  00:00:49,094 --&gt; 00:00:57,425<br>
+传统医学/UX 试验：10–50 人，知道年龄/体重/驾照；在线：百万级访问，但不知“网咖里是一个人还是多个人”<br>
+→ 线上= 大样本+高功效，但混杂因子多（同一设备多人、爬虫、机器人）。</p>
+<p>15  00:00:57,425 --&gt; 00:01:00,840<br>
+网络世界中要谨记的一件事就是当你做 A/B 测试时目的是要确认用户是否会喜欢这个新产品或新功能<br>
+→ 目的= 产品/功能偏好，而非科学发论文。</p>
+<p>16  00:01:00,840 --&gt; 00:01:07,960<br>
+设计一个合理且能够给到你可复验的结果 让你能够很好地决定是否要发布一款产品或功能<br>
+★ 关键词：合理（randomized）、可复验（reproducible）、发布决策（ship or not）。</p>
+<p>17  00:01:07,960 --&gt; 00:01:10,538<br>
+我知道优达学城使用 A/B 测试 其他技术公司呢？<br>
+→ 过渡，准备列“行业清单”。</p>
+<p>18  00:01:10,538 --&gt; 00:01:16,484<br>
+Google、Microsoft、eBay、PayPal、Netflix 基本上所有主要的公司都在使用 A/B 测试<br>
+→ 面试可用：报出大厂名单，体现“行业标准”。</p>
+<p>19  00:01:16,484 --&gt; 00:01:20,359<br>
+甚至还有公司专门为小公司提供这些服务<br>
+→ 指 Optimizely、VWO、Google Optimize 等 SaaS，降低门槛。</p>
+<p>20  00:01:20,359 --&gt; 00:01:23,211<br>
+帮助他们优化网站等等<br>
+→ 结论：A/B 已成“水电煤”基础设施。</p>
+<hr>
+<h3 id="文件-10-商业案例概述">文件 10  商业案例概述</h3>
+<p>1  00:00:00,420 --&gt; 00:00:02,270<br>
+好了 我们已经回顾了 A/B 测试的历史<br>
+→ 承上启下，进入“实战闭环”示例。</p>
+<p>2  00:00:02,270 --&gt; 00:00:05,470<br>
+现在让我们来看一些示例<br>
+→ 以下用“Audacity” fake 公司贯穿全课。</p>
+<p>3  00:00:05,470 --&gt; 00:00:06,440<br>
+在整个课程中我们会使用与优达学城相似的一个在线教育公司作为示例<br>
+→ 说明：业务模型= 线上教育+付费课程，指标通用性强。</p>
+<p>4  00:00:06,440 --&gt; 00:00:10,610<br>
+我们称它为 Audacity<br>
+→ 避免用真实 Udacity 数据，防止泄密。</p>
+<p>5  00:00:10,610 --&gt; 00:00:12,710<br>
+Audacity 专攻金融课程<br>
+→ 限定领域：金融类课程，单价高，漏斗长。</p>
+<p>6  00:00:12,710 --&gt; 00:00:15,900<br>
+他们在试着测试功能 增强学生互动<br>
+→ 业务目标：提升互动→最终提高完课率/收入。</p>
+<p>7  00:00:15,900 --&gt; 00:00:18,890<br>
+首先 让我们来谈谈 Audacity 网站典型的用户流程是怎样的<br>
+→ 准备画“漏斗”。</p>
+<p>8  00:00:18,890 --&gt; 00:00:23,700<br>
+你可以看到主页的最大用户访问数 → 少量用户查看不同页面 → 更少数创建账户 → 更少完成购买/上课/完课<br>
+→ 标准四层漏斗：Visit → Explore → Sign-up → Convert/Complete。</p>
+<p>9  00:00:23,700 --&gt; 00:00:27,460<br>
+这种流程类型通常被称为客户漏斗模型<br>
+★ 关键词：funnel（漏斗）+ swirl（涡旋，用户来回跳转）。</p>
+<p>10  00:00:27,460 --&gt; 00:00:30,420<br>
+对网站而言 这是个很常见的概念<br>
+→ 面试可随口画漏斗，体现“业务抽象能力”。</p>
+<p>11  00:00:30,420 --&gt; 00:00:34,310<br>
+但这个概念太过简单化了<br>
+→ 预告：真实用户路径非线性，会跳过/回流。</p>
+<p>12  00:00:34,310 --&gt; 00:00:37,930<br>
+客户会在不同的状态间来回涡旋 而回访者会跳过中间这些步骤<br>
+→ 涡旋= 多次访问，状态机比线性漏斗更准确。</p>
+<p>13  00:00:37,930 --&gt; 00:00:41,320<br>
+我们会在第三课中进一步讨论漏斗和涡旋及其与指标选择的关系<br>
+→ 预告：指标要“层控”——上层用概率，下层用比率/人均。</p>
+<p>14  00:00:41,320 --&gt; 00:00:45,436<br>
+而在后面的第一课内容中 我们会从头到尾讲解一个简单的实验<br>
+→ 承诺：马上跑一遍“小闭环”。</p>
+<p>15  00:00:45,436 --&gt; 00:00:48,480<br>
+具体来说 我们考虑改变一下“现在开始”这个按钮<br>
+→ 实验变量：按钮颜色（橙→粉），单因素。</p>
+<p>16  00:00:48,480 --&gt; 00:00:50,150<br>
+用户点击后会看到课程清单<br>
+→ 说明：按钮= 漏斗第 1→2 层关键跃迁。</p>
+<p>17  00:00:50,150 --&gt; 00:00:54,640<br>
+我们假设：颜色改变 → 提高点击 → 提高探索 → 最终提高完课<br>
+→ 逻辑链：颜色→点击概率→完课，需验证传递性。</p>
+<p>18  00:00:54,640 --&gt; 00:00:57,770<br>
+也就是 移动至漏斗的第二步<br>
+→ 指标定位：把“点击概率”当 proximal metric，完课当 distal metric。</p>
+<hr>
+<h3 id="文件-11-度量选择">文件 11  度量选择</h3>
+<p>1  00:00:00,400 --&gt; 00:00:02,620<br>
+现在我们已经大概了解了想进行的变更 我们需要选择一个指标来测量这个变更<br>
+→ 标准流程：变→指→设→采→析。</p>
+<p>2  00:00:02,620 --&gt; 00:00:05,180<br>
+在当前的假设中 我们还没有谈及如何测量改变颜色是否真的是一种改进<br>
+→ 颜色本身≠改进，必须量化到“可观测指标”。</p>
+<p>3  00:00:05,180 --&gt; 00:00:08,320<br>
+Audacity 在意的归根究底还是有多少人完成了课程<br>
+→ ★ 终极指标（goal metric）= 完课数，但周期长。</p>
+<p>4  00:00:08,320 --&gt; 00:00:11,510<br>
+所以可以选择“完成课程的数量”作为指标 然而学生可能需要几周或几个月<br>
+→ 问题：反馈慢 → 无法快速迭代；引出“代理指标”需求。</p>
+<p>5  00:00:11,510 --&gt; 00:00:15,100<br>
+采用这个作为指标的话会耗费太多时间了 不太现实<br>
+→ 结论：goal metric 不适合做实验 primary metric。</p>
+<p>6  00:00:15,100 --&gt; 00:00:19,798<br>
+另外一个选择就是“有多少用户实际点击了现在开始按钮”<br>
+→ 候选 proximal metric：原始点击数。</p>
+<p>7  00:00:19,798 --&gt; 00:00:23,980<br>
+但如果总访客不同，点击数会失真 → 引出“率”与“概率”之争。<br>
+→ 给出例子：橙组 1000 访客 100 点击；粉组 800 访客 95 点击——谁赢？</p>
+<p>8  00:00:23,980 --&gt; 00:00:27,940<br>
+我们可以使用“访客点击页面的比例”即点击次数/主页访问次数 → 点击率（CTR）<br>
+→ CTR 含重复点击，易受“连点/慢加载”噪音放大。</p>
+<p>9  00:00:27,940 --&gt; 00:00:32,210<br>
+另一个指标：点击概率 = 至少点击一次的独立访客 / 独立访客<br>
+→ ★ 官方选定：click-through probability（CTP）= binomial metric，每人最多 1 次成功。</p>
+<p>10  00:00:32,210 --&gt; 00:00:36,620<br>
+举例：用户 A 点 5 次 → CTR=5，CTP=1；用户 B 0 次 → CTR=0，CTP=0；合计 CTR=2.5，CTP=0.5<br>
+→ 用数字演示“比率 vs 概率”差异，面试可现场画表。</p>
+<p>11  00:00:36,620 --&gt; 00:00:40,910<br>
+比率与概率有不同的特点 第三课会进一步讨论<br>
+→ 预告：CTR 适合 UI 可用性；CTP 适合“渗透/覆盖”型目标。</p>
+<p>12  00:00:40,910 --&gt; 00:00:45,530<br>
+本课中 我们将使用点击概率作为指标 而不是点击率<br>
+★ 结论：Primary metric = CTP（binomial），便于后续用二项分布算置信区间。</p>
+<p>13  00:00:45,530 --&gt; 00:00:49,850<br>
+我们还假设这会最终提高终极业务指标即完成课程的总数<br>
+→ 需要验证“proxy→goal”传递性，否则可能局部最优但全局无效（后续课会讲“指标链”）。</p>
+<hr>
+<h3 id="文件-12-估计点击概率">文件 12  估计点击概率</h3>
+<p>1  00:00:00,310 --&gt; 00:00:04,129<br>
+在 Audacity 示例中 我们决定使用点击概率 而不是点击率<br>
+→ 复习：已拍板 CTP。</p>
+<p>2  00:00:04,129 --&gt; 00:00:08,080<br>
+一般来说 你想测量网站的可用性就使用比率；你想测量总影响就使用概率<br>
+★ 金句：Usability → ratio（CTR）；Reach/Impact → probability（CTP）。</p>
+<p>3  00:00:08,080 --&gt; 00:00:11,570<br>
+举例：按钮易找性 → CTR；只想知道多少人进入二级页面 → CTP<br>
+→ 给出口诀：重复点击=噪音时用概率。</p>
+<p>4  00:00:11,570 --&gt; 00:00:16,850<br>
+我们想知道的是用户是否会进入漏斗的第二层 这就是我们选择概率的原因<br>
+→ 再次确认：目标=“覆盖更多人”，而非“让人点多几次”。</p>
+<p>5  00:00:16,850 --&gt; 00:00:20,980<br>
+要计算概率 你首先要和工程师合作修改你的网站 确保你能捕捉网页访问中的任何事件<br>
+→ 工程前提：事件日志必须“访问级”+“点击级”可关联。</p>
+<p>6  00:00:20,980 --&gt; 00:00:25,250<br>
+当用户点击时 你能捕捉到点击事件<br>
+→ 关键字段：user_id (或 cookie), page_id, event_type, timestamp。</p>
+<p>7  00:00:25,250 --&gt; 00:00:28,780<br>
+一旦你获得了数据 要计算“比率”你只需要页面访问总数 &amp; 点击总数 然后相除<br>
+→ CTR 计算成本最低，SQL 一行：sum(clicks)/sum(impressions)。</p>
+<p>8  00:00:28,780 --&gt; 00:01:16,850<br>
+但对于概率 你必须将每个页面访问对应上所有的子点击 → 每人最多记 1 次成功<br>
+→ 需要“访客去重”逻辑：同一访客在实验期内多次访问只算 1 次成功/失败。<br>
+→ 工程实现：group by visitor_id → boolean max(is_click)。</p>
+<p>9  00:01:16,850 --&gt; 00:01:20,980<br>
+所以每个页面访问 你最多计算一个子点击<br>
+→ 强调“binomial”定义：n=独立访客，x=至少点击 1 次的访客。</p>
+<hr>
+<h3 id="文件-13-重复实验">文件 13  重复实验</h3>
+<p>1  00:00:00,380 --&gt; 00:00:03,100<br>
+让我们来测量“现在开始”这个按钮的点击概率<br>
+→ 进入“统计推断”环节：点估计 → 区间估计。</p>
+<p>2  00:00:03,100 --&gt; 00:00:08,610<br>
+Audacity 主页的单独用户为 1000；其中 100 位至少点击了一次 → 点估计 p̂ = 10 %<br>
+→ 给出数字：n=1000, x=100, p̂=0.10。</p>
+<p>3  00:00:08,610 --&gt; 00:00:15,770<br>
+但你对这个预测有多确定？——如果再来 1000 访客，结果会多接近 100？<br>
+→ 引出“抽样波动”概念，为置信区间埋伏笔。</p>
+<p>4  00:00:15,770 --&gt; 00:00:21,320<br>
+勾选所有让你吃惊的答案：101？110？150？900？<br>
+→ 互动题：测学员直觉版“置信区间宽度”。</p>
+<p>5  00:00:21,320 --&gt; 00:00:27,560<br>
+我们之后会讨论如何对其进行量化（标准误差、置信区间）<br>
+→ 预告：下一步上“二项分布→正态近似→公式”。</p>
+<hr>
+<h3 id="文件-14-重复实验-Solution">文件 14  重复实验 Solution</h3>
+<p>1  00:00:00,420 --&gt; 00:00:03,920<br>
+我认为新的测量结果会接近 100；900 或 150 会让我吃惊<br>
+→ 讲师暴露“主观区间”≈ ±50，对应后期 95% 置信约 ±1.96×SE。</p>
+<p>2  00:00:03,920 --&gt; 00:00:11,313<br>
+110 或 101 比较符合我的预期 → 标准误差会精确描述不同样本之间会有多大区别<br>
+→ 金句：SE 量化“样本–样本”波动。</p>
+<p>3  00:00:11,313 --&gt; 00:00:18,900<br>
+之后我们会讨论样本的标准误差 → 它告诉你同规模样本之间会有多大区别<br>
+→ 再次预告：SE = √(p̂(1−p̂)/n)。</p>
+<hr>
+<h3 id="文件-15-哪个分布？">文件 15  哪个分布？</h3>
+<p>1  00:00:00,460 --&gt; 00:00:03,610<br>
+接下来讨论“150 次点击是否让人吃惊”背后的数据<br>
+→ 准备上“二项分布”。</p>
+<p>2  00:00:03,610 --&gt; 00:00:06,220<br>
+如果你已熟悉二项分布、置信区间和假设检验，可跳过<br>
+→ 给出快捷键：讲师注释放链接。</p>
+<p>3  00:00:06,220 --&gt; 00:00:09,040<br>
+Carrie 你怎么知道 150 次点击是否让人吃惊？<br>
+→ 核心问题：需要概率模型。</p>
+<p>4  00:00:09,040 --&gt; 00:00:12,190<br>
+数据中经常会有特定的一些分布帮助我们了解数据有可能有多大的变化<br>
+→ 分布= 抽样波动的“模板”。</p>
+<p>5  00:00:12,190 --&gt; 00:00:15,490<br>
+像分级的钟形曲线就是正态分布的好例子<br>
+→ 正态= 连续；点击= 离散→ 需二项。</p>
+<p>6  00:00:15,490 --&gt; 00:00:19,970<br>
+针对这里的数据我们会使用与二项分布稍微不同的一种分布<br>
+→ 口误：实际就是二项，不是“不同”。</p>
+<p>7  00:00:19,970 --&gt; 00:00:23,930<br>
+因为我们的数据不是连续数据 而是有成功有失败<br>
+→ 离散二元 → 二项分布 Bin(n, p)。</p>
+<p>8  00:00:23,930 --&gt; 00:00:27,480<br>
+我们可以将点击叫做成功 将没有页面点击称为失败<br>
+→ 定义：success=1（点击），failure=0（未点击）。</p>
+<p>9  00:00:27,480 --&gt; 00:00:32,049<br>
+重要的是我们有两种可能的结果 点击或没有点击 而我们要计算的指标是概率<br>
+→ 再次确认：Binomial 适用条件①二元②独立③同概率。</p>
+<hr>
+<h3 id="文件-16-二项分布">文件 16  二项分布</h3>
+<p>1  00:00:00,350 --&gt; 00:00:02,250<br>
+假如我们有一个偏倚硬币 翻出正面的概率是 3/4<br>
+→ 用“硬币”当教具，降低数学恐惧。</p>
+<p>2  00:00:02,250 --&gt; 00:00:06,350<br>
+这个硬币可以代表“有 3/4 的概率点击按钮的网页访客”<br>
+→ 把 p=0.75 对应到按钮点击，建立直觉。</p>
+<p>3  00:00:06,350 --&gt; 00:00:09,660<br>
+我们将成功认作是正面 而失败是背面<br>
+→ 统一语言：success=点击/正面，failure=未点击/背面。</p>
+<p>4  00:00:09,660 --&gt; 00:00:18,610<br>
+翻 10 次硬币 → 正面次数 k=0~10；k=7,8 最可能；6–9 都算合理<br>
+→ 图形化：二项直方图，中心≈np，宽度≈√np(1−p)。</p>
+<p>5  00:00:18,610 --&gt; 00:00:24,900<br>
+像 Carrie 提及过的 这种分布称为二项分布<br>
+→ 正式给出名称：Binomial distribution。</p>
+<p>6  00:00:24,900 --&gt; 00:00:27,600<br>
+我们可以为翻任意次数的硬币绘制此图<br>
+→ 通用：Bin(n, p) 对任意 n 可画。</p>
+<p>7  00:00:27,600 --&gt; 00:00:29,480<br>
+当你增加 n 的时候 二项分布会越来越像正态分布<br>
+★ 中心极限定理（CLT）雏形：n→∞ 时 Bin≈N(np, np(1−p))。</p>
+<p>8  00:00:29,480 --&gt; 00:00:33,400<br>
+这里二项分布的 n 为 30 而正态分布用蓝色表示<br>
+→ 图示：n≥30 近似已很好（常用 rule of thumb）。</p>
+<p>9  00:00:33,400 --&gt; 00:00:35,970<br>
+均值相同 都等于 p<br>
+→ 均值 μ = np（次数）或 p（比例）。</p>
+<p>10  00:00:35,970 --&gt; 00:00:39,010<br>
+标准偏差为 √[p(1−p)/n]  （这里已换成“比例”口径）<br>
+★ 必背公式：SE(p̂) = √(p̂(1−p̂)/n)。</p>
+<p>11  00:00:39,010 --&gt; 00:00:43,300<br>
+例子：n=20, x=16 → p̂ = 16/20 = 0.8<br>
+→ 给出数字练习，代入公式。</p>
+<p>12  00:00:43,300 --&gt; 00:00:47,830<br>
+要估计硬币偏倚 → p̂ = x/n = 最大似然估计（MLE）。<br>
+→ 无贝叶斯先验时，默认用 MLE。</p>
+<p>13  00:00:47,830 --&gt; 00:00:51,110<br>
+当然 这也可能就是一个公平硬币 刚好翻出正面多过背面<br>
+→ 强调：点估计≠真实参数，需区间/假设检验。</p>
+<p>14  00:00:51,110 --&gt; 00:00:54,750<br>
+但根据结果来看 硬币很可能是偏倚性的<br>
+→ 口语版“似然思想”。</p>
+<p>15  00:00:54,750 --&gt; 00:00:58,700<br>
+二项分布三个假设：①二元结果 ②事件独立 ③同概率<br>
+★ 必背 checklist：用 binomial 前先验证这三条。</p>
+<p>16  00:00:58,700 --&gt; 00:01:02,420<br>
+实践中要确认事件是否独立有时候比较棘手<br>
+→ 提前预警：真实场景常 violated（网络搜索、购物车）。</p>
+<p>17  00:01:02,420 --&gt; 00:01:05,920<br>
+例子 1：洗好的 52 张牌抽 20 次 → 不是独立（无放回）<br>
+→ 无放回→超几何分布；若牌堆无限大可近似二项。</p>
+<p>18  00:01:05,920 --&gt; 00:01:10,400<br>
+例子 2：掷骰子 50 次 → 独立，满足二项。<br>
+→ 经典正面教材。</p>
+<p>19  00:01:10,400 --&gt; 00:01:16,630<br>
+例子 3：搜索引擎连续两次搜索 → 不独立（用户改词再搜）<br>
+→ 同一用户 session 内事件常相关→ 需“用户级去重”或“session 合并”。</p>
+<p>20  00:01:16,630 --&gt; 00:01:21,850<br>
+例子 4：优达学城学生完课 → 近似独立（全球学生多，小概率重复账号）<br>
+→ 给出“可接受近似”场景。</p>
+<p>21  00:01:21,850 --&gt; 00:01:26,590<br>
+例子 5：亚马逊购物车→ 不独立（同一用户多商品一起结账）<br>
+→ 事件级=SKU，但用户行为聚合→ 需“订单级”或“用户级”才能二项。</p>
+<p>22  00:01:26,590 --&gt; 00:01:28,710<br>
+标准偏差为 √[p(1−p)/n]  （比例形式）<br>
+→ 再次重复 SE 公式，强化记忆。</p>
+<p>23  00:01:28,710 --&gt; 00:01:33,400<br>
+当前情况下我们假设已知硬币翻出正面的概率；现在考虑：如果我们不知道这个概率<br>
+→ 过渡：从“已知 p”→“估计 p”，为置信区间铺垫。</p>
+<p>24  00:01:33,400 --&gt; 00:01:35,970<br>
+我们翻了 20 次硬币 其中十六次翻出正面 → p̂ = 16/20 = 0.8<br>
+→ 数字例子，后续算 CI 时用。</p>
+<p>25  00:01:35,970 --&gt; 00:01:39,010<br>
+要估计这个偏倚性 → p̂ = x/n = MLE<br>
+→ 再次强调 MLE 无偏且相合。</p>
+<p>26  00:01:39,010 --&gt; 00:01:43,300<br>
+我们得到结果五分之四 → 最佳估计是该硬币翻出正面的概率是 0.8<br>
+→ 口语化“最佳估计”= 点估计。</p>
+<p>27  00:01:43,300 --&gt; 00:01:47,830<br>
+如果你想更具体地了解不同参数的二项分布会是什么样的 讲师注释中的页面链接可能会有所帮助<br>
+→ 给出互动可视化链接（通常是被屏蔽的 Khan 或 Wolfram）。</p>
+<p>28  00:01:47,830 --&gt; 00:01:51,110<br>
+在使用二项分布时 必须使用一些假设<br>
+→ 进入“假设验证”清单。</p>
+<p>29  00:01:51,110 --&gt; 00:01:54,750<br>
+第一 必须有两个不同的结果 我们称之为成功与失败<br>
+→ 条件①二元：pass/fail, click/no-click。</p>
+<p>30  00:01:54,750 --&gt; 00:01:59,390<br>
+第二 事件必须是独立的 知道了某一次翻硬币的结果也不会知道下一次翻硬币结果是什么<br>
+→ 条件②独立：用户级随机化最易满足；事件级常 violated。</p>
+<p>31  00:01:59,390 --&gt; 00:02:02,870<br>
+第三 事件要遵循同一种分布 也就是说每一次翻硬币的成功概率必须是一致的<br>
+→ 条件③同概率：实验期间 p 恒定→ 排除“星期效应”“投放时段差异”等。</p>
+<p>32  00:02:02,870 --&gt; 00:02:05,040<br>
+在实践中要确认事件是否是独立的 有时候可能比较棘手<br>
+→ 再次预警：真实世界≠理想硬币。</p>
+<p>33  00:02:05,040 --&gt; 00:02:07,700<br>
+所以让我们来看看一些例子<br>
+→ 准备用 5 个案例让学员勾选“是否独立”。</p>
+<p>34  00:02:07,700 --&gt; 00:02:10,400<br>
+这里二项分布的 n 为 30 而正态分布用蓝色表示<br>
+→ 图示：n≥30 可正态近似，方便后面用 z-test。</p>
+<p>35  00:02:10,400 --&gt; 00:02:13,770<br>
+二项分布以及与其类似的正态分布 均值相同 都等于 p<br>
+→ 均值 μ = np（次数）或 p（比例）。</p>
+<p>36  00:02:13,770 --&gt; 00:02:16,630<br>
+标准偏差为 √[p(1−p)/n]<br>
+→ 第三次重复 SE 公式，确保背下。</p>
+<hr>
+<h3 id="文件-17-二项分布-Solution">文件 17  二项分布 Solution</h3>
+<p>1  00:00:00,370 --&gt; 00:00:02,400<br>
+洗好的纸牌不是独立的<br>
+→ 解析 ①：无放回 → 概率随抽牌变化 → 超几何。</p>
+<p>2  00:00:02,400 --&gt; 00:00:06,330<br>
+由于每一张牌在一副牌中只出现一次 你每抽取一张牌 它会提供一些关于下一张牌的信息<br>
+→ 条件概率：P(黑|已抽 5 黑) ≠ P(黑|初始)。</p>
+<p>3  00:00:06,330 --&gt; 00:00:08,570<br>
+如果第一张牌是黑色的 那第二张牌是黑色的可能性会更小<br>
+→ 直观解释负相关。</p>
+<p>4  00:00:08,570 --&gt; 00:00:10,400<br>
+如果你的一副牌无限大 这个就不是问题<br>
+→ 无限牌堆→放回抽样→二项成立；有限牌堆→超几何。</p>
+<p>5  00:00:10,400 --&gt; 00:00:13,410<br>
+掷骰子是独立的 → 成功的概率是 1/6 ≠ 0.5 但二项分布不要求 p=0.5<br>
+→ 澄清：p 可为任意值，只要恒定。</p>
+<p>6  00:00:13,410 --&gt; 00:00:16,300<br>
+每掷一次骰子都不会影响下一次掷骰子的结果<br>
+→ 经典独立案例。</p>
+<p>7  00:00:16,300 --&gt; 00:00:19,410<br>
+搜索引擎这个不是独立的 → 如果有的人第一次没找到想要的内容 他们会立刻用稍微有点不同的词再搜索一次<br>
+→ 同一用户连续搜索→事件相关→ 违反②。</p>
+<p>8  00:00:19,410 --&gt; 00:00:22,570<br>
+教育公司这个例子“近似独立”→ 每个学生对应一个事件 而不是多个 且学生遍布全球<br>
+→ 给出“可接受偏差”思路：现实中只要偏差&lt;&lt;效应量即可。</p>
+<p>9  00:00:22,570 --&gt; 00:01:25,060<br>
+购物车的案例不是独立的 → 一个人可能往购物车加入多个物品然后一起购买 → 不同事件的结果之间高度关联<br>
+→ 提示：需把“事件粒度”提升到“订单”或“用户”才能近似二项。</p>
+<p>10  00:01:25,060 --&gt; 00:01:28,020<br>
+小结：判断是否二项前 先问“事件是否独立/同概率”→ 不满足就换模型或提升粒度<br>
+→ 通用解题思路：模型 violated → 升/降粒度 or 换分布。</p>
+<h3 id="文件-18-置信区间">文件 18  置信区间</h3>
+<p>1  00:00:00,300 --&gt; 00:00:04,290<br>
+好了 我们预计点击概率会遵循二项分布<br>
+→ 承上启下：已确定用 Binomial 模型。</p>
+<p>2  00:00:04,290 --&gt; 00:00:07,860<br>
+那如何利用这个来确定哪些值是让我们吃惊的值？<br>
+→ 引出“区间 + 显著性”需求。</p>
+<p>3  00:00:07,860 --&gt; 00:00:11,220<br>
+当你知道它遵循二项分布之后 一个好处就是我们可以使用样本二项分布的标准误差的公式<br>
+★ 关键：模型已知 → 可用 SE 公式量化波动。</p>
+<p>4  00:00:11,220 --&gt; 00:00:15,770<br>
+来估计点击的整体概率会有多大变化<br>
+→ SE 描述“样本–样本”波动，即抽样误差。</p>
+<p>5  00:00:15,770 --&gt; 00:00:20,730<br>
+意思是 如果置信区间为 95%<br>
+→ 首次给出 95% 水平，后续所有实验沿用。</p>
+<p>6  00:00:20,730 --&gt; 00:00:23,970<br>
+置信区间也是会经常听到的词 理论上如果我们不断地重复实验 我们在样本均值附近建立的区间会有 95% 的几率涵盖真正的值<br>
+★ 正式定义：95% CI = 重复抽样下 95% 区间包含真实参数。</p>
+<p>7  00:00:23,970 --&gt; 00:00:38,060<br>
+→ 面试可背：CI 不是“参数落进区间的概率”，而是“区间捕捉参数的概率”。</p>
+<h3 id="文件-19-计算置信区间">文件 19  计算置信区间</h3>
+<p>1  00:00:00,380 --&gt; 00:00:03,680<br>
+现在让我们来看看如何计算样本的置信区间<br>
+→ 进入“手撕公式”环节。</p>
+<p>2  00:00:03,680 --&gt; 00:00:05,810<br>
+我们已经找到了区间的中心：点击的概率 p̂ = X / N<br>
+→ 中心 = 点估计 MLE。</p>
+<p>3  00:00:05,810 --&gt; 00:00:11,901<br>
+这里 X 是指点击的用户数量；N 是访问页面的用户总数量<br>
+→ 给出符号：X=success，N=sample size。</p>
+<p>4  00:00:11,901 --&gt; 00:00:17,425<br>
+在这里 p̂ 是 100 / 1000 = 0.1<br>
+→ 数字例子：n=1000, x=100, p̂=0.10。</p>
+<p>5  00:00:17,425 --&gt; 00:00:22,778<br>
+所以置信区间的中心应为 0.1<br>
+→ 中心固定，下一步算“宽度”。</p>
+<p>6  00:00:22,778 --&gt; 00:00:26,500<br>
+然后我需要计算置信区间的宽度 也称为误差幅度 margin = m<br>
+★ 术语：margin of error (m) = 半宽。</p>
+<p>7  00:00:26,500 --&gt; 00:00:29,870<br>
+为此我需要使用二项分布的标准误差<br>
+→ SE 是构造 m 的核心。</p>
+<p>8  00:00:29,870 --&gt; 00:00:33,900<br>
+如果样本规模够大 可以不使用二项分布 我假设分布是正态的<br>
+→ 正态近似条件：np̂≥5 且 n(1−p̂)≥5（后续课放宽到≥10）。</p>
+<p>9  00:00:33,900 --&gt; 00:00:37,720<br>
+这里 N × p̂ = 100 ≥ 5 → 合理<br>
+→ 现场验证条件满足。</p>
+<p>10  00:00:37,720 --&gt; 00:00:40,240<br>
+置信区间的宽度 = z × SE<br>
+→ 公式：m = z_(1−α/2) × SE。</p>
+<p>11  00:00:40,240 --&gt; 00:00:45,750<br>
+SE = √[p̂(1−p̂)/N]<br>
+★ 必背：Binomial SE（比例形式）。</p>
+<p>12  00:00:45,750 --&gt; 00:00:49,050<br>
+成功概率离 0.5 越远 标准误差会越小 → 分布更紧凑 → 置信区间更小<br>
+→ 重要洞察：p̂ 接近 0 或 1 时，同样 n 下区间变窄。</p>
+<p>13  00:00:49,050 --&gt; 00:00:53,570<br>
+样本数量越大 标准误差与置信区间则越小<br>
+→ 另一洞察：m ∝ 1/√n，想减半区间需 4×样本。</p>
+<p>14  00:00:53,570 --&gt; 00:00:57,150<br>
+现在我需要寻求 95% 置信区间 边界的 z 值<br>
+→ z=1.96（双尾 2.5%→97.5% 分位）。</p>
+<p>15  00:00:57,150 --&gt; 00:02:02,116<br>
+1.96 这个值称为 z 分数 我们可以在表格中查询<br>
+→ 现场查表→得 1.96。</p>
+<p>16  00:02:02,116 --&gt; 00:02:09,479<br>
+代入：m = 1.96 × √[0.1×0.9/1000] ≈ 0.019<br>
+→ 手算：SE≈0.00949，m≈0.0186→取 0.019。</p>
+<p>17  00:02:09,479 --&gt; 00:02:14,310<br>
+上限 = 0.1 + 0.019 = 0.119；下限 = 0.1 − 0.019 = 0.081<br>
+→ 95% CI：[8.1%, 11.9%]。</p>
+<p>18  00:02:14,310 --&gt; 00:02:18,578<br>
+也就是说你继续对几千次页面访问进行实验 你可以预估每一千次访问中点击在 80 至 120 次之间<br>
+→ 把比例转回“每千次点击”便于业务理解。</p>
+<p>19  00:02:18,578 --&gt; 00:02:24,120<br>
+超过或低于这个值都是让人吃惊的数字<br>
+→ 定义“吃惊”= 落在 CI 外 → 后续直接对应 p-value&lt;0.05。</p>
+<p>20  00:02:24,120 → 00:02:30,613<br>
+留作业：n=2000, x=300, 求 99% CI → 让学员手算一遍固化公式。<br>
+→ 99% z=2.58；p̂=0.15；SE=√(0.15×0.85/2000)=0.0079；m=0.0204 → CI[0.129, 0.171]。</p>
+<h3 id="文件-20-计算置信区间-Solution">文件 20  计算置信区间 Solution</h3>
+<p>1  00:00:00,340 --&gt; 00:00:03,260<br>
+要计算置信区间 首先我要预估成功的概率 即点估计<br>
+→ 步骤①：p̂ = 300 / 2000 = 0.150。</p>
+<p>2  00:00:03,260 --&gt; 00:00:07,590<br>
+→ 步骤②：99% 双尾 z=2.58（查表）。</p>
+<p>3  00:00:07,590 --&gt; 00:00:11,967<br>
+SE = √[0.15×0.85/2000] ≈ 0.0079<br>
+→ 步骤③：代公式。</p>
+<p>4  00:00:11,967 --&gt; 00:00:18,390<br>
+m = 2.58 × 0.0079 ≈ 0.021<br>
+→ 步骤④：得误差幅度。</p>
+<p>5  00:00:18,390 --&gt; 00:00:25,230<br>
+上限 = 0.15 + 0.021 = 0.171；下限 = 0.15 − 0.021 = 0.129<br>
+→ 步骤⑤：写区间 [12.9%, 17.1%]。</p>
+<p>6  00:00:25,230 --&gt; 00:00:30,613<br>
+★ 结论：99% 置信下，真实点击概率落在 12.9%–17.1%；若对照组区间与此无重叠→可认为差异显著。</p>
+<h3 id="文件-21-建立统计显著性">文件 21  建立统计显著性</h3>
+<p>1  00:00:00,340 --&gt; 00:00:02,930<br>
+现在我们已经预估了“现在开始”按钮的点击概率 但是我们还没有真正地变更按钮<br>
+→ 过渡：从“估计”到“比较”。</p>
+<p>2  00:00:02,930 --&gt; 00:00:06,420<br>
+在变更之后我们会运行实验 我们要如何分析结果呢？<br>
+→ 引出“假设检验”流程。</p>
+<p>3  00:00:06,420 --&gt; 00:00:10,420<br>
+在统计学中有个概念叫假设检验或推断 它能以量化的方式确定你的结果发生的概率<br>
+★ 定义：假设检验 = 量化“结果是否偶然”。</p>
+<p>4  00:00:10,420 --&gt; 00:00:14,430<br>
+首先我们需要一个零假设 或者说基准<br>
+→ 标准流程：H₀ 先立。</p>
+<p>5  00:00:14,430 --&gt; 00:00:20,310<br>
+在这里也就是对照组和实验组之间的点击概率没有区别<br>
+→ H₀：Pexp = Pcont（或差值=0）。</p>
+<p>6  00:00:20,310 --&gt; 00:00:24,140<br>
+然后我们需要考虑备择假设 我们感兴趣的是点击概率是否不同？更高？更低？任何区别？<br>
+→ 选双尾 or 单尾 → 影响后续 z 临界值。</p>
+<p>7  00:00:24,140 → 00:02:24,120<br>
+留互动：付款流程实验，让学员写 H₀ 与 HA → 强化“写假设”是第一步。</p>
+<h3 id="文件-22-零假设和对立假设">文件 22  零假设和对立假设</h3>
+<p>1  00:00:00,320 --&gt; 00:00:03,250<br>
+要使用假设检验 确保结果具有统计显著性 你需要计算结果是偶然出现的可能性<br>
+→ 显著性核心：P(数据│H₀) 足够小 → 拒绝 H₀。</p>
+<p>2  00:00:03,250 --&gt; 00:00:08,320<br>
+要计算这个概率 你需要先假设“如果实验没有效果 结果会是怎样”<br>
+→ 再次强调：先设“无效世界”基准。</p>
+<p>3  00:00:08,320 --&gt; 00:00:12,200<br>
+在 Audacity 的例子中 我们采集了两个样本 对照组使用橙色按钮 实验组使用粉色按钮<br>
+→ 两组独立样本，比例之差检验。</p>
+<p>4  00:00:12,200 --&gt; 00:00:17,650<br>
+我们假设每组都遵循二项分布 但是两组的概率可能会不同<br>
+→ 模型：Xcont~Bin(ncont, Pcont)；Xexp~Bin(nexp, Pexp)。</p>
+<p>5  00:00:17,650 --&gt; 00:00:22,570<br>
+如果变更按钮颜色没有效果 这样两组的分布相同 → Pexp = Pcont → 差值=0<br>
+★ H₀：Pexp − Pcont = 0。</p>
+<p>6  00:00:22,570 --&gt; 00:00:26,510<br>
+如果实验有效 → 备择假设 HA：Pexp − Pcont ≠ 0（双尾）<br>
+→ 课程默认双尾，α=0.05，z=±1.96。</p>
+<p>7  00:00:26,510 --&gt; 00:00:31,730<br>
+流程：采集数据 → 计算 p̂exp, p̂cont → 差值 → 计算在 H₀ 下出现该差值或更极端的概率（p-value）→ 若 &lt;0.05 排除 H₀<br>
+→ 与置信区间等价：95% CI 不包含 0 ↔ p&lt;0.05。</p>
+<h3 id="文件-23-零假设和对立假设-Solution">文件 23  零假设和对立假设 Solution</h3>
+<p>1  00:00:00,480 --&gt; 00:00:04,260<br>
+我选择的零假设是两组人完成付款的概率相同<br>
+→ 示范：H₀：Ppay,exp = Ppay,cont。</p>
+<p>2  00:00:04,260 --&gt; 00:00:07,930<br>
+备择假设是两组人完成付款的概率不同 → HA：Ppay,exp ≠ Ppay,cont<br>
+→ 双尾写法，差值≠0。</p>
+<p>3  00:00:07,930 --&gt; 00:00:11,480<br>
+即 Pexp − Pcont = 0 vs ≠ 0<br>
+→ 一句话模板，任何比例差检验都能照抄。</p>
+<p>4  00:00:11,480 --&gt; 00:00:18,630<br>
+强调：写假设时只谈参数（总体概率），不谈样本统计量<br>
+→ 避免新手错把“样本差=0”当 H₀。</p>
+<h3 id="24-比较两个样本">24 - 比较两个样本</h3>
+<p>1 00:00:00,410 --&gt; 00:00:02,200<br>
+现在我们已经设立了假设检验</p>
+<p>2 00:00:02,200 --&gt; 00:00:04,620<br>
+我们如何决定是否要拒绝零假设？</p>
+<p>3 00:00:04,620 --&gt; 00:00:07,440<br>
+我们需要从一个稍微不同的角度</p>
+<p>4 00:00:07,440 --&gt; 00:00:08,500<br>
+来看看置信区间</p>
+<p>5 00:00:08,500 --&gt; 00:00:11,610<br>
+要记得 在这个案例中 我们有两组样本</p>
+<p>6 00:00:11,610 --&gt; 00:00:12,910<br>
+一组是对照组</p>
+<p>7 00:00:12,910 --&gt; 00:00:16,100<br>
+一组是实验组 两者的用户数量可能会不同</p>
+<p>8 00:00:16,100 --&gt; 00:00:21,030<br>
+我们需要做的就是将预计的对照组点击比率</p>
+<p>9 00:00:21,030 --&gt; 00:00:24,130<br>
+与实验组的比率进行对比</p>
+<p>10 00:00:24,130 --&gt; 00:00:27,730<br>
+量化任务会告诉我们 我们得到的结果</p>
+<p>11 00:00:27,730 --&gt; 00:00:31,440<br>
+即观察到的区别 是否是偶然出现的</p>
+<p>12 00:00:31,440 --&gt; 00:00:34,920<br>
+或者如果两组结果完全一致 是否非常不可能出现这种区别</p>
+<h3 id="25-合并标准误差">25 - 合并标准误差</h3>
+<p>1<br>
+00:00:00,380 --&gt; 00:00:02,120<br>
+因为我们有两组样本</p>
+<p>2<br>
+00:00:02,120 --&gt; 00:00:05,840<br>
+我们需要选择一个标准误差 方面我们进行对比</p>
+<p>3<br>
+00:00:05,840 --&gt; 00:00:08,510<br>
+最简单的方法就是计算</p>
+<p>4<br>
+00:00:08,510 --&gt; 00:00:09,790<br>
+合并标准误差</p>
+<p>5<br>
+00:00:09,790 --&gt; 00:00:12,440<br>
+我们会测量每一组中进行了点击的用户数</p>
+<p>6<br>
+00:00:12,440 --&gt; 00:00:16,379<br>
+我们称之为 Xcont 和 Xexp</p>
+<p>7<br>
+00:00:16,379 --&gt; 00:00:20,510<br>
+以及每一组的总用户数 称为 Ncont 与 Nexp</p>
+<p>8<br>
+00:00:20,510 --&gt; 00:00:23,430<br>
+现在 我们要做的第一件事是计算</p>
+<p>9<br>
+00:00:23,430 --&gt; 00:00:25,040<br>
+合并点击概率</p>
+<p>10<br>
+00:00:25,040 --&gt; 00:00:28,010<br>
+这里我用 p? 因为这是预计的概率</p>
+<p>11<br>
+00:00:28,010 --&gt; 00:00:31,760<br>
+合并概率是整个组的</p>
+<p>12<br>
+00:00:31,760 --&gt; 00:00:33,270<br>
+点击概率 即</p>
+<p>13<br>
+00:00:33,270 --&gt; 00:00:37,247<br>
+进行过点击的用户总数除以用户总数</p>
+<p>14<br>
+00:00:37,247 --&gt; 00:00:41,250<br>
+然后我们计算合并标准误差 通过这个公式计算</p>
+<p>15<br>
+00:00:41,250 --&gt; 00:00:45,160<br>
+现在 我们要预计 P?exp 与 P?cont</p>
+<p>16<br>
+00:00:45,160 --&gt; 00:00:48,950<br>
+之间的差额 这个差额我称为 D?</p>
+<p>17<br>
+00:00:48,950 --&gt; 00:00:53,840<br>
+在零假设中 真正的差额 d 等于零</p>
+<p>18<br>
+00:00:53,840 --&gt; 00:00:59,390<br>
+所以我们可以预计 d? 应该为正态分布</p>
+<p>19<br>
+00:00:59,390 --&gt; 00:01:03,990<br>
+而均值为 0 标准偏差为合并标准误差</p>
+<p>20<br>
+00:01:03,990 --&gt; 00:01:08,250<br>
+如果预计中 d? 大于 1.96 我们的 z 分数</p>
+<p>21<br>
+00:01:08,250 --&gt; 00:01:12,220<br>
+乘以合并标准误差 或小于这个临界值的负值</p>
+<p>22<br>
+00:01:12,220 --&gt; 00:01:15,220<br>
+我们可以拒绝零假设</p>
+<p>23<br>
+00:01:15,220 --&gt; 00:01:18,390<br>
+认为我们的差别具有统计显著性</p>
+<h3 id="26-实用或实质性显著性">26 - 实用或实质性显著性</h3>
+<p>1<br>
+00:00:00,145 --&gt; 00:00:02,319<br>
+好了 我们现在能够使用假设检验确定</p>
+<p>2<br>
+00:00:02,319 --&gt; 00:00:06,235<br>
+确定实验中观察到的差异是否具有统计显著性</p>
+<p>3<br>
+00:00:06,235 --&gt; 00:00:07,315<br>
+那接下来呢？</p>
+<p>4<br>
+00:00:07,315 --&gt; 00:00:11,233<br>
+我们接下来需要从商业角度来决定</p>
+<p>5<br>
+00:00:11,233 --&gt; 00:00:15,108<br>
+怎样的点击概率变化具有实际显著性</p>
+<p>6<br>
+00:00:15,108 --&gt; 00:00:17,208<br>
+也就是说 变更对我们来说有多重要</p>
+<p>7<br>
+00:00:17,208 --&gt; 00:00:19,027<br>
+作为统计学家来讲</p>
+<p>8<br>
+00:00:19,027 --&gt; 00:00:22,618<br>
+这是统计显著性以外的实质性</p>
+<p>9<br>
+00:00:22,618 --&gt; 00:00:24,904<br>
+这就是工程师与统计学家</p>
+<p>10<br>
+00:00:24,904 --&gt; 00:00:26,001<br>
+的不同说法了</p>
+<p>11<br>
+00:00:26,001 --&gt; 00:00:29,820<br>
+实质性与实际显著性其实是指一样的东西</p>
+<p>12<br>
+00:00:29,820 --&gt; 00:00:30,609<br>
+好的</p>
+<p>13<br>
+00:00:30,609 --&gt; 00:00:34,018<br>
+为什么我们不认为在商业上所有变更都比较重要？</p>
+<p>14<br>
+00:00:34,018 --&gt; 00:00:36,968<br>
+我们不能进行任何能够造成差别的实验么？</p>
+<p>15<br>
+00:00:36,968 --&gt; 00:00:40,538<br>
+你可以 但是你可能不想这么做 这有多个原因</p>
+<p>16<br>
+00:00:40,538 --&gt; 00:00:43,746<br>
+首先 变更本身可能是需要投资的</p>
+<p>17<br>
+00:00:43,746 --&gt; 00:00:47,067<br>
+可能你觉得并不值得 或者说你想要等下一次变更</p>
+<p>18<br>
+00:00:47,067 --&gt; 00:00:50,885<br>
+觉得这里变更会不错 但是那样做会更好</p>
+<p>19<br>
+00:00:50,885 --&gt; 00:00:52,386<br>
+比如在医学方面</p>
+<p>20<br>
+00:00:52,386 --&gt; 00:00:54,835<br>
+你必须清楚知道变更是否值得</p>
+<p>21<br>
+00:00:54,835 --&gt; 00:00:58,940<br>
+如果你在测试一种新药 可能病人的反应会稍微好一点</p>
+<p>22<br>
+00:00:58,940 --&gt; 00:01:01,738<br>
+但你必须要投资用来培训护士</p>
+<p>23<br>
+00:01:01,738 --&gt; 00:01:03,372<br>
+才能实际推出这种药</p>
+<p>24<br>
+00:01:03,372 --&gt; 00:01:04,370<br>
+诸如此类的</p>
+<p>25<br>
+00:01:04,370 --&gt; 00:01:07,971<br>
+所以你可能需要更高的实际显著性</p>
+<p>26<br>
+00:01:07,971 --&gt; 00:01:09,751<br>
+才变更治疗方案</p>
+<p>27<br>
+00:01:09,751 --&gt; 00:01:12,715<br>
+这个也是网络世界和传统科学</p>
+<p>28<br>
+00:01:12,715 --&gt; 00:01:14,873<br>
+之间的重大差异之一 对吧？</p>
+<p>29<br>
+00:01:14,873 --&gt; 00:01:18,251<br>
+在医学中 5%、10%</p>
+<p>30<br>
+00:01:18,251 --&gt; 00:01:21,093<br>
+15% 的变更才是实质性的</p>
+<p>31<br>
+00:01:21,093 --&gt; 00:01:22,966<br>
+对吧？ 但是比如说 在 Google</p>
+<p>32<br>
+00:01:22,966 --&gt; 00:01:27,520<br>
+点击概率里的1%或者2%的改变就已经很大了</p>
+<p>33<br>
+00:01:27,520 --&gt; 00:01:29,786<br>
+所以被认为具有实际显著性的差异</p>
+<p>34<br>
+00:01:29,786 --&gt; 00:01:33,002<br>
+也是非常不同的</p>
+<p>35<br>
+00:01:33,002 --&gt; 00:01:36,500<br>
+是的 所以你真正关注的应该是可重复性</p>
+<p>36<br>
+00:01:36,500 --&gt; 00:01:39,110<br>
+统计显著性讨论的就是可重复性</p>
+<p>37<br>
+00:01:39,110 --&gt; 00:01:42,180<br>
+所以在你设置实验时 你想要确保</p>
+<p>38<br>
+00:01:42,180 --&gt; 00:01:44,483<br>
+对的 这些结果是可重复的</p>
+<p>39<br>
+00:01:44,483 --&gt; 00:01:46,085<br>
+那它就具有统计显著性</p>
+<p>40<br>
+00:01:46,085 --&gt; 00:01:49,586<br>
+但你还需要确认从商业角度来说</p>
+<p>41<br>
+00:01:49,586 --&gt; 00:01:52,145<br>
+你在实验中也看到了你感兴趣的改变</p>
+<p>42<br>
+00:01:52,145 --&gt; 00:01:55,728<br>
+它就具有实际显著性 也具有统计显著性</p>
+<p>43<br>
+00:01:55,728 --&gt; 00:01:59,613<br>
+所以你要恰当地设计实验的规模</p>
+<p>44<br>
+00:01:59,613 --&gt; 00:02:03,393<br>
+确保统计显著性条柱低于实际显著性条柱</p>
+<p>45<br>
+00:02:03,393 --&gt; 00:02:04,205<br>
+有道理</p>
+<p>46<br>
+00:02:04,205 --&gt; 00:02:05,781<br>
+那在 Audacity 的例子中</p>
+<p>47<br>
+00:02:05,781 --&gt; 00:02:08,365<br>
+我们仍需要选一个实际显著性的边界</p>
+<p>48<br>
+00:02:08,365 --&gt; 00:02:09,073<br>
+对的</p>
+<p>49<br>
+00:02:09,073 --&gt; 00:02:12,164<br>
+比如说 从商业角度来说</p>
+<p>50<br>
+00:02:12,164 --&gt; 00:02:16,950<br>
+2%的点击概率改变就具有实际显著性</p>
+<h3 id="27-权衡样本容量及功效">27 - 权衡样本容量及功效</h3>
+<p>1<br>
+00:00:00,370 --&gt; 00:00:04,350<br>
+好了 现在我们已经了解了如何计算合并标准误差以及置信区间</p>
+<p>2<br>
+00:00:04,350 --&gt; 00:00:06,120<br>
+是不是可以开始进行实验了？</p>
+<p>3<br>
+00:00:06,120 --&gt; 00:00:07,500<br>
+其实还没有</p>
+<p>4<br>
+00:00:07,500 --&gt; 00:00:10,250<br>
+我们首先要设计实验</p>
+<p>5<br>
+00:00:10,250 --&gt; 00:00:12,840<br>
+现在我们需要决定的一个主要问题是</p>
+<p>6<br>
+00:00:12,840 --&gt; 00:00:16,059<br>
+鉴于我们可以控制对照组和实验组的网页浏览量</p>
+<p>7<br>
+00:00:16,059 --&gt; 00:00:19,940<br>
+我们必须要确定 为获取统计显著性的结果</p>
+<p>8<br>
+00:00:19,940 --&gt; 00:00:23,020<br>
+最能获取统计显著性的结果</p>
+<p>9<br>
+00:00:23,020 --&gt; 00:00:25,180<br>
+这称为统计功效</p>
+<p>10<br>
+00:00:25,180 --&gt; 00:00:28,240<br>
+关键在于如果我们发现任何有意思的东西</p>
+<p>11<br>
+00:00:28,240 --&gt; 00:00:32,509<br>
+我们需要确保足够的功效</p>
+<p>12<br>
+00:00:32,509 --&gt; 00:00:35,640<br>
+从而得到高概率的结果 也就是具有统计显著性</p>
+<p>13<br>
+00:00:36,920 --&gt; 00:00:41,106<br>
+请谨记 功效与规模</p>
+<p>14<br>
+00:00:41,106 --&gt; 00:00:41,810<br>
+呈负面关系</p>
+<p>15<br>
+00:00:41,810 --&gt; 00:00:45,320<br>
+你想要探测的改变越小</p>
+<p>16<br>
+00:00:45,320 --&gt; 00:00:47,880<br>
+或者是你想要的结果置信度越高</p>
+<p>17<br>
+00:00:47,880 --&gt; 00:00:51,060<br>
+你需要运行的实验规模就越大 也就是对照组和实验组需要更多的网页浏览量</p>
+<h3 id="28－页面浏览数如何影响敏感性">28－页面浏览数如何影响敏感性</h3>
+<p>1<br>
+00:00:00,390 --&gt; 00:00:03,660<br>
+像 Diane 所说的 在进行实验之前</p>
+<p>2<br>
+00:00:03,660 --&gt; 00:00:07,060<br>
+你需要决定采集多少页面浏览量 以得出结论</p>
+<p>3<br>
+00:00:07,060 --&gt; 00:00:09,900<br>
+首先来看看你增加样本量时</p>
+<p>4<br>
+00:00:09,900 --&gt; 00:00:11,190<br>
+分布会有什么变化</p>
+<p>5<br>
+00:00:11,190 --&gt; 00:00:14,040<br>
+如果你采集 1000 个样本 结果就会是这样的</p>
+<p>6<br>
+00:00:14,040 --&gt; 00:00:18,200<br>
+两组之间没有真正的差异</p>
+<p>7<br>
+00:00:18,200 --&gt; 00:00:19,950<br>
+这是为什么均值等于零的原因</p>
+<p>8<br>
+00:00:19,950 --&gt; 00:00:23,398<br>
+如果你测量发现值比这个低 或者比这个高</p>
+<p>9<br>
+00:00:23,398 --&gt; 00:00:27,260<br>
+你会拒绝零假设 然后得出结论两者间有差异</p>
+<p>10<br>
+00:00:27,260 --&gt; 00:00:30,560<br>
+所以你错误地得出两者间有差异的概率</p>
+<p>11<br>
+00:00:30,560 --&gt; 00:00:34,076<br>
+称为 α 为 0.05</p>
+<p>12<br>
+00:00:34,076 --&gt; 00:00:38,810<br>
+如果你增加样本量 比如 5000 标准误差会减小</p>
+<p>13<br>
+00:00:38,810 --&gt; 00:00:42,700<br>
+结果的分布看上去更窄</p>
+<p>14<br>
+00:00:42,700 --&gt; 00:00:45,270<br>
+要保持同样的 α 值</p>
+<p>15<br>
+00:00:45,270 --&gt; 00:00:47,310<br>
+就意味着拒绝零假设的临界值接近零</p>
+<p>16<br>
+00:00:47,310 --&gt; 00:00:50,890<br>
+如果你决定只采集 1000 的页面浏览量</p>
+<p>17<br>
+00:00:50,890 --&gt; 00:00:53,330<br>
+这样你可以更快地得出结论</p>
+<p>18<br>
+00:00:53,330 --&gt; 00:00:56,910<br>
+如果没有真正的差异 结果的分布是这样的</p>
+<p>19<br>
+00:00:56,910 --&gt; 00:00:59,332<br>
+我们可以看到 α 等于 0.05</p>
+<p>20<br>
+00:00:59,332 --&gt; 00:01:02,700<br>
+现在让我们来考虑下如果两者间有差异</p>
+<p>21<br>
+00:01:02,700 --&gt; 00:01:05,900<br>
+明确来说 这个差异等于实际显著性</p>
+<p>22<br>
+00:01:05,900 --&gt; 00:01:06,960<br>
+为 0.02</p>
+<p>23<br>
+00:01:06,960 --&gt; 00:01:09,590<br>
+你不能拒绝零假设</p>
+<p>24<br>
+00:01:09,590 --&gt; 00:01:13,180<br>
+然后得出结论 认为没有显著的差异</p>
+<p>25<br>
+00:01:13,180 --&gt; 00:01:16,100<br>
+零假设实际上是错误的 然而却没有拒绝零假设的概率</p>
+<p>26<br>
+00:01:16,100 --&gt; 00:01:21,480<br>
+称为 β 这个值很高</p>
+<p>27<br>
+00:01:21,480 --&gt; 00:01:23,050<br>
+就算是真的有差异</p>
+<p>28<br>
+00:01:23,050 --&gt; 00:01:25,830<br>
+很可能也落在这个范围里</p>
+<p>29<br>
+00:01:25,830 --&gt; 00:01:29,210<br>
+所以收集少量样本的话 α 比较低</p>
+<p>30<br>
+00:01:29,210 --&gt; 00:01:32,410<br>
+也就是说你不太可能进行一个较差的实验</p>
+<p>31<br>
+00:01:32,410 --&gt; 00:01:37,030<br>
+但是 β 比较高 也就是说很大几率上</p>
+<p>32<br>
+00:01:37,030 --&gt; 00:01:39,520<br>
+你会无法在实验中得到你想要的差异结果</p>
+<p>33<br>
+00:01:39,520 --&gt; 00:01:42,850<br>
+β 或者说得到错误结论的概率</p>
+<p>34<br>
+00:01:42,850 --&gt; 00:01:46,010<br>
+取决于你的效应有多大</p>
+<p>35<br>
+00:01:46,010 --&gt; 00:01:49,360<br>
+对良态的分布例如正态分布来说</p>
+<p>36<br>
+00:01:49,360 --&gt; 00:01:53,950<br>
+当变化越来越大 β 会变小</p>
+<p>37<br>
+00:01:53,950 --&gt; 00:01:57,870<br>
+所以一般 β 是在实际显著性边界内</p>
+<p>38<br>
+00:01:57,870 --&gt; 00:02:00,600<br>
+因为你不在意更小的变化</p>
+<p>39<br>
+00:02:00,600 --&gt; 00:02:04,720<br>
+而变化越大 β 值越小 即误差的几率越小</p>
+<p>40<br>
+00:02:04,720 --&gt; 00:02:09,080<br>
+大家通常将 1 减去 β 视为实验的敏感性</p>
+<p>41<br>
+00:02:09,080 --&gt; 00:02:12,600<br>
+一般说来 在实际显著性界线内</p>
+<p>42<br>
+00:02:12,600 --&gt; 00:02:14,660<br>
+你希望实验具有较高的敏感性</p>
+<p>43<br>
+00:02:14,660 --&gt; 00:02:16,310<br>
+大家一般选择 80%</p>
+<p>44<br>
+00:02:16,310 --&gt; 00:02:20,490<br>
+好了 现在来看看如果采集 5000 个样本 会是什么结果</p>
+<p>45<br>
+00:02:20,490 --&gt; 00:02:22,830<br>
+两个分布都更加紧密了</p>
+<p>46<br>
+00:02:22,830 --&gt; 00:02:25,250<br>
+α 与之前一样 没有变化</p>
+<p>47<br>
+00:02:25,250 --&gt; 00:02:27,800<br>
+但是 这里出现了真正的差异</p>
+<p>48<br>
+00:02:27,800 --&gt; 00:02:32,240<br>
+你无法拒接零假设的几率大大减小了</p>
+<p>49<br>
+00:02:32,240 --&gt; 00:02:34,760<br>
+也就是说 你更有可能拒绝零假设</p>
+<p>50<br>
+00:02:34,760 --&gt; 00:02:36,730<br>
+并得出两者间有差异的结论</p>
+<p>51<br>
+00:02:36,730 --&gt; 00:02:39,990<br>
+β 减小了 而效应增强了</p>
+<h3 id="29－计算所需的页面浏览数量">29－计算所需的页面浏览数量</h3>
+<p>1<br>
+00:00:00,350 --&gt; 00:00:02,870<br>
+敏感性比较难以计算</p>
+<p>2<br>
+00:00:02,870 --&gt; 00:00:05,960<br>
+所以人们会使用不同的技术</p>
+<p>3<br>
+00:00:05,960 --&gt; 00:00:07,320<br>
+以确认他们需要多少网页浏览量</p>
+<p>4<br>
+00:00:07,320 --&gt; 00:00:10,510<br>
+首先 一些编程语言有自己的内置库</p>
+<p>5<br>
+00:00:10,510 --&gt; 00:00:11,760<br>
+可以计算这个</p>
+<p>6<br>
+00:00:11,760 --&gt; 00:00:15,410<br>
+你还可以找一些可供查阅的表格</p>
+<p>7<br>
+00:00:15,410 --&gt; 00:00:17,450<br>
+也能使用在线计算器</p>
+<p>8<br>
+00:00:18,670 --&gt; 00:00:21,410<br>
+在 Audacity 的实验中 我们希望你使用</p>
+<p>9<br>
+00:00:21,410 --&gt; 00:00:23,910<br>
+在线计算器 链接见讲师注释</p>
+<p>10<br>
+00:00:23,910 --&gt; 00:00:24,800<br>
+现在 在这个计算器中</p>
+<p>11<br>
+00:00:24,800 --&gt; 00:00:28,010<br>
+你需要输入一些不同的信息</p>
+<p>12<br>
+00:00:28,010 --&gt; 00:00:31,500<br>
+基准转化率 在我们例子中 是指更改之前的预计点击概率</p>
+<p>13<br>
+00:00:31,500 --&gt; 00:00:35,580<br>
+而最低的可探测效果</p>
+<p>14<br>
+00:00:35,580 --&gt; 00:00:38,240<br>
+就是我们之前一直所说的实际显著性</p>
+<p>15<br>
+00:00:38,240 --&gt; 00:00:41,100<br>
+你还需要说明你的实际显著性是</p>
+<p>16<br>
+00:00:41,100 --&gt; 00:00:43,730<br>
+绝对或相对的数值变更</p>
+<p>17<br>
+00:00:43,730 --&gt; 00:00:47,560<br>
+我们一直使用的是绝对数值变更 所以确保选择这个选项</p>
+<p>18<br>
+00:00:47,560 --&gt; 00:00:49,520<br>
+我们会在第三课中进一步讲授两者间的区别</p>
+<p>19<br>
+00:00:49,520 --&gt; 00:00:52,432<br>
+最后你还需要输入 1 - β 和 α 值</p>
+<p>20<br>
+00:00:52,432 --&gt; 00:00:56,441<br>
+请注意 这个计算器将 1 - β 称为统计功效</p>
+<p>21<br>
+00:00:56,441 --&gt; 00:00:58,550<br>
+而不是敏感性</p>
+<p>22<br>
+00:00:58,550 --&gt; 00:01:01,720<br>
+在方框中填入</p>
+<p>23<br>
+00:01:01,720 --&gt; 00:01:03,050<br>
+实验中每一组需要的页面浏览量</p>
+<p>24<br>
+00:01:03,050 --&gt; 00:01:04,709<br>
+还记得在进行变更之前</p>
+<p>25<br>
+00:01:04,709 --&gt; 00:01:10,240<br>
+我们收集到了 1000 个独立页面浏览 其中有 100 个进行了点击</p>
+<p>26<br>
+00:01:10,240 --&gt; 00:01:14,850<br>
+我们将实际显著性确定为 2% 或 0.02</p>
+<p>27<br>
+00:01:14,850 --&gt; 00:01:19,710<br>
+我称之为 dmin 意思是我们在意的最小差异</p>
+<p>28<br>
+00:01:19,710 --&gt; 00:01:22,710<br>
+然后 α 为 0.05</p>
+<p>29<br>
+00:01:22,710 --&gt; 00:01:26,040<br>
+β 为 0.2 非常标准</p>
+<h3 id="30－计算所需的页面浏览数量">30－计算所需的页面浏览数量</h3>
+<p>1<br>
+00:00:00,380 --&gt; 00:00:02,340<br>
+我们的基准转化率是 10%</p>
+<p>2<br>
+00:00:02,340 --&gt; 00:00:03,940<br>
+100 除以 1000</p>
+<p>3<br>
+00:00:03,940 --&gt; 00:00:08,620<br>
+而最小可探测效果 或者说实际显著性的界线</p>
+<p>4<br>
+00:00:08,620 --&gt; 00:00:11,540<br>
+我们确定为 2% 这是绝对数值变更</p>
+<p>5<br>
+00:00:11,540 --&gt; 00:00:15,840<br>
+最后 我将1 - β 确定为 80% α 为5%</p>
+<p>6<br>
+00:00:15,840 --&gt; 00:00:21,850<br>
+答案是实验中每一组</p>
+<p>7<br>
+00:00:21,850 --&gt; 00:00:23,380<br>
+至少需要 3623 的页面浏览量</p>
+<p>8<br>
+00:00:23,380 --&gt; 00:00:27,210<br>
+正确答案是 3623</p>
+<h3 id="31－页面浏览数是如何变化的">31－页面浏览数是如何变化的?</h3>
+<p>1<br>
+00:00:00,400 --&gt; 00:00:02,950<br>
+现在你已经了解了如何计算实验中所需的</p>
+<p>2<br>
+00:00:02,950 --&gt; 00:00:03,940<br>
+页面浏览量</p>
+<p>3<br>
+00:00:03,940 --&gt; 00:00:07,280<br>
+请你想一想实验中可能发生的以下变更</p>
+<p>4<br>
+00:00:07,280 --&gt; 00:00:09,150<br>
+并决定是否要增加或减少</p>
+<p>5<br>
+00:00:09,150 --&gt; 00:00:11,860<br>
+你需要的页面浏览量</p>
+<p>6<br>
+00:00:11,860 --&gt; 00:00:14,602<br>
+首先 假设对照组的点击概率变高了</p>
+<p>7<br>
+00:00:14,602 --&gt; 00:00:17,299<br>
+但依然低于 50%</p>
+<p>8<br>
+00:00:17,299 --&gt; 00:00:21,805<br>
+你是否需要更多或更少的页面浏览量以得到相同的敏感性？</p>
+<p>9<br>
+00:00:21,805 --&gt; 00:00:25,435<br>
+第二 假设你决定增加实际显著性</p>
+<p>10<br>
+00:00:25,435 --&gt; 00:00:27,255<br>
+我们称为 dmin</p>
+<p>11<br>
+00:00:27,255 --&gt; 00:00:31,815<br>
+你不再关心 2% 的变更</p>
+<p>12<br>
+00:00:31,815 --&gt; 00:00:35,300<br>
+而是 比如说 通过实验确认 3% 的变更</p>
+<p>13<br>
+00:00:35,300 --&gt; 00:00:38,340<br>
+第三 假设我们决定提高置信度</p>
+<p>14<br>
+00:00:38,340 --&gt; 00:00:40,610<br>
+也称为 1 - α</p>
+<p>15<br>
+00:00:40,610 --&gt; 00:00:43,050<br>
+比如说 我们选择99%的置信度</p>
+<p>16<br>
+00:00:43,050 --&gt; 00:00:46,020<br>
+而不是 95%</p>
+<p>17<br>
+00:00:46,020 --&gt; 00:00:48,870<br>
+最后 假设你想要更高的敏感性</p>
+<p>18<br>
+00:00:48,870 --&gt; 00:00:53,590<br>
+即实际显著性界线内的 1 - β</p>
+<p>19<br>
+00:00:53,590 --&gt; 00:00:56,720<br>
+针对这些情况 标出你认为需要增加或减少网页浏览量</p>
+<p>20<br>
+00:00:56,720 --&gt; 00:00:59,430<br>
+从而保证一切和之前一致的情况</p>
+<p>21<br>
+00:00:59,430 --&gt; 00:01:03,010<br>
+我建议你自己先预计下会发生什么</p>
+<p>22<br>
+00:01:03,010 --&gt; 00:01:06,640<br>
+然后试着在在线计算器上改变数字 看看是什么情况</p>
+<p>23<br>
+00:01:06,640 --&gt; 00:01:09,240<br>
+如果你不明白为什么这个变更会有这样的影响</p>
+<p>24<br>
+00:01:09,240 --&gt; 00:01:11,250<br>
+请观看视频查看解释</p>
+<h3 id="32－页面浏览数是如何变化的？">32－页面浏览数是如何变化的？</h3>
+<p>1<br>
+00:00:00,390 --&gt; 00:00:03,080<br>
+要弄明白点击概率</p>
+<p>2<br>
+00:00:03,080 --&gt; 00:00:04,010<br>
+对所需页面浏览量数量的影响</p>
+<p>3<br>
+00:00:04,010 --&gt; 00:00:07,530<br>
+就要回想之前提到过的 标准误差取决于点击概率</p>
+<p>4<br>
+00:00:07,530 --&gt; 00:00:10,570<br>
+标准误差与 p 乘以 1 减 p</p>
+<p>5<br>
+00:00:10,570 --&gt; 00:00:12,150<br>
+除以 N 的平方根成正比</p>
+<p>6<br>
+00:00:12,150 --&gt; 00:00:15,830<br>
+比如说 如果概率是 0.5 标准误差应该与</p>
+<p>7<br>
+00:00:15,830 --&gt; 00:00:21,470<br>
+0.5 乘以 0.5的平方根 即 0.5 成正比</p>
+<p>8<br>
+00:00:21,470 --&gt; 00:00:24,922<br>
+而如果概率是 0.1 或 0.9</p>
+<p>9<br>
+00:00:24,922 --&gt; 00:00:29,060<br>
+标准误差就与 0.3 成正比</p>
+<p>10<br>
+00:00:29,060 --&gt; 00:00:33,120<br>
+结果显示 概率约接近 0.5</p>
+<p>11<br>
+00:00:33,120 --&gt; 00:00:38,480<br>
+与极限值比如 0.1 或 0.9 越远 标准误差就会增加</p>
+<p>12<br>
+00:00:38,480 --&gt; 00:00:40,670<br>
+所以点击概率增加但不超过 0.5</p>
+<p>13<br>
+00:00:40,670 --&gt; 00:00:44,180<br>
+会增加标准误差</p>
+<p>14<br>
+00:00:44,180 --&gt; 00:00:47,410<br>
+也就是说我需要增加网页浏览量</p>
+<p>15<br>
+00:00:47,410 --&gt; 00:00:50,960<br>
+从而将标准误差降至原水平</p>
+<p>16<br>
+00:00:50,960 --&gt; 00:00:54,620<br>
+现在在在线计算器中 我试着增加基准转换率</p>
+<p>17<br>
+00:00:54,620 --&gt; 00:00:59,360<br>
+至 20% 样本量上升为约 6000</p>
+<p>18<br>
+00:00:59,360 --&gt; 00:01:02,040<br>
+如果你增加实际显著性</p>
+<p>19<br>
+00:01:02,040 --&gt; 00:01:05,780<br>
+比如说你不再想探测2%的变更</p>
+<p>20<br>
+00:01:05,780 --&gt; 00:01:08,730<br>
+你要探测的是</p>
+<p>21<br>
+00:01:08,730 --&gt; 00:01:09,850<br>
+超过 2% 的变更</p>
+<p>22<br>
+00:01:09,850 --&gt; 00:01:14,390<br>
+越大的变更越容易探测得到 所以你不需要这么多的页面浏览量</p>
+<p>23<br>
+00:01:14,390 --&gt; 00:01:17,290<br>
+我试着将实际显著性增加至 5%</p>
+<p>24<br>
+00:01:17,290 --&gt; 00:01:22,620<br>
+所需的样本量减少至每组 1000 的网页浏览量</p>
+<p>25<br>
+00:01:22,620 --&gt; 00:01:25,860<br>
+如果你增加置信度 也就是说在拒绝零假设之前</p>
+<p>26<br>
+00:01:25,860 --&gt; 00:01:28,940<br>
+你要先进一步确认变更是否有发生</p>
+<p>27<br>
+00:01:28,940 --&gt; 00:01:31,230<br>
+也就是说 你变得更为保守</p>
+<p>28<br>
+00:01:31,230 --&gt; 00:01:34,350<br>
+你可以通过拒绝零假设达到这个目的</p>
+<p>29<br>
+00:01:34,350 --&gt; 00:01:36,150<br>
+但这样会引起敏感性下降</p>
+<p>30<br>
+00:01:36,150 --&gt; 00:01:38,420<br>
+如果你想保持相同的敏感性</p>
+<p>31<br>
+00:01:38,420 --&gt; 00:01:41,250<br>
+你需要增加采集的页面浏览量</p>
+<p>32<br>
+00:01:41,250 --&gt; 00:01:45,300<br>
+我试着通过减小 α 值 增加置信度</p>
+<p>33<br>
+00:01:45,300 --&gt; 00:01:47,400<br>
+所需的页面浏览量上升了</p>
+<p>34<br>
+00:01:47,400 --&gt; 00:01:49,680<br>
+现在是 1,500 了 而不是 1,000</p>
+<p>35<br>
+00:01:49,680 --&gt; 00:01:53,420<br>
+最后 如你之前所见 如果你想增加实验的敏感性</p>
+<p>36<br>
+00:01:53,420 --&gt; 00:01:57,600<br>
+你需要采集更多的页面浏览量以收窄分布</p>
+<p>37<br>
+00:01:57,600 --&gt; 00:02:00,090<br>
+我试着增加这里的敏感性</p>
+<p>38<br>
+00:02:00,090 --&gt; 00:02:01,920<br>
+所需页面浏览量增加了</p>
+<p>39<br>
+00:02:01,920 --&gt; 00:02:03,729<br>
+现在是每组 2,000</p>
+<h3 id="33-计算结果">33 - 计算结果</h3>
+<p>1<br>
+00:00:00,420 --&gt; 00:00:03,300<br>
+好了 我们已经设计好了实验 并确定了规模</p>
+<p>2<br>
+00:00:03,300 --&gt; 00:00:07,100<br>
+现在 我们假设已经完成了实验 然后分析实验的结果</p>
+<p>3<br>
+00:00:07,100 --&gt; 00:00:11,398<br>
+假设对照组的总页面浏览量为 10,072</p>
+<p>4<br>
+00:00:11,398 --&gt; 00:00:14,092<br>
+实验组为 9,886</p>
+<p>5<br>
+00:00:14,092 --&gt; 00:00:17,594<br>
+数字不尽相同</p>
+<p>6<br>
+00:00:17,594 --&gt; 00:00:18,601<br>
+因为是随机将用户分配给各小组的</p>
+<p>7<br>
+00:00:18,601 --&gt; 00:00:23,337<br>
+在对照组中 用户中有 974 位点击了现在开始按钮</p>
+<p>8<br>
+00:00:23,337 --&gt; 00:00:26,080<br>
+而实验组中有 1,242 位</p>
+<p>9<br>
+00:00:27,420 --&gt; 00:00:31,860<br>
+所以看上去明显实验组中有更多的人进行了点击</p>
+<p>10<br>
+00:00:31,860 --&gt; 00:00:34,220<br>
+但这是否是因为随机变化呢？</p>
+<p>11<br>
+00:00:34,220 --&gt; 00:00:36,920<br>
+要回答这个问题 我们需要计算</p>
+<p>12<br>
+00:00:36,920 --&gt; 00:00:38,200<br>
+这个差异的置信区间</p>
+<p>13<br>
+00:00:38,200 --&gt; 00:00:40,820<br>
+一开始 我要计算合并概率</p>
+<p>14<br>
+00:00:40,820 --&gt; 00:00:43,370<br>
+也就是两组的总点击数</p>
+<p>15<br>
+00:00:43,370 --&gt; 00:00:48,450<br>
+除以总用户数 结果是约 0.111</p>
+<p>16<br>
+00:00:48,450 --&gt; 00:00:51,630<br>
+现在我会使用你之前见过的公式来计算合并标准误差</p>
+<p>17<br>
+00:00:51,630 --&gt; 00:00:56,459<br>
+结果是 0.00445</p>
+<p>18<br>
+00:00:56,459 --&gt; 00:00:58,620<br>
+现在 请计算预计差异 d? 以及误差幅度 m</p>
+<p>19<br>
+00:00:58,620 --&gt; 00:01:03,730<br>
+以完成此次计算</p>
+<p>20<br>
+00:01:03,730 --&gt; 00:01:07,320<br>
+在这些方框中写入你的答案 精确至小数点后四位</p>
+<p>21<br>
+00:01:07,320 --&gt; 00:01:10,880<br>
+然后将置信区间的上限和下限放入这些方框中</p>
+<p>22<br>
+00:01:10,880 --&gt; 00:01:12,820<br>
+同样精确至小数点后四位</p>
+<p>23<br>
+00:01:12,820 --&gt; 00:01:15,980<br>
+最后 根据这些结果</p>
+<p>24<br>
+00:01:15,980 --&gt; 00:01:16,820<br>
+你是否会发布新版本的现在开始按钮</p>
+<p>25<br>
+00:01:16,820 --&gt; 00:01:18,300<br>
+选择是或否</p>
+<p>26<br>
+00:01:18,300 --&gt; 00:01:22,238<br>
+别忘记考虑这个变更是否大于实际显著性 2%</p>
+<p>27<br>
+00:01:22,238 --&gt; 00:01:25,810<br>
+置信度采用 95%</p>
+<h3 id="34-计算结果-Solution">34 - 计算结果 Solution</h3>
+<p>1<br>
+00:00:00,360 --&gt; 00:00:04,570<br>
+我们将预计差异定义为</p>
+<p>2<br>
+00:00:04,570 --&gt; 00:00:06,460<br>
+实验概率减去对照概率</p>
+<p>3<br>
+00:00:06,460 --&gt; 00:00:09,110<br>
+答案为 0.0289</p>
+<p>4<br>
+00:00:09,110 --&gt; 00:00:13,222<br>
+误差幅度等于合并标准误差乘以 1.96</p>
+<p>5<br>
+00:00:13,222 --&gt; 00:00:16,357<br>
+1.96 是置信度 95% 的 Z 分数</p>
+<p>6<br>
+00:00:16,357 --&gt; 00:00:19,202<br>
+结果是 0.0087</p>
+<p>7<br>
+00:00:19,202 --&gt; 00:00:23,823<br>
+置信区间的下限为 d? 减 m</p>
+<p>8<br>
+00:00:23,823 --&gt; 00:00:26,057<br>
+结果是 0.0202</p>
+<p>9<br>
+00:00:26,057 --&gt; 00:00:30,683<br>
+上限为 d? 加 m 结果是 0.0376</p>
+<p>10<br>
+00:00:30,683 --&gt; 00:00:33,714<br>
+从这些结果中我们能得出什么结论？</p>
+<p>11<br>
+00:00:33,714 --&gt; 00:00:38,272<br>
+我们可以说 点击概率变更超过2%的几率</p>
+<p>12<br>
+00:00:38,272 --&gt; 00:00:39,797<br>
+非常大</p>
+<p>13<br>
+00:00:39,797 --&gt; 00:00:43,623<br>
+请记得 我们同时要满足统计显著性与实际显著性</p>
+<p>14<br>
+00:00:43,623 --&gt; 00:00:45,170<br>
+这里我们满足了这两个条件</p>
+<p>15<br>
+00:00:45,170 --&gt; 00:00:48,400<br>
+2% 是我们的实际显著性水平</p>
+<p>16<br>
+00:00:48,400 --&gt; 00:00:52,040<br>
+至少在 95% 的置信度上 我们可以看到很大的改变</p>
+<p>17<br>
+00:00:53,140 --&gt; 00:00:55,640<br>
+基于这个结论 我肯定会发布这个新版本</p>
+<h3 id="35－置信区间案例分解">35－置信区间案例分解</h3>
+<p>1<br>
+00:00:00,420 --&gt; 00:00:04,280<br>
+现在让我们来看看其他可能出现的结果</p>
+<p>2<br>
+00:00:04,280 --&gt; 00:00:06,970<br>
+这里我用这两条蓝色线画出了</p>
+<p>3<br>
+00:00:06,970 --&gt; 00:00:10,000<br>
+实际显著性界线 而零就是中间这条黑线</p>
+<p>4<br>
+00:00:10,000 --&gt; 00:00:14,130<br>
+我们的点估计 也就是我们之前所说的 d?</p>
+<p>5<br>
+00:00:14,130 --&gt; 00:00:16,680<br>
+比实际显著性的界线更大</p>
+<p>6<br>
+00:00:16,680 --&gt; 00:00:19,250<br>
+事实上 置信区间的两端</p>
+<p>7<br>
+00:00:19,250 --&gt; 00:00:21,120<br>
+都比实际显著性边界更大</p>
+<p>8<br>
+00:00:21,120 --&gt; 00:00:24,660<br>
+因此 点击概率的变更</p>
+<p>9<br>
+00:00:24,660 --&gt; 00:00:28,090<br>
+实际上很可能超过实际显著性</p>
+<p>10<br>
+00:00:28,090 --&gt; 00:00:31,400<br>
+现在让我们看看其它情况下 我们的结果会是怎样</p>
+<p>11<br>
+00:00:31,400 --&gt; 00:00:34,670<br>
+并试着对每种情况给出决定建议</p>
+<p>12<br>
+00:00:34,670 --&gt; 00:00:38,630<br>
+选择你是否要发布这个变更</p>
+<p>13<br>
+00:00:38,630 --&gt; 00:00:40,040<br>
+或者对这些情况</p>
+<p>14<br>
+00:00:40,040 --&gt; 00:00:44,100<br>
+运行额外的测试 收集更多的数据</p>
+<p>15<br>
+00:00:44,100 --&gt; 00:00:47,010<br>
+第一个情况就是我刚刚说到的</p>
+<p>16<br>
+00:00:47,010 --&gt; 00:00:48,800<br>
+我会发布这个变更</p>
+<p>17<br>
+00:00:48,800 --&gt; 00:00:51,700<br>
+你应该假设想得到的是点击概率的正面变更</p>
+<p>18<br>
+00:00:51,700 --&gt; 00:00:55,330<br>
+不想得到的是负面变更</p>
+<p>19<br>
+00:00:55,330 --&gt; 00:00:58,440<br>
+要记得 我们进行 A/B 测试的目的是收集数据</p>
+<p>20<br>
+00:00:58,440 --&gt; 00:00:59,930<br>
+做出决定</p>
+<p>21<br>
+00:00:59,930 --&gt; 00:01:02,850<br>
+我们在置信区间内计算效能</p>
+<p>22<br>
+00:01:02,850 --&gt; 00:01:05,760<br>
+是为了了解我们的结果有多大可能具有</p>
+<p>23<br>
+00:01:05,760 --&gt; 00:01:07,530<br>
+可重复性与合理性</p>
+<p>24<br>
+00:01:07,530 --&gt; 00:01:08,990<br>
+做出正确的决定</p>
+<p>25<br>
+00:01:08,990 --&gt; 00:01:11,650<br>
+因此 针对每个情况选择你认为最好的决定</p>
+<h3 id="36-置信区间案例分解-Solution">36 - 置信区间案例分解 Solution</h3>
+<p>1<br>
+00:00:00,360 --&gt; 00:00:02,969<br>
+第二个结果一般称为中性结果</p>
+<p>2<br>
+00:00:02,969 --&gt; 00:00:05,900<br>
+因为置信区间包括 0</p>
+<p>3<br>
+00:00:05,900 --&gt; 00:00:08,590<br>
+所以没有变更具有统计显著性</p>
+<p>4<br>
+00:00:08,590 --&gt; 00:00:12,560<br>
+你也可以确认没有实际显著性的变更</p>
+<p>5<br>
+00:00:12,560 --&gt; 00:00:15,620<br>
+所以这个变更不值得发布</p>
+<p>6<br>
+00:00:15,620 --&gt; 00:00:19,350<br>
+在第三个案例中 你的结果具有统计显著性</p>
+<p>7<br>
+00:00:19,350 --&gt; 00:00:22,370<br>
+你确定存在正面变更</p>
+<p>8<br>
+00:00:22,370 --&gt; 00:00:23,890<br>
+但不具有实际显著性</p>
+<p>9<br>
+00:00:23,890 --&gt; 00:00:27,630<br>
+事实上 你确信没有实际显著性的变更</p>
+<p>10<br>
+00:00:27,630 --&gt; 00:00:29,960<br>
+换句话说 你确认这里有变更</p>
+<p>11<br>
+00:00:29,960 --&gt; 00:00:32,420<br>
+但你不在意变化的幅度</p>
+<p>12<br>
+00:00:32,420 --&gt; 00:00:35,170<br>
+如果你的团队得到了这样的结果 别急着庆祝</p>
+<p>13<br>
+00:00:35,170 --&gt; 00:00:38,510<br>
+同样的 不值得发布这样的变更</p>
+<p>14<br>
+00:00:38,510 --&gt; 00:00:42,290<br>
+但如果你的实际显著性界线设置得更低 就可以发布</p>
+<p>15<br>
+00:00:42,290 --&gt; 00:00:45,320<br>
+第四个案例是作为分析家</p>
+<p>16<br>
+00:00:45,320 --&gt; 00:00:47,220<br>
+最难处理的案例之一</p>
+<p>17<br>
+00:00:47,220 --&gt; 00:00:50,820<br>
+一些人称它为中性变更 像第二个案例一样</p>
+<p>18<br>
+00:00:50,820 --&gt; 00:00:54,130<br>
+但是这里 置信区间超出了</p>
+<p>19<br>
+00:00:54,130 --&gt; 00:00:55,440<br>
+实际显著性的范围</p>
+<p>20<br>
+00:00:55,440 --&gt; 00:00:59,380<br>
+如果你进行实验 发现它可能会导致你的用户数量增加 10%</p>
+<p>21<br>
+00:00:59,380 --&gt; 00:01:03,780<br>
+或减少 10%</p>
+<p>22<br>
+00:01:03,780 --&gt; 00:01:06,320<br>
+你会认为这个变更是中性的么？</p>
+<p>23<br>
+00:01:06,320 --&gt; 00:01:09,140<br>
+最好的说法是 你没有足够的功效</p>
+<p>24<br>
+00:01:09,140 --&gt; 00:01:10,890<br>
+得出结论</p>
+<p>25<br>
+00:01:10,890 --&gt; 00:01:13,920<br>
+如果可能 我们这里建议你</p>
+<p>26<br>
+00:01:13,920 --&gt; 00:01:15,810<br>
+采用更大的功效再进行一次测试</p>
+<p>27<br>
+00:01:15,810 --&gt; 00:01:17,460<br>
+这又是一个棘手的案例</p>
+<p>28<br>
+00:01:17,460 --&gt; 00:01:20,670<br>
+点估计超过了实际显著性</p>
+<p>29<br>
+00:01:20,670 --&gt; 00:01:24,180<br>
+也就是说 你可以猜测 这个变更是你关注的变更</p>
+<p>30<br>
+00:01:24,180 --&gt; 00:01:26,590<br>
+但是置信区间覆盖了0</p>
+<p>31<br>
+00:01:26,590 --&gt; 00:01:28,770<br>
+所以也可能根本没有任何变更</p>
+<p>32<br>
+00:01:28,770 --&gt; 00:01:31,230<br>
+你可以假设它是正面结果 然后发布变更</p>
+<p>33<br>
+00:01:31,230 --&gt; 00:01:33,860<br>
+即便有可能没有效果</p>
+<p>34<br>
+00:01:33,860 --&gt; 00:01:36,420<br>
+使用更大的功效重复测试</p>
+<p>35<br>
+00:01:36,420 --&gt; 00:01:38,070<br>
+会让结果更有信服力</p>
+<p>36<br>
+00:01:38,070 --&gt; 00:01:41,000<br>
+最后还是一种比较难处理的示例</p>
+<p>37<br>
+00:01:41,000 --&gt; 00:01:43,880<br>
+一般情况下 你可以猜测存在一个</p>
+<p>38<br>
+00:01:43,880 --&gt; 00:01:45,180<br>
+具有实际显著性的正面变更</p>
+<p>39<br>
+00:01:45,180 --&gt; 00:01:49,230<br>
+然而 也有可能你的变更根本不具有实际显著性</p>
+<p>40<br>
+00:01:49,230 --&gt; 00:01:50,460<br>
+你该如何决定呢？</p>
+<p>41<br>
+00:01:50,460 --&gt; 00:01:51,730<br>
+所以对后面三个案例</p>
+<p>42<br>
+00:01:51,730 --&gt; 00:01:55,580<br>
+如果你有时间的话 应该采用更大的功效进行额外的测试</p>
+<p>43<br>
+00:01:55,580 --&gt; 00:01:58,540<br>
+但有时候 即便你不确定结果有多真实 或者结果的方向是否正确</p>
+<p>44<br>
+00:01:58,540 --&gt; 00:02:02,870<br>
+你也必须要作出决定</p>
+<p>45<br>
+00:02:02,870 --&gt; 00:02:05,610<br>
+现在我们会听听 Diane 对这些棘手案例的观点</p>
+<h3 id="37－对不确定数据做出决策">37－对不确定数据做出决策</h3>
+<p>1 00:00:00,370 --&gt; 00:00:03,780<br>
+Diane 如果出现最后三种情况</p>
+<p>2 00:00:03,780 --&gt; 00:00:06,420<br>
+但是你没有时间进行新的实验时 你会怎么做？</p>
+<p>3 00:00:06,420 --&gt; 00:00:10,300<br>
+如果只有前面三种情况的话 生活该有多轻松啊</p>
+<p>4 00:00:10,300 --&gt; 00:00:13,010<br>
+问题就在于即便我们尽力地</p>
+<p>5 00:00:13,010 --&gt; 00:00:15,540<br>
+增强了我们的实验</p>
+<p>6 00:00:15,540 --&gt; 00:00:18,150<br>
+我们也会遇到数据有不确定性的情况</p>
+<p>7 00:00:19,280 --&gt; 00:00:23,550<br>
+你要做的就是当决策人必须要做出决定时</p>
+<p>8 00:00:23,550 --&gt; 00:00:27,850<br>
+和他们进行沟通 冒一下险 因为数据是不确定的</p>
+<p>9 00:00:27,850 --&gt; 00:00:31,270<br>
+他们就必须依赖其他的一些因素 比如战略业务问题</p>
+<p>10 00:00:31,270 --&gt; 00:00:33,460<br>
+或者数据背后的其他因素</p>
+<h3 id="38-结论">38 - 结论</h3>
+<p>1 00:00:00,470 --&gt; 00:00:03,150<br>
+恭喜大家完成了本课的学习</p>
+<p>2 00:00:03,150 --&gt; 00:00:07,070<br>
+你已经学习了在技术领域之前 A/B 测试的历史</p>
+<p>3 00:00:07,070 --&gt; 00:00:10,330<br>
+以及什么时候 A/B 测试适用</p>
+<p>4 00:00:10,330 --&gt; 00:00:14,090<br>
+然后我们介绍了本课程中会一直使用的商业示例</p>
+<p>5 00:00:14,090 --&gt; 00:00:17,530<br>
+并通过简单的过程 从头到尾地完成了 A/B 测试的设置</p>
+<p>6 00:00:17,530 --&gt; 00:00:20,440<br>
+在示范实验中 你学习了如何提出</p>
+<p>7 00:00:20,440 --&gt; 00:00:22,920<br>
+并评估可进行测试的假设</p>
+<p>8 00:00:22,920 --&gt; 00:00:26,190<br>
+包括为评估变更选取指标</p>
+<p>9 00:00:26,190 --&gt; 00:00:30,740<br>
+并确定指标发生怎样的变化才具有实际显著性</p>
+<p>1000:00:30,740 --&gt; 00:00:32,910<br>
+我们讨论了实际显著性与统计显著性</p>
+<p>11 00:00:32,910 --&gt; 00:00:37,230<br>
+之间的差异 以及如何计算二项置信区间</p>
+<p>12 00:00:37,230 --&gt; 00:00:40,960<br>
+把所有这些结合起来 你能够计算实验的统计功效</p>
+<p>13 00:00:40,960 --&gt; 00:00:45,360<br>
+并了解功效与规模之间的拉锯关系</p>
+<p>14 00:00:45,360 --&gt; 00:00:48,080<br>
+最后 你使用这些概念分析实验结果</p>
+<p>15 00:00:48,080 --&gt; 00:00:50,970<br>
+并学习可以得出什么结论 以及不能得出什么结论</p>
+<p>16 00:00:52,200 --&gt; 00:00:55,290<br>
+在下一课中 我们会学习在实验中你应该注意哪些点</p>
+<p>17 00:00:55,290 --&gt; 00:00:58,080<br>
+以保护参与者</p>
+<p>18 00:00:58,080 --&gt; 00:00:58,590<br>
+到时候见</p>
+<h1>🎯批量修改文件名py</h1>
+<p>将所有.srt文件后缀改成.txt：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python3</span></span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">from</span> pathlib <span class="keyword">import</span> Path</span><br><span class="line"></span><br><span class="line">ROOT_DIR = <span class="string">r&#x27;C:\Code\pyProject\pydf\UdacityABtest&#x27;</span>  <span class="comment"># 要处理的根目录</span></span><br><span class="line">OLD_EXT = <span class="string">&#x27;.srt&#x27;</span>  <span class="comment"># 原后缀（必须带点）</span></span><br><span class="line">NEW_EXT = <span class="string">&#x27;.txt&#x27;</span>  <span class="comment"># 新后缀（必须带点）</span></span><br><span class="line">RECURSIVE = <span class="literal">True</span>  <span class="comment"># True=连子目录一起改，False=只改当前目录</span></span><br><span class="line"></span><br><span class="line">old_ext_lower = OLD_EXT.lower()</span><br><span class="line"><span class="keyword">for</span> dirpath, _, filenames <span class="keyword">in</span> os.walk(ROOT_DIR) <span class="keyword">if</span> RECURSIVE <span class="keyword">else</span> [(ROOT_DIR, [], os.listdir(ROOT_DIR))]:</span><br><span class="line">    <span class="keyword">for</span> name <span class="keyword">in</span> filenames:</span><br><span class="line">        <span class="keyword">if</span> name.lower().endswith(old_ext_lower):</span><br><span class="line">            p = Path(dirpath) / name</span><br><span class="line">            new_name = p.stem + NEW_EXT</span><br><span class="line">            p.rename(p.with_name(new_name))</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&#x27;renamed: <span class="subst">&#123;p&#125;</span>  -&gt;  <span class="subst">&#123;new_name&#125;</span>&#x27;</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;done!&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>将所有.txt文件的文字合并到一个pdf里：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">import os</span><br><span class="line"><span class="keyword">from</span> pathlib import Path</span><br><span class="line"><span class="keyword">from</span> reportlab.pdfbase import pdfmetrics</span><br><span class="line"><span class="keyword">from</span> reportlab.pdfbase.ttfonts import TTFont</span><br><span class="line"><span class="keyword">from</span> reportlab.lib.pagesizes import A4</span><br><span class="line"><span class="keyword">from</span> reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer</span><br><span class="line"><span class="keyword">from</span> reportlab.lib.styles import getSampleStyleSheet</span><br><span class="line"></span><br><span class="line">ROOT_DIR  <span class="operator">=</span> r<span class="string">&#x27;.&#x27;</span>                 # 含 txt 的根目录</span><br><span class="line"><span class="keyword">RECURSIVE</span> <span class="operator">=</span> <span class="literal">True</span></span><br><span class="line">FONT_NAME <span class="operator">=</span> <span class="string">&#x27;SimSun&#x27;</span></span><br><span class="line">FONT_FILE <span class="operator">=</span> r<span class="string">&#x27;C:\Windows\Fonts\simsun.ttc&#x27;</span>   # Linux<span class="operator">/</span>Mac 按需改</span><br><span class="line">OUTPUT_PDF <span class="operator">=</span> <span class="string">&#x27;merged_all.pdf&#x27;</span>    # 合并后的文件名</span><br><span class="line"></span><br><span class="line"># 注册字体</span><br><span class="line">pdfmetrics.registerFont(TTFont(FONT_NAME, FONT_FILE))</span><br><span class="line">styles <span class="operator">=</span> getSampleStyleSheet()</span><br><span class="line"></span><br><span class="line">title_style <span class="operator">=</span> styles[<span class="string">&#x27;Heading1&#x27;</span>]</span><br><span class="line">title_style.fontName <span class="operator">=</span> FONT_NAME</span><br><span class="line">title_style.fontSize <span class="operator">=</span> <span class="number">16</span></span><br><span class="line">title_style.leading <span class="operator">=</span> <span class="number">20</span></span><br><span class="line"></span><br><span class="line">normal_style <span class="operator">=</span> styles[<span class="string">&#x27;Normal&#x27;</span>]</span><br><span class="line">normal_style.fontName <span class="operator">=</span> FONT_NAME</span><br><span class="line">normal_style.fontSize <span class="operator">=</span> <span class="number">10</span></span><br><span class="line">normal_style.leading <span class="operator">=</span> <span class="number">14</span></span><br><span class="line"></span><br><span class="line">story <span class="operator">=</span> []</span><br><span class="line"></span><br><span class="line"># 按文件名排序，保证顺序一致</span><br><span class="line">txt_files <span class="operator">=</span> []</span><br><span class="line"><span class="keyword">for</span> dirpath, _, files <span class="keyword">in</span> (os.walk(ROOT_DIR) if <span class="keyword">RECURSIVE</span> <span class="keyword">else</span> [(ROOT_DIR, [], os.listdir(ROOT_DIR))]):</span><br><span class="line">    <span class="keyword">for</span> f <span class="keyword">in</span> files:</span><br><span class="line">        if f.<span class="built_in">lower</span>().endswith(<span class="string">&#x27;.txt&#x27;</span>):</span><br><span class="line">            txt_files.append(Path(dirpath) <span class="operator">/</span> f)</span><br><span class="line">txt_files.sort()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> txt_path <span class="keyword">in</span> txt_files:</span><br><span class="line">    # 一级标题：文件名（去掉后缀）</span><br><span class="line">    story.append(Paragraph(txt_path.stem, title_style))</span><br><span class="line">    story.append(Spacer(<span class="number">1</span>, <span class="number">6</span>))</span><br><span class="line"></span><br><span class="line">    # 正文</span><br><span class="line">    <span class="keyword">with</span> txt_path.open(encoding<span class="operator">=</span><span class="string">&#x27;utf-8&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            line <span class="operator">=</span> line.rstrip()</span><br><span class="line">            if line:</span><br><span class="line">                story.append(Paragraph(line, normal_style))</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                story.append(Spacer(<span class="number">1</span>, normal_style.leading))</span><br><span class="line"></span><br><span class="line">    # 每个文件结束后空一行</span><br><span class="line">    story.append(Spacer(<span class="number">1</span>, <span class="number">20</span>))</span><br><span class="line"></span><br><span class="line"># 一次性写 PDF</span><br><span class="line">doc <span class="operator">=</span> SimpleDocTemplate(OUTPUT_PDF, pagesize<span class="operator">=</span>A4,</span><br><span class="line">                        topMargin<span class="operator">=</span><span class="number">72</span>, bottomMargin<span class="operator">=</span><span class="number">36</span>,</span><br><span class="line">                        leftMargin<span class="operator">=</span><span class="number">36</span>, rightMargin<span class="operator">=</span><span class="number">36</span>)</span><br><span class="line">doc.build(story)</span><br><span class="line">print(f<span class="string">&#x27;所有 txt 已合并到 &#123;OUTPUT_PDF&#125;&#x27;</span>)</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://kkkika.github.io/">Kika</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://kkkika.github.io/2026/12/13/%E3%80%90%E6%95%B0%E5%88%86%E7%AC%94%E8%AE%B0%E3%80%91Udacity%20AB%20Testing/">https://kkkika.github.io/2026/12/13/【数分笔记】Udacity AB Testing/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://kkkika.github.io" target="_blank">Kkkika</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="addtoany"><div class="a2a_kit a2a_kit_size_32 a2a_default_style"><a class="a2a_button_wechat"></a><a class="a2a_button_copy_link"></a><a class="a2a_dd" target="_blank" rel="noopener" href="https://www.addtoany.com/share"></a></div></div><script async="async" src="https://static.addtoany.com/menu/page.js"></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/2026/01/12/%E3%80%90%E6%95%B0%E5%88%86%E3%80%91%E6%B6%88%E8%B4%B9%E9%87%91%E8%9E%8D/" title="【数分】消费金融"><img class="cover" src="/./../Cover/default_cover.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">【数分】消费金融</div></div><div class="info-2"><div class="info-item-1">消费金融行业解读，业务处理经验等</div></div></div></a></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/img/icon.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Kika</div><div class="author-info-description">Why so serious?</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">18</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">11</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Kkkika"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/Kkkika" target="_blank" title="Github"><i class="fab fa-github" style="color: #FDB68C;"></i></a><a class="social-icon" href="https://blog.csdn.net/m0_73972962" target="_blank" title="CSDN"><i class="fa fa-search" style="color: #FDB68C;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">持续更新中...<br>欢迎关注我的 GitHub，获取更多开源项目和教程分享！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content is-expand"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">1.</span> <span class="toc-text">🎯课程基础信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">2.</span> <span class="toc-text">🎯A&#x2F;B 测试核心认知</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">3.</span> <span class="toc-text">🎯A&#x2F;B 测试适用边界</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%8F%E5%85%B8%E6%A1%88%E4%BE%8B"><span class="toc-number">3.1.</span> <span class="toc-text">经典案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%BF%E4%BB%A3%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">替代方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">4.</span> <span class="toc-text">🎯指标选择</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">5.</span> <span class="toc-text">🎯统计基础</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83"><span class="toc-number">5.1.</span> <span class="toc-text">二项分布</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E5%BF%83%E6%9E%81%E9%99%90%E5%AE%9A%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">中心极限定理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E5%87%86%E8%AF%AF%E5%B7%AE"><span class="toc-number">5.3.</span> <span class="toc-text">标准误差</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4"><span class="toc-number">5.4.</span> <span class="toc-text">置信区间</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E5%BC%8F%E5%88%86%E8%A7%A3"><span class="toc-number">5.4.1.</span> <span class="toc-text">公式分解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A1%88%E4%BE%8B%E8%AE%A1%E7%AE%97"><span class="toc-number">5.4.2.</span> <span class="toc-text">案例计算</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E4%B8%B4%E7%95%8C-Z-%E5%80%BC"><span class="toc-number">5.4.3.</span> <span class="toc-text">常用临界 Z 值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C"><span class="toc-number">5.5.</span> <span class="toc-text">假设检验</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1%E6%98%BE%E8%91%97%E6%80%A7-vs-%E5%AE%9E%E9%99%85%E6%98%BE%E8%91%97%E6%80%A7"><span class="toc-number">5.6.</span> <span class="toc-text">统计显著性 vs 实际显著性</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">6.</span> <span class="toc-text">🎯样本量计算</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5"><span class="toc-number">6.1.</span> <span class="toc-text">核心概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B7%E6%9C%AC%E9%87%8F%E5%BD%B1%E5%93%8D%E5%9B%A0%E7%B4%A0"><span class="toc-number">6.2.</span> <span class="toc-text">样本量影响因素</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%B7%A5%E5%85%B7"><span class="toc-number">6.3.</span> <span class="toc-text">计算工具</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">7.</span> <span class="toc-text">🎯结果决策</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E7%A7%8D%E6%83%85%E5%86%B5%E5%9B%BE%E8%A7%A3"><span class="toc-number">7.1.</span> <span class="toc-text">六种情况图解</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">8.</span> <span class="toc-text">🎯实验全流程总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">9.</span> <span class="toc-text">🎯补充知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%86%E5%8F%B2%E6%B8%8A%E6%BA%90"><span class="toc-number">9.1.</span> <span class="toc-text">历史渊源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E4%BC%A6%E7%90%86-Checklist"><span class="toc-number">9.2.</span> <span class="toc-text">实验伦理 Checklist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E9%87%91%E5%8F%A5"><span class="toc-number">9.3.</span> <span class="toc-text">核心金句</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9C%9F%E5%AE%9E%E5%B7%A5%E4%BD%9C%E4%B8%AD"><span class="toc-number">9.4.</span> <span class="toc-text">真实工作中</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E9%87%8A%E5%8E%9F%E5%9B%A0"><span class="toc-number">9.4.1.</span> <span class="toc-text">解释原因</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%87%E8%AE%BE%E6%A3%80%E9%AA%8C%E7%B1%BB%E5%9E%8B"><span class="toc-number">9.4.2.</span> <span class="toc-text">假设检验类型</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">10.</span> <span class="toc-text">🎯字幕稿解读</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-1-%E8%AF%BE%E7%A8%8B%E7%AE%80%E4%BB%8B"><span class="toc-number">10.0.1.</span> <span class="toc-text">文件 1  课程简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-2-%E8%AF%BE%E7%A8%8B%E6%A8%A1%E5%BC%8F"><span class="toc-number">10.0.2.</span> <span class="toc-text">文件 2  课程模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-3-A-B-%E6%B5%8B%E8%AF%95%E7%AE%80%E4%BB%8B"><span class="toc-number">10.0.3.</span> <span class="toc-text">文件 3  A&#x2F;B 测试简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-4-%E4%BD%A0%E5%8F%AF%E4%BB%A5%E5%81%9A%E5%92%8C%E4%B8%8D%E5%8F%AF%E4%BB%A5%E5%81%9A%E7%9A%84%E4%BA%8B%EF%BC%88%E9%A2%98%E7%9B%AE%EF%BC%89"><span class="toc-number">10.0.4.</span> <span class="toc-text">文件 4  你可以做和不可以做的事（题目）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-5-%E4%BD%A0%E5%8F%AF%E4%BB%A5%E5%81%9A%E5%92%8C%E4%B8%8D%E5%8F%AF%E4%BB%A5%E5%81%9A%E7%9A%84%E4%BA%8B%EF%BC%88%E8%A7%A3%E6%9E%90%EF%BC%89"><span class="toc-number">10.0.5.</span> <span class="toc-text">文件 5  你可以做和不可以做的事（解析）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-6-%E5%86%8D%E7%BB%99%E4%BD%A0-3-%E4%B8%AA%E5%9C%BA%E6%99%AF%EF%BC%88%E7%AC%AC%E4%BA%8C%E8%BD%AE%E7%BB%83%E4%B9%A0%EF%BC%89"><span class="toc-number">10.0.6.</span> <span class="toc-text">文件 6  再给你 3 个场景（第二轮练习）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-7-%E7%AC%AC%E4%BA%8C%E8%BD%AE%E8%A7%A3%E6%9E%90"><span class="toc-number">10.0.7.</span> <span class="toc-text">文件 7  第二轮解析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-8-%E5%85%B6%E4%BB%96%E6%8A%80%E5%B7%A7"><span class="toc-number">10.0.8.</span> <span class="toc-text">文件 8  其他技巧</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-9-A-B-%E6%B5%8B%E8%AF%95%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-number">10.0.9.</span> <span class="toc-text">文件 9  A&#x2F;B 测试的历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-10-%E5%95%86%E4%B8%9A%E6%A1%88%E4%BE%8B%E6%A6%82%E8%BF%B0"><span class="toc-number">10.0.10.</span> <span class="toc-text">文件 10  商业案例概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-11-%E5%BA%A6%E9%87%8F%E9%80%89%E6%8B%A9"><span class="toc-number">10.0.11.</span> <span class="toc-text">文件 11  度量选择</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-12-%E4%BC%B0%E8%AE%A1%E7%82%B9%E5%87%BB%E6%A6%82%E7%8E%87"><span class="toc-number">10.0.12.</span> <span class="toc-text">文件 12  估计点击概率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-13-%E9%87%8D%E5%A4%8D%E5%AE%9E%E9%AA%8C"><span class="toc-number">10.0.13.</span> <span class="toc-text">文件 13  重复实验</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-14-%E9%87%8D%E5%A4%8D%E5%AE%9E%E9%AA%8C-Solution"><span class="toc-number">10.0.14.</span> <span class="toc-text">文件 14  重复实验 Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-15-%E5%93%AA%E4%B8%AA%E5%88%86%E5%B8%83%EF%BC%9F"><span class="toc-number">10.0.15.</span> <span class="toc-text">文件 15  哪个分布？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-16-%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83"><span class="toc-number">10.0.16.</span> <span class="toc-text">文件 16  二项分布</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-17-%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83-Solution"><span class="toc-number">10.0.17.</span> <span class="toc-text">文件 17  二项分布 Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-18-%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4"><span class="toc-number">10.0.18.</span> <span class="toc-text">文件 18  置信区间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-19-%E8%AE%A1%E7%AE%97%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4"><span class="toc-number">10.0.19.</span> <span class="toc-text">文件 19  计算置信区间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-20-%E8%AE%A1%E7%AE%97%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4-Solution"><span class="toc-number">10.0.20.</span> <span class="toc-text">文件 20  计算置信区间 Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-21-%E5%BB%BA%E7%AB%8B%E7%BB%9F%E8%AE%A1%E6%98%BE%E8%91%97%E6%80%A7"><span class="toc-number">10.0.21.</span> <span class="toc-text">文件 21  建立统计显著性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-22-%E9%9B%B6%E5%81%87%E8%AE%BE%E5%92%8C%E5%AF%B9%E7%AB%8B%E5%81%87%E8%AE%BE"><span class="toc-number">10.0.22.</span> <span class="toc-text">文件 22  零假设和对立假设</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-23-%E9%9B%B6%E5%81%87%E8%AE%BE%E5%92%8C%E5%AF%B9%E7%AB%8B%E5%81%87%E8%AE%BE-Solution"><span class="toc-number">10.0.23.</span> <span class="toc-text">文件 23  零假设和对立假设 Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#24-%E6%AF%94%E8%BE%83%E4%B8%A4%E4%B8%AA%E6%A0%B7%E6%9C%AC"><span class="toc-number">10.0.24.</span> <span class="toc-text">24 - 比较两个样本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#25-%E5%90%88%E5%B9%B6%E6%A0%87%E5%87%86%E8%AF%AF%E5%B7%AE"><span class="toc-number">10.0.25.</span> <span class="toc-text">25 - 合并标准误差</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#26-%E5%AE%9E%E7%94%A8%E6%88%96%E5%AE%9E%E8%B4%A8%E6%80%A7%E6%98%BE%E8%91%97%E6%80%A7"><span class="toc-number">10.0.26.</span> <span class="toc-text">26 - 实用或实质性显著性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#27-%E6%9D%83%E8%A1%A1%E6%A0%B7%E6%9C%AC%E5%AE%B9%E9%87%8F%E5%8F%8A%E5%8A%9F%E6%95%88"><span class="toc-number">10.0.27.</span> <span class="toc-text">27 - 权衡样本容量及功效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#28%EF%BC%8D%E9%A1%B5%E9%9D%A2%E6%B5%8F%E8%A7%88%E6%95%B0%E5%A6%82%E4%BD%95%E5%BD%B1%E5%93%8D%E6%95%8F%E6%84%9F%E6%80%A7"><span class="toc-number">10.0.28.</span> <span class="toc-text">28－页面浏览数如何影响敏感性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#29%EF%BC%8D%E8%AE%A1%E7%AE%97%E6%89%80%E9%9C%80%E7%9A%84%E9%A1%B5%E9%9D%A2%E6%B5%8F%E8%A7%88%E6%95%B0%E9%87%8F"><span class="toc-number">10.0.29.</span> <span class="toc-text">29－计算所需的页面浏览数量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#30%EF%BC%8D%E8%AE%A1%E7%AE%97%E6%89%80%E9%9C%80%E7%9A%84%E9%A1%B5%E9%9D%A2%E6%B5%8F%E8%A7%88%E6%95%B0%E9%87%8F"><span class="toc-number">10.0.30.</span> <span class="toc-text">30－计算所需的页面浏览数量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#31%EF%BC%8D%E9%A1%B5%E9%9D%A2%E6%B5%8F%E8%A7%88%E6%95%B0%E6%98%AF%E5%A6%82%E4%BD%95%E5%8F%98%E5%8C%96%E7%9A%84"><span class="toc-number">10.0.31.</span> <span class="toc-text">31－页面浏览数是如何变化的?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#32%EF%BC%8D%E9%A1%B5%E9%9D%A2%E6%B5%8F%E8%A7%88%E6%95%B0%E6%98%AF%E5%A6%82%E4%BD%95%E5%8F%98%E5%8C%96%E7%9A%84%EF%BC%9F"><span class="toc-number">10.0.32.</span> <span class="toc-text">32－页面浏览数是如何变化的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#33-%E8%AE%A1%E7%AE%97%E7%BB%93%E6%9E%9C"><span class="toc-number">10.0.33.</span> <span class="toc-text">33 - 计算结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#34-%E8%AE%A1%E7%AE%97%E7%BB%93%E6%9E%9C-Solution"><span class="toc-number">10.0.34.</span> <span class="toc-text">34 - 计算结果 Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#35%EF%BC%8D%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4%E6%A1%88%E4%BE%8B%E5%88%86%E8%A7%A3"><span class="toc-number">10.0.35.</span> <span class="toc-text">35－置信区间案例分解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#36-%E7%BD%AE%E4%BF%A1%E5%8C%BA%E9%97%B4%E6%A1%88%E4%BE%8B%E5%88%86%E8%A7%A3-Solution"><span class="toc-number">10.0.36.</span> <span class="toc-text">36 - 置信区间案例分解 Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#37%EF%BC%8D%E5%AF%B9%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%95%B0%E6%8D%AE%E5%81%9A%E5%87%BA%E5%86%B3%E7%AD%96"><span class="toc-number">10.0.37.</span> <span class="toc-text">37－对不确定数据做出决策</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#38-%E7%BB%93%E8%AE%BA"><span class="toc-number">10.0.38.</span> <span class="toc-text">38 - 结论</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link"><span class="toc-number">11.</span> <span class="toc-text">🎯批量修改文件名py</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/12/13/%E3%80%90%E6%95%B0%E5%88%86%E7%AC%94%E8%AE%B0%E3%80%91Udacity%20AB%20Testing/" title="【数分笔记】Udacity AB Testing"><img src="/./../Cover/ABtest.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【数分笔记】Udacity AB Testing"/></a><div class="content"><a class="title" href="/2026/12/13/%E3%80%90%E6%95%B0%E5%88%86%E7%AC%94%E8%AE%B0%E3%80%91Udacity%20AB%20Testing/" title="【数分笔记】Udacity AB Testing">【数分笔记】Udacity AB Testing</a><time datetime="2026-12-13T12:09:59.000Z" title="发表于 2026-12-13 20:09:59">2026-12-13</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/12/%E3%80%90%E6%95%B0%E5%88%86%E3%80%91%E6%B6%88%E8%B4%B9%E9%87%91%E8%9E%8D/" title="【数分】消费金融"><img src="/./../Cover/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【数分】消费金融"/></a><div class="content"><a class="title" href="/2026/01/12/%E3%80%90%E6%95%B0%E5%88%86%E3%80%91%E6%B6%88%E8%B4%B9%E9%87%91%E8%9E%8D/" title="【数分】消费金融">【数分】消费金融</a><time datetime="2026-01-12T03:14:22.000Z" title="发表于 2026-01-12 11:14:22">2026-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/01/12/%E3%80%90%E6%95%B0%E5%88%86%E3%80%91%E6%95%B4%E7%90%86/" title="【数分】整理"><img src="/./../Cover/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="【数分】整理"/></a><div class="content"><a class="title" href="/2026/01/12/%E3%80%90%E6%95%B0%E5%88%86%E3%80%91%E6%95%B4%E7%90%86/" title="【数分】整理">【数分】整理</a><time datetime="2026-01-12T03:08:29.000Z" title="发表于 2026-01-12 11:08:29">2026-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/25/%E7%AC%94%E8%AE%B0%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA/" title="笔记系统搭建"><img src="/./../Cover/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="笔记系统搭建"/></a><div class="content"><a class="title" href="/2025/11/25/%E7%AC%94%E8%AE%B0%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BA/" title="笔记系统搭建">笔记系统搭建</a><time datetime="2025-11-25T06:21:52.000Z" title="发表于 2025-11-25 14:21:52">2025-11-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/31/%E6%9C%89%E8%B6%A3/" title="有趣"><img src="/./../Cover/default_cover.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="有趣"/></a><div class="content"><a class="title" href="/2025/10/31/%E6%9C%89%E8%B6%A3/" title="有趣">有趣</a><time datetime="2025-10-31T06:08:17.000Z" title="发表于 2025-10-31 14:08:17">2025-10-31</time></div></div></div></div></div></div></main><footer id="footer" style="background: transparent;"><div id="footer-wrap"><div class="copyright">&copy;2024 - 2026 By Kika</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 7.3.0</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.3.5</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-beat"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="日夜切换"><i class="fas fa-adjust fa-flip"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up fa-bounce"></i></button><button id="go-down" type="button" title="回到底部"><i class="fas fa-arrow-down fa-bounce"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox/fancybox.umd.min.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/node-snackbar/dist/snackbar.min.js"></script><div class="js-pjax"><script>(async () => {
+  const showKatex = () => {
+    document.querySelectorAll('#article-container .katex').forEach(el => el.classList.add('katex-show'))
+  }
+
+  if (!window.katex_js_css) {
+    window.katex_js_css = true
+    await btf.getCSS('https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css')
+    if (true) {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/katex/dist/contrib/copy-tex.min.js')
+    }
+  }
+
+  showKatex()
+})()</script><script>(() => {
+  const runMermaid = ele => {
+    window.loadMermaid = true
+    const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default'
+
+    ele.forEach((item, index) => {
+      const mermaidSrc = item.firstElementChild
+      const mermaidThemeConfig = `%%{init:{ 'theme':'${theme}'}}%%\n`
+      const mermaidID = `mermaid-${index}`
+      const mermaidDefinition = mermaidThemeConfig + mermaidSrc.textContent
+
+      const renderFn = mermaid.render(mermaidID, mermaidDefinition)
+      const renderMermaid = svg => {
+        mermaidSrc.insertAdjacentHTML('afterend', svg)
+      }
+
+      // mermaid v9 and v10 compatibility
+      typeof renderFn === 'string' ? renderMermaid(renderFn) : renderFn.then(({ svg }) => renderMermaid(svg))
+    })
+  }
+
+  const codeToMermaid = () => {
+    const codeMermaidEle = document.querySelectorAll('pre > code.mermaid')
+    if (codeMermaidEle.length === 0) return
+
+    codeMermaidEle.forEach(ele => {
+      const preEle = document.createElement('pre')
+      preEle.className = 'mermaid-src'
+      preEle.hidden = true
+      preEle.textContent = ele.textContent
+      const newEle = document.createElement('div')
+      newEle.className = 'mermaid-wrap'
+      newEle.appendChild(preEle)
+      ele.parentNode.replaceWith(newEle)
+    })
+  }
+
+  const loadMermaid = () => {
+    if (true) codeToMermaid()
+    const $mermaid = document.querySelectorAll('#article-container .mermaid-wrap')
+    if ($mermaid.length === 0) return
+
+    const runMermaidFn = () => runMermaid($mermaid)
+    btf.addGlobalFn('themeChange', runMermaidFn, 'mermaid')
+    window.loadMermaid ? runMermaidFn() : btf.getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(runMermaidFn)
+  }
+
+  btf.addGlobalFn('encrypt', loadMermaid, 'mermaid')
+  window.pjax ? loadMermaid() : document.addEventListener('DOMContentLoaded', loadMermaid)
+})()</script></div><canvas class="fireworks" mobile="false"></canvas><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/fireworks.min.js"></script><script id="canvas_nest" defer="defer" color="253,114,16" opacity="0.9" zIndex="-1" count="99" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="text-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
