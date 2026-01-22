@@ -190,8 +190,16 @@
 
       if (service === 'fancybox') {
         Array.from(ele).forEach(i => {
+          // 处理图片 src 属性，去除 ./../ 前缀
+          let imgSrc = i.getAttribute('src') || i.src
+          if (imgSrc.startsWith('./../')) {
+            imgSrc = imgSrc.substring(4) // 移除 ./../ 前缀
+            i.setAttribute('src', imgSrc)
+          }
+
           if (i.parentNode.tagName !== 'A') {
-            const dataSrc = i.dataset.lazySrc || i.src
+            // 获取原始的相对路径，而不是浏览器解析的绝对路径
+            let dataSrc = imgSrc
             const dataCaption = i.title || i.alt || ''
             btf.wrap(i, 'a', { href: dataSrc, 'data-fancybox': 'gallery', 'data-caption': dataCaption, 'data-thumb': dataSrc })
           }
@@ -227,6 +235,7 @@
               }
             }
           })
+
           window.fancyboxRun = true
         }
       }
