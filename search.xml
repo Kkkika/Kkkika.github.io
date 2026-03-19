@@ -325,25 +325,6 @@
     
     
     <entry>
-      <title>pic</title>
-      <link href="/2025/04/11/pic/"/>
-      <url>/2025/04/11/pic/</url>
-      
-        <content type="html"><![CDATA[<p>文章路径：<code>C:\Code\KikaBlog\blog\source\_posts</code></p><p>（疑问：为什么source和_posts之间的斜杠显示的时候会被隐藏？）</p><h1>1 【./】</h1><p>【typora可 博客不可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source\_posts</code></p><p><img src="./test1.png" alt="./test1.png"></p><p>但是如果我复制图片到<code>C:\Code\KikaBlog\blog\source</code>的时候，博客上就可以正常显示，而图片路径还是./</p><p><img src="./../pic/test1-2.png" alt="./../pic/test1-2.png"></p><p>也就是说把图片放在<code>C:\Code\KikaBlog\blog\source</code>上用路径./和./…/是等价的；还有就是_posts文件夹是进不去的，这个文件夹只能放<code>.md</code></p><h1>2【./…/】</h1><p>【都可！typora可 博客可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source</code></p><p><img src="./../test2.png" alt="./../test2.png"></p><p>缺点：图片文件挤在同一个文件夹，不方便管理</p><h1>3【./${filename}】</h1><p>【typora可 博客不可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source\_posts\pic</code></p><p><img src="./pic/test3.png" alt="./pic/test3.png"></p><p>为什么不行？这样管理分类最有秩序了，在_posts中搜索文章名，还可以直接搜到文章存放图片的文件夹。啊啊啊啊</p><h1>4【./…/${filename}】</h1><p>【都可！typora可 博客可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source\pic</code></p><p><img src="./../pic/test4.png" alt="./../pic/test4.png"></p><h1>结论</h1><p>第2种和第4种在Typora写文章时可以看到图片，并且GitHub搭建的博客网站上也能正常显示图片。</p><p>第2种是把图片统一放在博客文件夹下的source里；</p><p>第4种则在source文件夹中创建一个与文章名同名的文件夹存放图片，个人更喜欢第4种存放方式。而且【./…/${filename}】格式，笔记不管是放在发布文章文件夹 <code>_posts</code>还是草稿文章文件夹 <code>_drafts</code>，图片不用移动。</p><h1>pdf</h1><p><a href="/PDF/test.pdf">test.pdf</a></p><p>粘贴的时候是<code>..\PDF\test.pdf</code>，<strong>目标是</strong><code>/PDF/test.pdf</code>我不想手动改，有没有代码自动化这个流程的方法</p><p>要在粘贴的时候就转换，是不是要改typora</p><p>在 Typora 用户目录创建 <code>plugins/</code> 文件夹，新建<code>pdf-path-fix</code></p><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;pdf-path-fix&#x27;</span>,</span><br><span class="line">  <span class="attr">onPaste</span>: <span class="keyword">function</span>(<span class="params">event, context</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> text = context.<span class="property">content</span>;</span><br><span class="line">    <span class="comment">// 只处理 ..\PDF\xxx.pdf → /PDF/xxx.pdf</span></span><br><span class="line">    text = text.<span class="title function_">replace</span>(<span class="regexp">/\\.\\\\PDF\\\\([^\&quot;\&#x27;&gt;\s]+\\.pdf)/g</span>, <span class="string">&#x27;/PDF/$1&#x27;</span>);</span><br><span class="line">    context.<span class="property">content</span> = text;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>自定义插件，typora粘贴的时候是<code>..\PDF\test.pdf</code>，目标是<code>/PDF/test.pdf</code></p><h1>双链</h1><p>[[笔记系统搭建#Ob使用]]</p><p><img src="%E5%A4%A7%E6%96%87%E6%A1%A3#%E7%94%9F%E6%B4%BB%E5%B8%B8%E8%AF%86#%E7%9C%8B%E6%88%BF%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9" alt="1"></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> blog </category>
-          
-      </categories>
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>Git常用</title>
       <link href="/2025/04/11/Git%E5%B8%B8%E7%94%A8/"/>
       <url>/2025/04/11/Git%E5%B8%B8%E7%94%A8/</url>
@@ -365,6 +346,25 @@
             <tag> Gitee </tag>
             
         </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>pic</title>
+      <link href="/2025/04/11/pic/"/>
+      <url>/2025/04/11/pic/</url>
+      
+        <content type="html"><![CDATA[<p>文章路径：<code>C:\Code\KikaBlog\blog\source\_posts</code></p><p>（疑问：为什么source和_posts之间的斜杠显示的时候会被隐藏？）</p><h1>1 【./】</h1><p>【typora可 博客不可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source\_posts</code></p><p><img src="./test1.png" alt="./test1.png"></p><p>但是如果我复制图片到<code>C:\Code\KikaBlog\blog\source</code>的时候，博客上就可以正常显示，而图片路径还是./</p><p><img src="./../pic/test1-2.png" alt="./../pic/test1-2.png"></p><p>也就是说把图片放在<code>C:\Code\KikaBlog\blog\source</code>上用路径./和./…/是等价的；还有就是_posts文件夹是进不去的，这个文件夹只能放<code>.md</code></p><h1>2【./…/】</h1><p>【都可！typora可 博客可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source</code></p><p><img src="./../test2.png" alt="./../test2.png"></p><p>缺点：图片文件挤在同一个文件夹，不方便管理</p><h1>3【./${filename}】</h1><p>【typora可 博客不可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source\_posts\pic</code></p><p><img src="./pic/test3.png" alt="./pic/test3.png"></p><p>为什么不行？这样管理分类最有秩序了，在_posts中搜索文章名，还可以直接搜到文章存放图片的文件夹。啊啊啊啊</p><h1>4【./…/${filename}】</h1><p>【都可！typora可 博客可】</p><p>实际路径在<code>C:\Code\KikaBlog\blog\source\pic</code></p><p><img src="./../pic/test4.png" alt="./../pic/test4.png"></p><h1>结论</h1><p>第2种和第4种在Typora写文章时可以看到图片，并且GitHub搭建的博客网站上也能正常显示图片。</p><p>第2种是把图片统一放在博客文件夹下的source里；</p><p>第4种则在source文件夹中创建一个与文章名同名的文件夹存放图片，个人更喜欢第4种存放方式。而且【./…/${filename}】格式，笔记不管是放在发布文章文件夹 <code>_posts</code>还是草稿文章文件夹 <code>_drafts</code>，图片不用移动。</p><h1>pdf</h1><p><a href="/PDF/test.pdf">test.pdf</a></p><p>粘贴的时候是<code>..\PDF\test.pdf</code>，<strong>目标是</strong><code>/PDF/test.pdf</code>我不想手动改，有没有代码自动化这个流程的方法</p><p>要在粘贴的时候就转换，是不是要改typora</p><p>在 Typora 用户目录创建 <code>plugins/</code> 文件夹，新建<code>pdf-path-fix</code></p><figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = &#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;pdf-path-fix&#x27;</span>,</span><br><span class="line">  <span class="attr">onPaste</span>: <span class="keyword">function</span>(<span class="params">event, context</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> text = context.<span class="property">content</span>;</span><br><span class="line">    <span class="comment">// 只处理 ..\PDF\xxx.pdf → /PDF/xxx.pdf</span></span><br><span class="line">    text = text.<span class="title function_">replace</span>(<span class="regexp">/\\.\\\\PDF\\\\([^\&quot;\&#x27;&gt;\s]+\\.pdf)/g</span>, <span class="string">&#x27;/PDF/$1&#x27;</span>);</span><br><span class="line">    context.<span class="property">content</span> = text;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure><p>自定义插件，typora粘贴的时候是<code>..\PDF\test.pdf</code>，目标是<code>/PDF/test.pdf</code></p><h1>双链</h1><p>[[笔记系统搭建#Ob使用]]</p><p><img src="%E5%A4%A7%E6%96%87%E6%A1%A3#%E7%94%9F%E6%B4%BB%E5%B8%B8%E8%AF%86#%E7%9C%8B%E6%88%BF%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9" alt="1"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> blog </category>
+          
+      </categories>
+      
       
     </entry>
     
